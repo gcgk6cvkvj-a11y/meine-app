@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#101722">
+<title>Signale lernen ByArmando</title>
+<!-- Supabase SDK einbinden -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #101722;
+  --panel: #1b2735;
+  --panel2: #243448;
+  --text: #f3f6fa;
+  --muted: #aab8c8;
+  --accent: #48a6ff;
+  --green: #38c98b;
+  --red: #ff6474;
+  --orange: #ffad42;
+  --border: #34465b;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 12px 12px 90px 12px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+header, main {
+  max-width: 900px;
+  margin: auto;
+}
+
+header {
+  padding: 8px 3px 14px 3px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  font-size: 24px;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+h2 { font-size: 20px; margin-top: 0; margin-bottom: 12px; }
+h3 { font-size: 16px; margin: 10px 0; }
+p { line-height: 1.5; margin: 8px 0; }
+small, .muted { color: var(--muted); }
+.brand { color: var(--accent); }
+
+/* Feste Mobile Bottom Navigation */
+nav#mainNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0d131d;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px)) 4px;
+  z-index: 1000;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+}
+
+nav#mainNav button {
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+nav#mainNav button .icon {
+  font-size: 18px;
+}
+
+nav#mainNav button.active {
+  color: var(--accent);
+  background: rgba(72, 166, 255, 0.1);
+}
+
+/* Formulare & Buttons */
+button, input, select, textarea {
+  font: inherit;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+button {
+  background: var(--panel2);
+  color: var(--text);
+  padding: 12px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  user-select: none;
+  transition: opacity 0.1s ease, transform 0.1s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button.primary { background: var(--accent); color: #071522; border-color: var(--accent); }
+button.good { background: #176e50; color: #fff; border-color: #26795b; }
+button.danger { background: #853542; color: #fff; border-color: #a84353; }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0 14px 0;
+  background: #111c29;
+  color: var(--text);
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+}
+
+textarea { min-height: 95px; resize: vertical; }
+label { display: block; color: var(--muted); font-size: 13px; font-weight: 500; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.page { display: block; }
+.page[hidden] { display: none !important; }
+
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.row > * { flex: 1; min-width: 130px; }
+
+.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.actions button { flex: 1; min-width: 110px; }
+
+/* Signal-Bilder */
+.signal-image {
+  width: 100%;
+  height: 240px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 12px;
+  margin: 10px 0;
+  border: 1px solid var(--border);
+}
+
+.placeholder {
+  height: 180px;
+  background: #111c29;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  text-align: center;
+  padding: 20px;
+  margin: 10px 0;
+}
+
+/* Feedback & Antworten */
+.answer { background: #111c29; border-radius: 12px; padding: 14px; margin-top: 14px; border: 1px solid var(--border); }
+.correct { color: var(--green); }
+.incorrect { color: var(--red); }
+
+.warning {
+  background: #3d1c18;
+  border: 1px solid #b65b36;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 12px;
+  color: #ffd4b8;
+}
+.warning h3 { color: #ff8b68; margin-top: 0; }
+
+.solution {
+  background: #103328;
+  border: 1px solid #26795b;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 12px;
+}
+.solution h3 { color: #d9fff0; margin-top: 0; }
+.solution p { margin: 8px 0; }
+.solution-value { white-space: pre-wrap; word-break: break-word; color: #fff; font-weight: 600; }
+.missing { color: #ffbd70; font-weight: 700; }
+
+.progress { height: 8px; background: #101722; border-radius: 10px; overflow: hidden; margin: 10px 0; }
+.progress span { display: block; height: 100%; background: var(--green); width: 0%; transition: width 0.3s ease; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.stat { background: #111c29; border-radius: 12px; padding: 14px; border: 1px solid var(--border); }
+.stat strong { display: block; font-size: 24px; margin-top: 6px; color: var(--accent); }
+
+/* Karten in der Liste */
+.signal-card {
+  background: #111c29;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin: 10px 0;
+}
+.signal-card h3 { margin: 0 0 6px 0; color: #fff; font-size: 17px; }
+.signal-card p { margin: 8px 0; color: #d0dbe7; font-size: 14px; }
+
+hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
+#notice { min-height: 20px; color: var(--green); font-weight: 600; font-size: 14px; margin-top: 4px; }
+.score-line { display: flex; justify-content: space-between; gap: 8px; margin: 6px 0; }
+
+/* Login Container */
+#authPanel { max-width: 420px; margin: 40px auto; }
+
+@media(max-width: 520px) {
+  body { padding: 8px 8px 85px 8px; }
+  .panel { padding: 12px; }
+  .signal-image { height: 200px; }
+  .stat-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🚦 Signale lernen <span class="brand">ByArmando</span></h1>
+    <p class="muted">Signale erkennen · Bedeutungen lernen · Prüfung bestehen</p>
+  </div>
+  <button id="logoutBtn" class="danger" style="display:none; padding: 6px 12px; font-size:12px;">Abmelden</button>
+</header>
+
+<div id="notice" aria-live="polite" style="max-width:900px; margin:auto;"></div>
+
+<!-- 🔐 LOGIN / REGISTRIERUNG -->
+<section id="authPanel" class="panel">
+  <h2 id="authTitle">Anmelden</h2>
+  <label for="authEmail">E-Mail Adresse</label>
+  <input type="email" id="authEmail" placeholder="deine@email.de" autocomplete="email">
+  
+  <label for="authPassword">Passwort</label>
+  <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
+  
+  <div class="actions">
+    <button type="button" class="primary" id="loginBtn">Einloggen</button>
+    <button type="button" id="signUpBtn">Konto erstellen</button>
+  </div>
+</section>
+
+<!-- HAUPT-APP (Wird erst nach Login sichtbar) -->
+<main id="appMain" hidden>
+<!-- 📚 LERNMODUS -->
+<section id="learn" class="page">
+  <div class="panel">
+    <h2>Lernmodus</h2>
+    <div class="row">
+      <div>
+        <label for="learnCategory">Kategorie</label>
+        <select id="learnCategory"><option value="all">Alle Signale</option></select>
+      </div>
+      <div>
+        <label>Fortschritt</label>
+        <strong id="learnCounter" style="display:block; margin-top:12px;">Frage 1</strong>
+      </div>
+    </div>
+    <div class="progress"><span id="learnProgress"></span></div>
+    
+    <img id="learnImage" class="signal-image" alt="Signalbild" hidden>
+    <div id="learnNoImage" class="placeholder">Kein Signalbild hinterlegt</div>
+    
+    <p><b>Erkenne das Signal. Trage alle drei Angaben selbst ein:</b></p>
+    
+    <label for="learnShort">1. Kurzbezeichnung</label>
+    <input id="learnShort" placeholder="z. B. Ne 1" autocomplete="off">
+    
+    <label for="learnLong">2. Langbezeichnung</label>
+    <input id="learnLong" placeholder="z. B. Trapeztafel" autocomplete="off">
+    
+    <label for="learnMeaning">3. Bedeutung</label>
+    <textarea id="learnMeaning" placeholder="Vollständige Bedeutung des Signals..."></textarea>
+    
+    <div class="actions">
+      <button type="button" class="primary" id="checkLearn">Antwort prüfen</button>
+      <button type="button" id="skipLearn">Überspringen</button>
+    </div>
+    
+    <div id="learnFeedback" class="answer" hidden></div>
+    <button type="button" class="good" id="nextLearn" hidden style="width:100%; margin-top:12px;">Nächstes Signal ➔</button>
+  </div>
+</section>
+
+<!-- 📝 PRÜFUNGSMODUS -->
+<section id="exam" class="page" hidden>
+  <div class="panel">
+    <h2>Prüfungsmodus</h2>
+    <p class="muted">Test unter Prüfungsbedingungen. Maximal 3 Punkte pro Frage.</p>
+    
+    <div id="examConfig">
+      <label for="examLength">Anzahl der Fragen</label>
+      <select id="examLength">
+        <option value="10">10 Fragen</option>
+        <option value="20">20 Fragen</option>
+        <option value="30">30 Fragen</option>
+        <option value="50">50 Fragen</option>
+      </select>
+      <button type="button" class="primary" id="startExam" style="width:100%; margin-top:8px;">Prüfung starten</button>
+    </div>
+
+    <div id="examArea" hidden>
+      <hr>
+      <div class="row">
+        <strong id="examCounter">Frage 1</strong>
+        <strong id="examTimer" style="text-align:right;">00:00</strong>
+      </div>
+      <div class="progress"><span id="examProgress"></span></div>
+      
+      <img id="examImage" class="signal-image" alt="Signalbild" hidden>
+      <div id="examNoImage" class="placeholder" hidden>Kein Signalbild hinterlegt</div>
+      
+      <label for="examShort">1. Kurzbezeichnung</label>
+      <input id="examShort" placeholder="Kurzbezeichnung" autocomplete="off">
+      
+      <label for="examLong">2. Langbezeichnung</label>
+      <input id="examLong" placeholder="Langbezeichnung" autocomplete="off">
+      
+      <label for="examMeaning">3. Bedeutung</label>
+      <textarea id="examMeaning" placeholder="Bedeutung des Signals"></textarea>
+      
+      <button type="button" class="primary" id="submitExam" style="width:100%;">Antwort abgeben</button>
+      <div id="examFeedback" class="answer" hidden></div>
+      <button type="button" id="examNext" hidden style="width:100%; margin-top:12px;">Weiter ➔</button>
+    </div>
+    
+    <div id="examResult" class="answer" hidden></div>
+  </div>
+</section>
+
+<!-- 📊 STATISTIK -->
+<section id="stats" class="page" hidden>
+  <div class="panel">
+    <h2>Deine Lernstatistik</h2>
+    <div class="stat-grid">
+      <div class="stat">Beantwortete Fragen<strong id="statAnswered">0</strong></div>
+      <div class="stat">Erreichte Punkte<strong id="statPoints">0</strong></div>
+      <div class="stat">Punktequote<strong id="statRate">0 %</strong></div>
+      <div class="stat">Absolvierte Prüfungen<strong id="statExams">0</strong></div>
+    </div>
+    
+    <hr>
+    <h3>Schwierige Signale</h3>
+    <div id="difficultSignals"></div>
+    
+    <hr>
+    <h3>Leistung nach Kategorie</h3>
+    <div id="categoryStats"></div>
+    
+    <button type="button" class="danger" id="resetStats" style="width:100%; margin-top:14px;">Statistik zurücksetzen</button>
+  </div>
+</section>
+
+<!-- ⚙️ VERWALTUNG -->
+<section id="manage" class="page" hidden>
+  <div class="panel">
+    <h2 id="formTitle">Signal hinzufügen</h2>
+    <input type="hidden" id="editId">
+    
+    <label for="shortName">Kurzbezeichnung</label>
+    <input id="shortName" placeholder="z. B. Lf 1">
+    
+    <label for="longName">Langbezeichnung</label>
+    <input id="longName" placeholder="z. B. Trapeztafel">
+    
+    <label for="meaning">Bedeutung / Musterlösung</label>
+    <textarea id="meaning" placeholder="Vollständige Bedeutung..."></textarea>
+    
+    <!-- Feste Kategorien-Auswahl mit Lf und Bü -->
+    <label for="category">Kategorie</label>
+    <select id="category">
+      <option value="Lf">Lf – Langsamfahrsignale</option>
+      <option value="Bü">Bü – Bahnübergangssignale</option>
+      <option value="Ne">Ne – Nebensignale</option>
+      <option value="Hp">Hp – Hauptsignale</option>
+      <option value="Vr">Vr – Vorsignale</option>
+      <option value="Ks">Ks – Kombinationssignale</option>
+      <option value="Hl">Hl – Hl-Signale</option>
+      <option value="Sh">Sh – Schutzsignale</option>
+      <option value="Ra">Ra – Rangiersignale</option>
+      <option value="Zs">Zs – Zusatzsignale</option>
+      <option value="El">El – Fahrleitungssignale</option>
+      <option value="So">So – Sonstige Signale</option>
+      <option value="Sonstige">Sonstige</option>
+    </select>
+    
+    <label for="imageUrl">Bild-URL (optional)</label>
+    <input id="imageUrl" placeholder="https://...">
+    
+    <div class="actions">
+      <button type="button" id="pickGallery">🖼️ Galerie</button>
+      <button type="button" id="pickCamera">📸 Kamera</button>
+    </div>
+    <input type="file" id="imageFile" accept="image/*" hidden>
+    <input type="file" id="cameraFile" accept="image/*" capture="environment" hidden>
+
+    <div class="actions" style="margin-top:12px;">
+      <button type="button" class="primary" id="saveSignal">Signal speichern</button>
+      <button type="button" id="clearForm">Formular leeren</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Gespeicherte Signale: <span id="signalCount" class="brand">0</span></h3>
+    <input id="searchSignals" placeholder="Signal suchen (Kurz, Lang, Kategorie)...">
+    
+    <!-- Liste für dynamisches Rendering -->
+    <div id="signalList"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Datensicherung</h2>
+    <p class="muted">Signale und Statistiken sichern oder wiederherstellen.</p>
+    <div class="actions">
+      <button type="button" id="exportData">Daten exportieren</button>
+      <button type="button" id="importButton">Daten importieren</button>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+  </div>
+</section>
+</main>
+
+<!-- Bottom Nav Bar -->
+<nav id="mainNav" hidden>
+  <button type="button" class="active" data-page="learn"><span class="icon">📚</span><span>Lernen</span></button>
+  <button type="button" data-page="exam"><span class="icon">📝</span><span>Prüfung</span></button>
+  <button type="button" data-page="stats"><span class="icon">📊</span><span>Statistik</span></button>
+  <button type="button" data-page="manage"><span class="icon">⚙️</span><span>Verwaltung</span></button>
+</nav>
+
+<script>
+(function(){
+"use strict";
+
+// 🔐 SUPABASE-ZUGANGSDATEN EINGETRAGEN
+const SUPABASE_URL = "https://qfitlansvvbspwutcjgh.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_u2Kw3x1e2rZQCeP0Bsk9PA_hI4TD...";
+
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id);
+
+let currentUser = null;
+let signals = [];
+let stats = { answered: 0, points: 0, exams: 0, bySignal: {} };
+let current = null;
+let learnNumber = 0;
+let learnDone = false;
+let examList = [];
+let examIndex = 0;
+let examPoints = 0;
+let examStarted = 0;
+let examDone = false;
+let examAnswered = false;
+let tempImageBase64 = "";
+
+function notify(message) {
+  const el = $("notice");
+  el.textContent = message;
+  setTimeout(() => {
+    if (el.textContent === message) el.textContent = "";
+  }, 3500);
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[c]);
+}
+
+/* 🔐 AUTHENTIFIZIERUNG (SUPABASE) */
+async function handleLogin() {
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value.trim();
+  if (!email || !password) return notify("Bitte E-Mail und Passwort eingeben.");
+
+  const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+  if (error) {
+    notify("Login fehlgeschlagen: " + error.message);
+  } else {
+    currentUser = data.user;
+    notify("Erfolgreich angemeldet!");
+    initUserSession();
+  }
+}
+
+async function handleSignUp() {
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value.trim();
+  if (!email || !password) return notify("Bitte E-Mail und Passwort eingeben.");
+
+  const { data, error } = await _supabase.auth.signUp({ email, password });
+  if (error) {
+    notify("Registrierung fehlgeschlagen: " + error.message);
+  } else {
+    notify("Konto erstellt! Du kannst dich jetzt einloggen.");
+  }
+}
+
+async function handleLogout() {
+  await _supabase.auth.signOut();
+  currentUser = null;
+  signals = [];
+  $("appMain").hidden = true;
+  $("mainNav").hidden = true;
+  $("logoutBtn").style.display = "none";
+  $("authPanel").hidden = false;
+  notify("Erfolgreich abgemeldet.");
+}
+
+async function checkSession() {
+  const { data } = await _supabase.auth.getSession();
+  if (data.session) {
+    currentUser = data.session.user;
+    initUserSession();
+  }
+}
+
+function initUserSession() {
+  $("authPanel").hidden = true;
+  $("appMain").hidden = false;
+  $("mainNav").hidden = false;
+  $("logoutBtn").style.display = "block";
+  loadCloudSignals();
+}
+
+/* ☁️ DATENBANK-OPERATIONEN (SUPABASE) */
+async function loadCloudSignals() {
+  if (!currentUser) return;
+  notify("Lade deine Signale...");
+  const { data, error } = await _supabase
+    .from('signals')
+    .select('*')
+    .eq('user_id', currentUser.id);
+
+  if (error) {
+    console.error(error);
+    notify("Fehler beim Laden der Signale.");
+  } else {
+    signals = data || [];
+    updateCategories();
+    renderList();
+    nextLearn();
+    notify("Signale geladen!");
+  }
+}
+
+async function saveSignal() {
+  if (!currentUser) return;
+  const id = $("editId").value;
+  const short = $("shortName").value.trim();
+  const long = $("longName").value.trim();
+  const meaning = $("meaning").value.trim();
+  const category = $("category").value || "Sonstige";
+
+  if (!short || !long || !meaning) {
+    notify("Bitte Kurzbezeichnung, Langbezeichnung und Bedeutung ausfüllen.");
+    return;
+  }
+
+  const payload = {
+    short, long, meaning, category,
+    image: tempImageBase64 || $("imageUrl").value.trim(),
+    user_id: currentUser.id
+  };
+
+  if (id) {
+    const { error } = await _supabase.from('signals').update(payload).eq('id', id);
+    if (error) notify("Fehler beim Aktualisieren: " + error.message);
+    else notify("Signal aktualisiert!");
+  } else {
+    const { error } = await _supabase.from('signals').insert([payload]);
+    if (error) notify("Fehler beim Speichern: " + error.message);
+    else notify("Neues Signal gespeichert!");
+  }
+
+  clearForm();
+  loadCloudSignals();
+}
+
+async function deleteSignal(id) {
+  if (!confirm("Möchtest du dieses Signal wirklich löschen?")) return;
+  const { error } = await _supabase.from('signals').delete().eq('id', id);
+  if (error) notify("Fehler beim Löschen.");
+  else {
+    notify("Signal gelöscht.");
+    loadCloudSignals();
+  }
+}
+
+/* Page Navigation */
+function showPage(page) {
+  ["learn", "exam", "stats", "manage"].forEach(id => {
+    const visible = id === page;
+    const el = $(id);
+    el.hidden = !visible;
+    el.style.display = visible ? "block" : "none";
+  });
+
+  document.querySelectorAll("#mainNav button").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.page === page);
+  });
+
+  if (page === "stats") renderStats();
+  if (page === "manage") renderList();
+  window.scrollTo(0, 0);
+}
+
+function updateCategories() {
+  const select = $("learnCategory");
+  const old = select.value || "all";
+  select.innerHTML = '<option value="all">Alle Signale</option>';
+
+  const baseCats = ["Lf", "Bü", "Ne", "Hp", "Vr", "Ks", "Hl", "Sh", "Ra", "Zs", "El", "So", "Sonstige"];
+  const allCatsSet = new Set([...baseCats, ...signals.map(s => s.category || "Sonstige")]);
+  const categories = [...allCatsSet].sort();
+
+  categories.forEach(cat => {
+    const opt = document.createElement("option");
+    opt.value = cat;
+    opt.textContent = cat;
+    select.appendChild(opt);
+  });
+
+  select.value = [...select.options].some(o => o.value === old) ? old : "all";
+}
+
+function filteredSignals() {
+  const cat = $("learnCategory").value;
+  return signals.filter(s => cat === "all" || s.category === cat);
+}
+
+function chooseSignal(list) {
+  if (!list.length) return null;
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function setImage(img, placeholder, src) {
+  img.onerror = null;
+  if (src && src.trim() !== "") {
+    img.src = src;
+    img.hidden = false;
+    placeholder.hidden = true;
+    img.onerror = () => { img.hidden = true; placeholder.hidden = false; };
+  } else {
+    img.removeAttribute("src");
+    img.hidden = true;
+    placeholder.hidden = false;
+  }
+}
+
+function clean(value) {
+  return String(value ?? "").toLowerCase()
+    .replace(/ä/g, "ae").replace(/ö/g, "oe")
+    .replace(/ü/g, "ue").replace(/ß/g, "ss")
+    .replace(/[.,;:!?()[\]{}"'`]/g, " ")
+    .replace(/\s+/g, " ").trim();
+}
+
+function sameAnswer(user, correct) {
+  return clean(user) === clean(correct);
+}
+
+function evaluate(signal, short, long, meaning) {
+  return {
+    short: sameAnswer(short, signal.short),
+    long: sameAnswer(long, signal.long),
+    meaning: sameAnswer(meaning, signal.meaning)
+  };
+}
+
+function calculatePoints(result) {
+  if (!result.meaning) return 0;
+  return Number(result.short) + Number(result.long) + 1;
+}
+
+function solutionHTML(signal) {
+  const short = String(signal.short || "").trim();
+  const long = String(signal.long || "").trim();
+  const meaning = String(signal.meaning || "").trim();
+
+  const valueHTML = v => v ? `<span class="solution-value">${esc(v)}</span>` : `<span class="missing">FEHLT IN DATENBANK</span>`;
+
+  return `
+    <div class="solution">
+      <h3>✓ Musterlösung</h3>
+      <p><b>Kurzbezeichnung:</b><br>${valueHTML(short)}</p>
+      <p><b>Langbezeichnung:</b><br>${valueHTML(long)}</p>
+      <p><b>Bedeutung:</b><br>${valueHTML(meaning)}</p>
+    </div>`;
+}
+
+function feedbackHTML(signal, result) {
+  const points = calculatePoints(result);
+  const allCorrect = points === 3;
+  const line = (label, isOk) => `
+    <p class="score-line">
+      <span>${label}</span>
+      <b class="${isOk ? "correct" : "incorrect"}">${isOk ? "✓ Richtig" : "✗ Falsch"}</b>
+    </p>`;
+
+  let html = `<h3 class="${allCorrect ? "correct" : "incorrect"}">${allCorrect ? "✓ Alles richtig!" : "✗ Nicht vollständig richtig"}</h3>`;
+  html += line("Kurzbezeichnung", result.short);
+  html += line("Langbezeichnung", result.long);
+  html += line("Bedeutung", result.meaning);
+
+  if (!result.meaning) {
+    html += `
+      <div class="warning">
+        <h3>⚠ BETRIEBSGEFAHR</h3>
+        <p>Die Signalbedeutung ist falsch. Sämtliche Punkte für diese Frage verfallen (0 Punkte).</p>
+      </div>`;
+  }
+  if (!allCorrect) html += solutionHTML(signal);
+  html += `<hr><h3>Ergebnis: ${points} von 3 Punkten</h3>`;
+  return html;
+}
+
+/* Lernmodus Logik */
+function nextLearn() {
+  const list = filteredSignals();
+  if (!list.length) {
+    current = null;
+    $("learnImage").hidden = true;
+    $("learnNoImage").hidden = false;
+    $("learnNoImage").textContent = "Keine Signale in dieser Kategorie. Wechsel in die Verwaltung zum Anlegen.";
+    $("learnCounter").textContent = "Keine Frage";
+    $("learnFeedback").hidden = true;
+    $("nextLearn").hidden = true;
+    $("checkLearn").disabled = true;
+    $("skipLearn").disabled = true;
+    return;
+  }
+  current = chooseSignal(list);
+  learnNumber++;
+  learnDone = false;
+  $("learnCounter").textContent = "Frage " + learnNumber;
+  $("learnProgress").style.width = ((learnNumber % 10) * 10 || 10) + "%";
+  setImage($("learnImage"), $("learnNoImage"), current.image);
+
+  $("learnShort").value = "";
+  $("learnLong").value = "";
+  $("learnMeaning").value = "";
+  $("learnFeedback").hidden = true;
+  $("nextLearn").hidden = true;
+  $("checkLearn").disabled = false;
+  $("skipLearn").disabled = false;
+}
+
+function checkLearn() {
+  if (!current || learnDone) return;
+  const result = evaluate(current, $("learnShort").value, $("learnLong").value, $("learnMeaning").value);
+  learnDone = true;
+  $("learnFeedback").innerHTML = feedbackHTML(current, result);
+  $("learnFeedback").hidden = false;
+  $("checkLearn").disabled = true;
+  $("skipLearn").disabled = true;
+  $("nextLearn").hidden = false;
+}
+
+function skipLearn() {
+  if (!learnDone) nextLearn();
+}
+
+/* VERWALTUNG & FORMULAR */
+function clearForm() {
+  $("editId").value = "";
+  $("shortName").value = "";
+  $("longName").value = "";
+  $("meaning").value = "";
+  $("imageUrl").value = "";
+  $("category").value = "Lf";
+  $("imageFile").value = "";
+  $("cameraFile").value = "";
+  tempImageBase64 = "";
+  $("formTitle").textContent = "Signal hinzufügen";
+  $("saveSignal").textContent = "Signal speichern";
+}
+
+function renderList() {
+  const query = $("searchSignals") ? $("searchSignals").value.toLowerCase().trim() : "";
+  const container = $("signalList");
+
+  const list = signals.filter(s => {
+    const text = [s.short, s.long, s.meaning, s.category].map(v => String(v || "")).join(" ").toLowerCase();
+    return text.includes(query);
+  });
+
+  $("signalCount").textContent = signals.length;
+
+  if (!list.length) {
+    container.innerHTML = "<p class='muted'>Keine Signale vorhanden.</p>";
+    return;
+  }
+
+  container.innerHTML = list.map(s => `
+    <div class="signal-card">
+      <h3>${esc(s.short)} – ${esc(s.long)}</h3>
+      <small class="muted">Kategorie: <b>${esc(s.category)}</b></small>
+      <p>${esc(s.meaning || "Keine Bedeutung hinterlegt")}</p>
+      <div class="actions">
+        <button type="button" class="btn-edit" data-id="${esc(s.id)}">✏️ Bearbeiten</button>
+        <button type="button" class="danger btn-delete" data-id="${esc(s.id)}">🗑 Löschen</button>
+      </div>
+    </div>`).join("");
+}
+
+function handleListClick(e) {
+  const btnEdit = e.target.closest(".btn-edit");
+  const btnDelete = e.target.closest(".btn-delete");
+
+  if (btnEdit) {
+    editSignal(btnEdit.getAttribute("data-id"));
+  } else if (btnDelete) {
+    deleteSignal(btnDelete.getAttribute("data-id"));
+  }
+}
+
+function editSignal(id) {
+  const signal = signals.find(s => String(s.id) === String(id));
+  if (!signal) {
+    notify("Signal nicht gefunden.");
+    return;
+  }
+
+  $("editId").value = signal.id;
+  $("shortName").value = signal.short || "";
+  $("longName").value = signal.long || "";
+  $("meaning").value = signal.meaning || "";
+  $("category").value = signal.category || "Lf";
+  $("imageUrl").value = signal.image || "";
+  tempImageBase64 = "";
+
+  $("formTitle").textContent = "Signal bearbeiten";
+  $("saveSignal").textContent = "Änderungen speichern";
+
+  showPage("manage");
+  $("shortName").focus();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  notify("Signal in Formular geladen.");
+}
+
+/* StatistikPlatzhalter */
+function renderStats() {
+  $("statAnswered").textContent = stats.answered || 0;
+  $("statPoints").textContent = stats.points || 0;
+  $("statRate").textContent = "0 %";
+  $("statExams").textContent = stats.exams || 0;
+}
+
+function handleImageInput(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    tempImageBase64 = e.target.result;
+    notify("Bild erfolgreich ausgewählt!");
+  };
+  reader.readAsDataURL(file);
+}
+
+function initEvents() {
+  $("loginBtn").addEventListener("click", handleLogin);
+  $("signUpBtn").addEventListener("click", handleSignUp);
+  $("logoutBtn").addEventListener("click", handleLogout);
+
+  $("mainNav").addEventListener("click", e => {
+    const btn = e.target.closest("button[data-page]");
+    if (btn) showPage(btn.dataset.page);
+  });
+
+  $("checkLearn").addEventListener("click", checkLearn);
+  $("nextLearn").addEventListener("click", nextLearn);
+  $("skipLearn").addEventListener("click", skipLearn);
+  $("learnCategory").addEventListener("change", nextLearn);
+
+  $("saveSignal").addEventListener("click", saveSignal);
+  $("clearForm").addEventListener("click", clearForm);
+  if ($("searchSignals")) $("searchSignals").addEventListener("input", renderList);
+  if ($("signalList")) $("signalList").addEventListener("click", handleListClick);
+
+  $("pickGallery").addEventListener("click", () => $("imageFile").click());
+  $("pickCamera").addEventListener("click", () => $("cameraFile").click());
+  $("imageFile").addEventListener("change", function() { handleImageInput(this.files[0]); this.value = ""; });
+  $("cameraFile").addEventListener("change", function() { handleImageInput(this.files[0]); this.value = ""; });
+}
+
+function init() {
+  initEvents();
+  checkSession();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
+})();
+</script>
+</body>
+</html>
