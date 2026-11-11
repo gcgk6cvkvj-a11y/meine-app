@@ -21,363 +21,175 @@
   --orange:#ffad42;
   --border:#34465b;
 }
-
-* {
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
+* {box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body {
-  margin:0;
-  padding:12px 12px 90px;
-  background:var(--bg);
+  margin:0;padding:12px 12px 90px;background:var(--bg);
   color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
-
-header,main {
-  max-width:900px;
-  margin:auto;
-}
-
+header,main {max-width:900px;margin:auto}
 header {
-  padding:8px 3px 14px;
-  text-align:left;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  padding:8px 3px 14px;display:flex;
+  justify-content:space-between;align-items:center;
 }
-
-h1 {
-  font-size:24px;
-  margin:4px 0;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-h2 {font-size:20px;margin-top:0;margin-bottom:12px}
+h1 {font-size:24px;margin:4px 0;display:flex;align-items:center;gap:8px}
+h2 {font-size:20px;margin:0 0 12px}
 h3 {font-size:16px;margin:10px 0}
 p {line-height:1.5;margin:8px 0}
 small,.muted {color:var(--muted)}
 .brand {color:var(--accent)}
-
 nav#mainNav {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:#0d131d;
-  border-top:1px solid var(--border);
-  display:grid;
+  position:fixed;bottom:0;left:0;right:0;background:#0d131d;
+  border-top:1px solid var(--border);display:grid;
   grid-template-columns:repeat(4,1fr);
   padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));
-  z-index:1000;
-  box-shadow:0 -4px 20px rgba(0,0,0,.5);
+  z-index:1000;box-shadow:0 -4px 20px rgba(0,0,0,.5);
 }
-
 nav#mainNav button {
-  background:transparent;
-  border:none;
-  border-radius:8px;
-  color:var(--muted);
-  font-size:11px;
-  font-weight:600;
-  padding:6px 2px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:4px;
-  cursor:pointer;
+  background:transparent;border:none;border-radius:8px;
+  color:var(--muted);font-size:11px;font-weight:600;
+  padding:6px 2px;display:flex;flex-direction:column;
+  align-items:center;gap:4px;
 }
-
 nav#mainNav button .icon {font-size:18px}
-nav#mainNav button.active {
-  color:var(--accent);
-  background:rgba(72,166,255,.1);
-}
-
-button,input,select,textarea {
-  font:inherit;
-  border-radius:10px;
-  border:1px solid var(--border);
-}
-
+nav#mainNav button.active {color:var(--accent);background:rgba(72,166,255,.1)}
+button,input,select,textarea {font:inherit;border-radius:10px;border:1px solid var(--border)}
 button {
-  background:var(--panel2);
-  color:var(--text);
-  padding:12px 14px;
-  cursor:pointer;
-  font-weight:600;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  user-select:none;
+  background:var(--panel2);color:var(--text);padding:12px 14px;
+  cursor:pointer;font-weight:600;display:inline-flex;
+  align-items:center;justify-content:center;gap:6px;
 }
-
 button:active {transform:scale(.98)}
-button.primary {
-  background:var(--accent);
-  color:#071522;
-  border-color:var(--accent);
-}
-button.good {
-  background:#176e50;
-  color:#fff;
-  border-color:#26795b;
-}
-button.danger {
-  background:#853542;
-  color:#fff;
-  border-color:#a84353;
-}
+button.primary {background:var(--accent);color:#071522;border-color:var(--accent)}
+button.good {background:#176e50;color:#fff;border-color:#26795b}
+button.danger {background:#853542;color:#fff;border-color:#a84353}
 button:disabled {opacity:.45;cursor:not-allowed}
-
 input,select,textarea {
-  width:100%;
-  padding:12px;
-  margin:6px 0 14px;
-  background:#111c29;
-  color:var(--text);
-  outline:none;
+  width:100%;padding:12px;margin:6px 0 14px;
+  background:#111c29;color:var(--text);outline:none;
 }
-
-input:focus,select:focus,textarea:focus {
-  border-color:var(--accent);
-}
-
+input:focus,select:focus,textarea:focus {border-color:var(--accent)}
 textarea {min-height:95px;resize:vertical}
-label {
-  display:block;
-  color:var(--muted);
-  font-size:13px;
-  font-weight:500;
-}
-
+label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 .panel {
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:14px;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:16px;margin-bottom:14px;
   box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
-
 .page {display:block}
 .page[hidden] {display:none!important}
-
-.row {
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-}
+.row {display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .row>* {flex:1;min-width:130px}
-
-.actions {
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
+.actions {display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .actions button {flex:1;min-width:110px}
-
 .signal-image {
-  width:100%;
-  height:240px;
-  object-fit:contain;
-  background:#fff;
-  border-radius:12px;
-  margin:10px 0;
-  border:1px solid var(--border);
+  width:100%;height:240px;object-fit:contain;background:#fff;
+  border-radius:12px;margin:10px 0;border:1px solid var(--border);
 }
-
 .placeholder {
-  height:180px;
-  background:#111c29;
-  border:1px dashed var(--border);
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--muted);
-  text-align:center;
-  padding:20px;
-  margin:10px 0;
+  height:180px;background:#111c29;border:1px dashed var(--border);
+  border-radius:12px;display:flex;align-items:center;
+  justify-content:center;color:var(--muted);text-align:center;
+  padding:20px;margin:10px 0;
 }
-
 .answer {
-  background:#111c29;
-  border-radius:12px;
-  padding:14px;
-  margin-top:14px;
-  border:1px solid var(--border);
+  background:#111c29;border-radius:12px;padding:14px;
+  margin-top:14px;border:1px solid var(--border);
 }
-
 .correct {color:var(--green)}
 .incorrect {color:var(--red)}
-
 .warning {
-  background:#3d1c18;
-  border:1px solid #b65b36;
-  border-radius:10px;
-  padding:12px;
-  margin-top:12px;
-  color:#ffd4b8;
+  background:#3d1c18;border:1px solid #b65b36;
+  border-radius:10px;padding:12px;margin-top:12px;color:#ffd4b8;
 }
 .warning h3 {color:#ff8b68;margin-top:0}
-
 .solution {
-  background:#103328;
-  border:1px solid #26795b;
-  border-radius:10px;
-  padding:14px;
-  margin-top:12px;
+  background:#103328;border:1px solid #26795b;
+  border-radius:10px;padding:14px;margin-top:12px;
 }
 .solution h3 {color:#d9fff0;margin-top:0}
 .solution p {margin:8px 0}
-.solution-value {
-  white-space:pre-wrap;
-  word-break:break-word;
-  color:#fff;
-  font-weight:600;
-}
+.solution-value {white-space:pre-wrap;word-break:break-word;color:#fff;font-weight:600}
 .missing {color:#ffbd70;font-weight:700}
-
 .progress {
-  height:8px;
-  background:#101722;
-  border-radius:10px;
-  overflow:hidden;
-  margin:10px 0;
+  height:8px;background:#101722;border-radius:10px;
+  overflow:hidden;margin:10px 0;
 }
 .progress span {
-  display:block;
-  height:100%;
-  background:var(--green);
-  width:0%;
-  transition:width .3s ease;
+  display:block;height:100%;background:var(--green);
+  width:0%;transition:width .3s ease;
 }
-
-.stat-grid {
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
+.stat-grid {display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .stat {
-  background:#111c29;
-  border-radius:12px;
-  padding:14px;
+  background:#111c29;border-radius:12px;padding:14px;
   border:1px solid var(--border);
 }
-.stat strong {
-  display:block;
-  font-size:24px;
-  margin-top:6px;
-  color:var(--accent);
-}
-
+.stat strong {display:block;font-size:24px;margin-top:6px;color:var(--accent)}
 .signal-card {
-  background:#111c29;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:14px;
-  margin:10px 0;
+  background:#111c29;border:1px solid var(--border);
+  border-radius:12px;padding:14px;margin:10px 0;
 }
-.signal-card h3 {
-  margin:0 0 6px;
-  color:#fff;
-  font-size:17px;
-}
-.signal-card p {
-  margin:8px 0;
-  color:#d0dbe7;
-  font-size:14px;
-}
-
+.signal-card h3 {margin:0 0 6px;color:#fff;font-size:17px}
+.signal-card p {margin:8px 0;color:#d0dbe7;font-size:14px}
 .signal-select-row {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:12px;
-  padding-bottom:10px;
-  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+  padding-bottom:10px;border-bottom:1px solid var(--border);
 }
-
 .signal-select-row label {
-  color:var(--text);
-  font-size:14px;
-  display:flex;
-  align-items:center;
-  gap:9px;
-  cursor:pointer;
-  flex:1;
+  color:var(--text);font-size:14px;display:flex;
+  align-items:center;gap:9px;cursor:pointer;flex:1;
 }
-
 .signal-select-row input[type="checkbox"],
 .signal-card input[type="checkbox"] {
-  width:22px;
-  height:22px;
-  margin:0;
-  accent-color:var(--accent);
-  flex-shrink:0;
+  width:22px;height:22px;margin:0;accent-color:var(--accent);flex-shrink:0;
 }
-
-.signal-card.selected {
-  border-color:var(--accent);
-  background:#14283b;
-}
-
+.signal-card.selected {border-color:var(--accent);background:#14283b}
 .bulk-toolbar {
-  background:#111c29;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  margin:10px 0 14px;
+  background:#111c29;border:1px solid var(--border);
+  border-radius:12px;padding:12px;margin:10px 0 14px;
 }
-
-.bulk-toolbar .actions {
-  margin-top:8px;
+.bulk-toolbar .actions {margin-top:8px}
+.bulk-toolbar button {font-size:13px;padding:11px 8px}
+.selection-count {color:var(--accent);font-weight:700;font-size:14px;margin-top:8px}
+.category-picker {
+  background:#111c29;border:1px solid var(--border);
+  border-radius:12px;padding:12px;margin:10px 0 14px;
 }
-
-.bulk-toolbar button {
-  font-size:13px;
-  padding:11px 8px;
+.category-picker-header {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin-bottom:10px;
 }
-
-.selection-count {
-  color:var(--accent);
-  font-weight:700;
-  font-size:14px;
-  margin-top:8px;
+.category-picker-header strong {font-size:14px}
+.category-grid {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
 }
-
-hr {
-  border:0;
-  border-top:1px solid var(--border);
-  margin:16px 0;
+.category-option {
+  display:flex;align-items:center;gap:8px;
+  padding:9px;background:#1b2735;border:1px solid var(--border);
+  border-radius:9px;color:var(--text);font-size:13px;
+  min-width:0;
 }
+.category-option input {
+  width:19px;height:19px;margin:0;flex-shrink:0;
+  accent-color:var(--accent);
+}
+.category-option span {overflow-wrap:anywhere}
+.category-summary {
+  color:var(--accent);font-size:13px;font-weight:700;margin-top:10px;
+}
+hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 #notice {
-  min-height:20px;
-  color:var(--green);
-  font-weight:600;
-  font-size:14px;
-  margin-top:4px;
+  min-height:20px;color:var(--green);font-weight:600;
+  font-size:14px;margin-top:4px;
 }
-.score-line {
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-}
-
+.score-line {display:flex;justify-content:space-between;gap:8px}
 #authPanel {max-width:420px;margin:40px auto}
-
 @media(max-width:520px) {
   body {padding:8px 8px 85px}
   .panel {padding:12px}
   .signal-image {height:200px}
   .stat-grid {grid-template-columns:1fr}
+  .category-grid {grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -395,14 +207,11 @@ hr {
 <div id="notice" aria-live="polite" style="max-width:900px;margin:auto;"></div>
 
 <section id="authPanel" class="panel">
-  <h2 id="authTitle">Anmelden</h2>
-
+  <h2>Anmelden</h2>
   <label for="authEmail">E-Mail Adresse</label>
   <input type="email" id="authEmail" placeholder="deine@email.de" autocomplete="email">
-
   <label for="authPassword">Passwort</label>
   <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
-
   <div class="actions">
     <button type="button" class="primary" id="loginBtn">Einloggen</button>
     <button type="button" id="signUpBtn">Konto erstellen</button>
@@ -414,17 +223,25 @@ hr {
 <section id="learn" class="page">
   <div class="panel">
     <h2>Lernmodus</h2>
+    <p class="muted">Wähle aus, welche Signalgruppen du lernen möchtest.</p>
+
+    <div class="category-picker">
+      <div class="category-picker-header">
+        <strong>Signalgruppen auswählen</strong>
+        <button type="button" id="learnSelectAll" style="padding:7px 10px;font-size:12px;">Alle auswählen</button>
+      </div>
+      <div id="learnCategoryChoices" class="category-grid"></div>
+      <div id="learnCategorySummary" class="category-summary"></div>
+    </div>
 
     <div class="row">
       <div>
-        <label for="learnCategory">Kategorie</label>
-        <select id="learnCategory">
-          <option value="all">Alle Signale</option>
-        </select>
-      </div>
-      <div>
         <label>Fortschritt</label>
         <strong id="learnCounter" style="display:block;margin-top:12px;">Frage 1</strong>
+      </div>
+      <div>
+        <label>Verfügbare Signale</label>
+        <strong id="learnAvailable" style="display:block;margin-top:12px;">0</strong>
       </div>
     </div>
 
@@ -434,13 +251,10 @@ hr {
     <div id="learnNoImage" class="placeholder">Kein Signalbild hinterlegt</div>
 
     <p><b>Erkenne das Signal. Trage alle drei Angaben selbst ein:</b></p>
-
     <label for="learnShort">1. Kurzbezeichnung</label>
     <input id="learnShort" placeholder="z. B. Ne 1" autocomplete="off">
-
     <label for="learnLong">2. Langbezeichnung</label>
     <input id="learnLong" placeholder="z. B. Trapeztafel" autocomplete="off">
-
     <label for="learnMeaning">3. Bedeutung</label>
     <textarea id="learnMeaning" placeholder="Vollständige Bedeutung des Signals..."></textarea>
 
@@ -448,7 +262,6 @@ hr {
       <button type="button" class="primary" id="checkLearn">Antwort prüfen</button>
       <button type="button" id="skipLearn">Überspringen</button>
     </div>
-
     <div id="learnFeedback" class="answer" hidden></div>
     <button type="button" class="good" id="nextLearn" hidden style="width:100%;margin-top:12px;">Nächstes Signal ➔</button>
   </div>
@@ -457,9 +270,18 @@ hr {
 <section id="exam" class="page" hidden>
   <div class="panel">
     <h2>Prüfungsmodus</h2>
-    <p class="muted">Test unter Prüfungsbedingungen. Maximal 3 Punkte pro Frage.</p>
+    <p class="muted">Wähle die Signalgruppen aus, die in deiner Prüfung abgefragt werden sollen.</p>
 
     <div id="examConfig">
+      <div class="category-picker">
+        <div class="category-picker-header">
+          <strong>Signalgruppen auswählen</strong>
+          <button type="button" id="examSelectAll" style="padding:7px 10px;font-size:12px;">Alle auswählen</button>
+        </div>
+        <div id="examCategoryChoices" class="category-grid"></div>
+        <div id="examCategorySummary" class="category-summary"></div>
+      </div>
+
       <label for="examLength">Anzahl der Fragen</label>
       <select id="examLength">
         <option value="10">10 Fragen</option>
@@ -468,6 +290,7 @@ hr {
         <option value="50">50 Fragen</option>
       </select>
       <button type="button" class="primary" id="startExam" style="width:100%;margin-top:8px;">Prüfung starten</button>
+      <div id="examAvailable" class="muted" style="margin-top:10px;"></div>
     </div>
 
     <div id="examArea" hidden>
@@ -483,10 +306,8 @@ hr {
 
       <label for="examShort">1. Kurzbezeichnung</label>
       <input id="examShort" placeholder="Kurzbezeichnung" autocomplete="off">
-
       <label for="examLong">2. Langbezeichnung</label>
       <input id="examLong" placeholder="Langbezeichnung" autocomplete="off">
-
       <label for="examMeaning">3. Bedeutung</label>
       <textarea id="examMeaning" placeholder="Bedeutung des Signals"></textarea>
 
@@ -502,22 +323,15 @@ hr {
 <section id="stats" class="page" hidden>
   <div class="panel">
     <h2>Deine Lernstatistik</h2>
-
     <div class="stat-grid">
       <div class="stat">Beantwortete Fragen<strong id="statAnswered">0</strong></div>
       <div class="stat">Erreichte Punkte<strong id="statPoints">0</strong></div>
       <div class="stat">Punktequote<strong id="statRate">0 %</strong></div>
       <div class="stat">Absolvierte Prüfungen<strong id="statExams">0</strong></div>
     </div>
-
     <hr>
-    <h3>Schwierige Signale</h3>
-    <div id="difficultSignals"></div>
-
-    <hr>
-    <h3>Leistung nach Kategorie</h3>
-    <div id="categoryStats"></div>
-
+    <h3>Letztes Prüfungsergebnis</h3>
+    <div id="lastExamResult" class="muted">Noch keine Prüfung absolviert.</div>
     <button type="button" class="danger" id="resetStats" style="width:100%;margin-top:14px;">Statistik zurücksetzen</button>
   </div>
 </section>
@@ -537,21 +351,7 @@ hr {
     <textarea id="meaning" placeholder="Vollständige Bedeutung..."></textarea>
 
     <label for="category">Kategorie</label>
-    <select id="category">
-      <option value="Lf">Lf – Langsamfahrsignale</option>
-      <option value="Bü">Bü – Bahnübergangssignale</option>
-      <option value="Ne">Ne – Nebensignale</option>
-      <option value="Hp">Hp – Hauptsignale</option>
-      <option value="Vr">Vr – Vorsignale</option>
-      <option value="Ks">Ks – Kombinationssignale</option>
-      <option value="Hl">Hl – Hl-Signale</option>
-      <option value="Sh">Sh – Schutzsignale</option>
-      <option value="Ra">Ra – Rangiersignale</option>
-      <option value="Zs">Zs – Zusatzsignale</option>
-      <option value="El">El – Fahrleitungssignale</option>
-      <option value="So">So – Sonstige Signale</option>
-      <option value="Sonstige">Sonstige</option>
-    </select>
+    <select id="category"></select>
 
     <label for="imageUrl">Bild-URL (optional)</label>
     <input id="imageUrl" placeholder="https://...">
@@ -560,7 +360,6 @@ hr {
       <button type="button" id="pickGallery">🖼️ Galerie</button>
       <button type="button" id="pickCamera">📸 Kamera</button>
     </div>
-
     <input type="file" id="imageFile" accept="image/*" hidden>
     <input type="file" id="cameraFile" accept="image/*" capture="environment" hidden>
 
@@ -581,21 +380,18 @@ hr {
           Alle angezeigten Signale auswählen
         </label>
       </div>
-
       <div class="actions">
         <button type="button" id="clearSelection">Auswahl aufheben</button>
         <button type="button" class="danger" id="deleteSelected" disabled>🗑 Ausgewählte löschen</button>
       </div>
-
       <div id="selectionCount" class="selection-count">0 Signale ausgewählt</div>
     </div>
-
     <div id="signalList"></div>
   </div>
 
   <div class="panel">
     <h2>Datensicherung</h2>
-    <p class="muted">Signale und Statistiken sichern oder wiederherstellen.</p>
+    <p class="muted">Signale sichern oder wiederherstellen.</p>
     <div class="actions">
       <button type="button" id="exportData">Daten exportieren</button>
       <button type="button" id="importButton">Daten importieren</button>
@@ -603,7 +399,6 @@ hr {
     <input type="file" id="importFile" accept=".json,application/json" hidden>
   </div>
 </section>
-
 </main>
 
 <nav id="mainNav" hidden>
@@ -617,98 +412,246 @@ hr {
 (function(){
 "use strict";
 
-const SUPABASE_URL = "https://qfitlansvvbspwutcjgh.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_u2Kw3xle2rZQCeP0Bsk9PA_hI4TDeoy";
+/* SUPABASE */
 
-const _supabase = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-const $ = id => document.getElementById(id);
+const SUPABASE_URL="https://qfitlansvvbspwutcjgh.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_u2Kw3xle2rZQCeP0Bsk9PA_hI4TDeoy";
+const _supabase=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const $=id=>document.getElementById(id);
 
-let currentUser = null;
-let signals = [];
-let stats = {answered:0,points:0,exams:0,bySignal:{}};
-let current = null;
-let learnNumber = 0;
-let learnDone = false;
-let examList = [];
-let examIndex = 0;
-let examPoints = 0;
-let examStarted = 0;
-let examDone = false;
-let examAnswered = false;
-let tempImageBase64 = "";
-let imageLoadToken = 0;
-let selectedSignalIds = new Set();
-let bulkDeleteRunning = false;
+/* ALLE SIGNALGRUPPEN */
 
-function notify(message) {
-  const el = $("notice");
-  if (!el) return;
-  el.textContent = message;
-  setTimeout(()=>{
-    if(el.textContent===message) el.textContent="";
-  },4500);
+const BASE_CATEGORIES=[
+  "Lf","Bü","Ne","Hp","Vr","Ks","Hl","Sh","Ra","Zs","El","So",
+  "Wn","Zp","Zg","Ts","Mastschilder","Sonstige"
+];
+
+const CATEGORY_LABELS={
+  "Lf":"Lf – Langsamfahrsignale",
+  "Bü":"Bü – Bahnübergangssignale",
+  "Ne":"Ne – Nebensignale",
+  "Hp":"Hp – Hauptsignale",
+  "Vr":"Vr – Vorsignale",
+  "Ks":"Ks – Kombinationssignale",
+  "Hl":"Hl – Hl-Signale",
+  "Sh":"Sh – Schutzsignale",
+  "Ra":"Ra – Rangiersignale",
+  "Zs":"Zs – Zusatzsignale",
+  "El":"El – Fahrleitungssignale",
+  "So":"So – Sonstige Signale",
+  "Wn":"Wn – Weichensignale",
+  "Zp":"Zp – Zugpersonalsignale",
+  "Zg":"Zg – Zugbegleitersignale",
+  "Ts":"Ts – Türen- und sonstige Betriebssignale",
+  "Mastschilder":"Mastschilder",
+  "Sonstige":"Sonstige"
+};
+
+let currentUser=null;
+let signals=[];
+let stats={answered:0,points:0,exams:0,lastExam:null};
+let current=null;
+let learnNumber=0;
+let learnDone=false;
+let tempImageBase64="";
+let imageLoadToken=0;
+let selectedSignalIds=new Set();
+let bulkDeleteRunning=false;
+
+let selectedLearnCategories=new Set(BASE_CATEGORIES);
+let selectedExamCategories=new Set(BASE_CATEGORIES);
+let knownCategories=new Set(BASE_CATEGORIES);
+
+let examList=[];
+let examIndex=0;
+let examPoints=0;
+let examStarted=0;
+let examTimerInterval=null;
+let examAnswered=false;
+let examQuestionResults=[];
+
+/* HILFSFUNKTIONEN */
+
+function notify(message){
+  const el=$("notice");
+  if(!el)return;
+  el.textContent=message;
+  setTimeout(()=>{if(el.textContent===message)el.textContent="";},5000);
 }
 
-function esc(value) {
+function esc(value){
   return String(value??"").replace(/[&<>"']/g,c=>({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[c]);
 }
 
-function extractSignals(data) {
-  if(Array.isArray(data)) return data;
-  if(!data || typeof data!=="object") return [];
+function shuffle(array){
+  const result=[...array];
+  for(let i=result.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [result[i],result[j]]=[result[j],result[i]];
+  }
+  return result;
+}
 
-  for(const key of ["signals","items","data","signale","database","entries"]) {
-    if(Array.isArray(data[key])) return data[key];
-    if(data[key] && typeof data[key]==="object") {
+function extractSignals(data){
+  if(Array.isArray(data))return data;
+  if(!data||typeof data!=="object")return [];
+  for(const key of ["signals","items","data","signale","database","entries"]){
+    if(Array.isArray(data[key]))return data[key];
+    if(data[key]&&typeof data[key]==="object"){
       const values=Object.values(data[key]);
-      if(values.length && values.some(v=>v && typeof v==="object")) return values;
+      if(values.length&&values.some(v=>v&&typeof v==="object"))return values;
     }
   }
-
   const values=Object.values(data);
-  if(values.length && values.every(v=>v && typeof v==="object")) return values;
+  if(values.length&&values.every(v=>v&&typeof v==="object"))return values;
   return [];
+}
+
+function getAllCategories(){
+  return [...new Set([...BASE_CATEGORIES,...signals.map(s=>s.category||"Sonstige")])];
+}
+
+function syncCategories(){
+  const categories=getAllCategories();
+
+  categories.forEach(cat=>{
+    if(!knownCategories.has(cat)){
+      selectedLearnCategories.add(cat);
+      selectedExamCategories.add(cat);
+      knownCategories.add(cat);
+    }
+  });
+
+  renderCategoryChoices();
+  renderCategorySelect();
+}
+
+function renderCategorySelect(){
+  const select=$("category");
+  if(!select)return;
+
+  const old=select.value;
+  select.innerHTML="";
+
+  getAllCategories().forEach(cat=>{
+    const option=document.createElement("option");
+    option.value=cat;
+    option.textContent=CATEGORY_LABELS[cat]||cat;
+    select.appendChild(option);
+  });
+
+  select.value=getAllCategories().includes(old)?old:"Lf";
+}
+
+/* KATEGORIE-AUSWAHL */
+
+function renderOneCategoryPicker(containerId,selectedSet,prefix,summaryId){
+  const container=$(containerId);
+  if(!container)return;
+
+  const categories=getAllCategories();
+
+  container.innerHTML=categories.map((cat,index)=>{
+    const id=prefix+"_"+index;
+    return `
+      <label class="category-option" for="${id}">
+        <input type="checkbox" id="${id}" data-category="${esc(cat)}"
+          ${selectedSet.has(cat)?"checked":""}>
+        <span>${esc(CATEGORY_LABELS[cat]||cat)}</span>
+      </label>`;
+  }).join("");
+
+  const summary=$(summaryId);
+  if(summary){
+    summary.textContent=selectedSet.size===categories.length
+      ?"Alle "+categories.length+" Gruppen ausgewählt"
+      :selectedSet.size+" von "+categories.length+" Gruppen ausgewählt";
+  }
+}
+
+function renderCategoryChoices(){
+  renderOneCategoryPicker(
+    "learnCategoryChoices",selectedLearnCategories,
+    "learnCat","learnCategorySummary"
+  );
+  renderOneCategoryPicker(
+    "examCategoryChoices",selectedExamCategories,
+    "examCat","examCategorySummary"
+  );
+  updateLearnAvailable();
+  updateExamAvailable();
+}
+
+function handleCategoryChange(e,type){
+  const checkbox=e.target.closest('input[type="checkbox"][data-category]');
+  if(!checkbox)return;
+
+  const category=checkbox.dataset.category;
+  const set=type==="learn"?selectedLearnCategories:selectedExamCategories;
+
+  if(checkbox.checked)set.add(category);
+  else set.delete(category);
+
+  renderCategoryChoices();
+
+  if(type==="learn")nextLearn();
+}
+
+function toggleAllCategories(type){
+  const set=type==="learn"?selectedLearnCategories:selectedExamCategories;
+  const categories=getAllCategories();
+  const allSelected=categories.every(cat=>set.has(cat));
+
+  if(allSelected)set.clear();
+  else categories.forEach(cat=>set.add(cat));
+
+  renderCategoryChoices();
+
+  if(type==="learn")nextLearn();
+}
+
+function updateLearnAvailable(){
+  const count=signals.filter(s=>selectedLearnCategories.has(s.category||"Sonstige")).length;
+  $("learnAvailable").textContent=count;
+}
+
+function updateExamAvailable(){
+  const count=signals.filter(s=>selectedExamCategories.has(s.category||"Sonstige")).length;
+  const el=$("examAvailable");
+  if(el){
+    el.textContent=count+" Signale stehen für die Prüfung zur Verfügung.";
+  }
 }
 
 /* AUTHENTIFIZIERUNG */
 
-async function handleLogin() {
+async function handleLogin(){
   const email=$("authEmail").value.trim();
   const password=$("authPassword").value.trim();
-
-  if(!email || !password) return notify("Bitte E-Mail und Passwort eingeben.");
+  if(!email||!password)return notify("Bitte E-Mail und Passwort eingeben.");
 
   const {data,error}=await _supabase.auth.signInWithPassword({email,password});
+  if(error)return notify("Login fehlgeschlagen: "+error.message);
 
-  if(error) {
-    notify("Login fehlgeschlagen: "+error.message);
-  } else {
-    currentUser=data.user;
-    notify("Erfolgreich angemeldet!");
-    initUserSession();
-  }
+  currentUser=data.user;
+  initUserSession();
+  notify("Erfolgreich angemeldet!");
 }
 
-async function handleSignUp() {
+async function handleSignUp(){
   const email=$("authEmail").value.trim();
   const password=$("authPassword").value.trim();
-
-  if(!email || !password) return notify("Bitte E-Mail und Passwort eingeben.");
+  if(!email||!password)return notify("Bitte E-Mail und Passwort eingeben.");
 
   const {data,error}=await _supabase.auth.signUp({email,password});
-
-  if(error) {
-    notify("Registrierung fehlgeschlagen: "+error.message);
-  } else {
-    notify("Konto erstellt! Du kannst dich jetzt einloggen.");
-  }
+  if(error)return notify("Registrierung fehlgeschlagen: "+error.message);
+  notify("Konto erstellt! Du kannst dich jetzt einloggen.");
 }
 
-async function handleLogout() {
+async function handleLogout(){
   await _supabase.auth.signOut();
-
   currentUser=null;
   signals=[];
   current=null;
@@ -719,24 +662,21 @@ async function handleLogout() {
   $("logoutBtn").style.display="none";
   $("authPanel").hidden=false;
 
+  stopExamTimer();
   notify("Erfolgreich abgemeldet.");
 }
 
-async function checkSession() {
+async function checkSession(){
   const {data,error}=await _supabase.auth.getSession();
+  if(error)return notify("Sitzungsfehler: "+error.message);
 
-  if(error) {
-    notify("Sitzungsfehler: "+error.message);
-    return;
-  }
-
-  if(data.session) {
+  if(data.session){
     currentUser=data.session.user;
     initUserSession();
   }
 }
 
-function initUserSession() {
+function initUserSession(){
   $("authPanel").hidden=true;
   $("appMain").hidden=false;
   $("mainNav").hidden=false;
@@ -744,36 +684,31 @@ function initUserSession() {
   loadCloudSignals();
 }
 
-/* SIGNALDATEN OHNE BILDER LADEN */
+/* DATEN LADEN */
 
-async function loadCloudSignals() {
-  if(!currentUser) return;
+async function loadCloudSignals(){
+  if(!currentUser)return;
 
   notify("Lade deine Signale...");
 
-  try {
+  try{
     let allData=[];
     let page=0;
     const pageSize=20;
-    let fetchMore=true;
 
-    while(fetchMore) {
+    while(true){
       const {data,error}=await _supabase
         .from("signals")
         .select("id, short, long, meaning, category, user_id")
         .eq("user_id",currentUser.id)
         .range(page*pageSize,(page+1)*pageSize-1);
 
-      if(error) throw error;
+      if(error)throw error;
+      if(!data||data.length===0)break;
 
-      if(data && data.length>0) {
-        allData=allData.concat(data);
-        page++;
-
-        if(data.length<pageSize) fetchMore=false;
-      } else {
-        fetchMore=false;
-      }
+      allData=allData.concat(data);
+      page++;
+      if(data.length<pageSize)break;
     }
 
     signals=allData;
@@ -783,30 +718,54 @@ async function loadCloudSignals() {
       [...selectedSignalIds].filter(id=>existingIds.has(String(id)))
     );
 
-    updateCategories();
+    syncCategories();
     renderList();
     nextLearn();
+    updateExamAvailable();
 
     notify("Erfolgreich "+signals.length+" Signale geladen!");
 
-  } catch(err) {
-    console.error("Fehler beim Laden der Signale:",err);
-    notify("Fehler beim Laden der Signale: "+(err.message||String(err)));
+  }catch(err){
+    console.error(err);
+    notify("Fehler beim Laden: "+(err.message||String(err)));
   }
 }
 
-/* EINZELNES SIGNALBILD LADEN */
+/* BILDER */
 
-async function loadSignalImage(signal,img,placeholder) {
-  if(!signal || !signal.id || !img || !placeholder || !currentUser) return;
+function setImage(img,placeholder,src){
+  if(!img||!placeholder)return;
+
+  img.onerror=null;
+
+  if(src&&String(src).trim()!==""){
+    img.onload=()=>{
+      img.hidden=false;
+      placeholder.hidden=true;
+    };
+    img.onerror=()=>{
+      img.hidden=true;
+      placeholder.hidden=false;
+      placeholder.textContent="Bild konnte nicht angezeigt werden.";
+    };
+    img.src=src;
+  }else{
+    img.removeAttribute("src");
+    img.hidden=true;
+    placeholder.hidden=false;
+    placeholder.textContent="Kein Signalbild hinterlegt";
+  }
+}
+
+async function loadSignalImage(signal,img,placeholder){
+  if(!signal||!signal.id||!img||!placeholder||!currentUser)return;
 
   const token=++imageLoadToken;
-
   img.hidden=true;
   placeholder.hidden=false;
   placeholder.textContent="Signalbild wird geladen...";
 
-  try {
+  try{
     const {data,error}=await _supabase
       .from("signals")
       .select("image")
@@ -814,22 +773,15 @@ async function loadSignalImage(signal,img,placeholder) {
       .eq("user_id",currentUser.id)
       .maybeSingle();
 
-    if(error) throw error;
+    if(error)throw error;
+    if(token!==imageLoadToken)return;
 
-    if(token!==imageLoadToken) return;
+    signal.image=data?.image||"";
+    setImage(img,placeholder,signal.image);
 
-    if(data && data.image) {
-      signal.image=data.image;
-      setImage(img,placeholder,data.image);
-    } else {
-      signal.image="";
-      setImage(img,placeholder,"");
-    }
-
-  } catch(err) {
+  }catch(err){
     console.error("Bild konnte nicht geladen werden:",err);
-
-    if(token===imageLoadToken) {
+    if(token===imageLoadToken){
       placeholder.textContent="Bild konnte nicht geladen werden.";
       img.hidden=true;
       placeholder.hidden=false;
@@ -839,8 +791,8 @@ async function loadSignalImage(signal,img,placeholder) {
 
 /* SIGNAL SPEICHERN UND BEARBEITEN */
 
-async function saveSignal() {
-  if(!currentUser) return;
+async function saveSignal(){
+  if(!currentUser)return;
 
   const id=$("editId").value;
   const short=$("shortName").value.trim();
@@ -848,68 +800,42 @@ async function saveSignal() {
   const meaning=$("meaning").value.trim();
   const category=$("category").value||"Sonstige";
 
-  if(!short || !long || !meaning) {
-    notify("Bitte Kurzbezeichnung, Langbezeichnung und Bedeutung ausfüllen.");
-    return;
+  if(!short||!long||!meaning){
+    return notify("Bitte Kurzbezeichnung, Langbezeichnung und Bedeutung ausfüllen.");
   }
 
-  const existing=id ? signals.find(s=>String(s.id)===String(id)) : null;
+  const existing=id?signals.find(s=>String(s.id)===String(id)):null;
+  let imageValue=tempImageBase64||$("imageUrl").value.trim();
 
-  let imageValue=tempImageBase64 || $("imageUrl").value.trim();
-
-  if(id && !imageValue && existing) {
-    imageValue=existing.image || "";
+  if(id&&!imageValue&&existing){
+    imageValue=existing.image||"";
   }
 
-  if(id && !imageValue && existing && existing.image===undefined) {
+  if(id&&!imageValue&&existing&&existing.image===undefined){
     const {data,error}=await _supabase
-      .from("signals")
-      .select("image")
-      .eq("id",id)
-      .eq("user_id",currentUser.id)
-      .maybeSingle();
+      .from("signals").select("image")
+      .eq("id",id).eq("user_id",currentUser.id).maybeSingle();
 
-    if(error) {
-      notify("Vorhandenes Bild konnte nicht geprüft werden: "+error.message);
-      return;
-    }
-
-    imageValue=data?.image || "";
+    if(error)return notify("Vorhandenes Bild konnte nicht geprüft werden: "+error.message);
+    imageValue=data?.image||"";
   }
 
   const payload={
-    short,
-    long,
-    meaning,
-    category,
+    short,long,meaning,category,
     image:imageValue,
     user_id:currentUser.id
   };
 
-  if(id) {
+  if(id){
     const {error}=await _supabase
-      .from("signals")
-      .update(payload)
-      .eq("id",id)
-      .eq("user_id",currentUser.id);
+      .from("signals").update(payload)
+      .eq("id",id).eq("user_id",currentUser.id);
 
-    if(error) {
-      notify("Fehler beim Aktualisieren: "+error.message);
-      return;
-    }
-
+    if(error)return notify("Fehler beim Aktualisieren: "+error.message);
     notify("Signal aktualisiert!");
-
-  } else {
-    const {error}=await _supabase
-      .from("signals")
-      .insert([payload]);
-
-    if(error) {
-      notify("Fehler beim Speichern: "+error.message);
-      return;
-    }
-
+  }else{
+    const {error}=await _supabase.from("signals").insert([payload]);
+    if(error)return notify("Fehler beim Speichern: "+error.message);
     notify("Neues Signal gespeichert!");
   }
 
@@ -919,24 +845,22 @@ async function saveSignal() {
 
 /* EINZELNES SIGNAL LÖSCHEN */
 
-async function deleteSignal(id) {
-  if(!confirm("Möchtest du dieses Signal wirklich löschen?")) return;
+async function deleteSignal(id){
+  if(!confirm("Möchtest du dieses Signal wirklich löschen?"))return;
 
   const {data,error}=await _supabase
-    .from("signals")
-    .delete()
-    .eq("id",id)
-    .eq("user_id",currentUser.id)
+    .from("signals").delete()
+    .eq("id",id).eq("user_id",currentUser.id)
     .select("id");
 
-  if(error) {
+  if(error){
     notify("Fehler beim Löschen: "+error.message);
     console.error(error);
     return;
   }
 
-  if(!data || data.length===0) {
-    notify("Signal wurde nicht gelöscht. Es wurde kein passender Datensatz gefunden oder die Berechtigung fehlt.");
+  if(!data||data.length===0){
+    notify("Signal wurde nicht gelöscht. Datensatz nicht gefunden oder Berechtigung fehlt.");
     return;
   }
 
@@ -945,106 +869,85 @@ async function deleteSignal(id) {
   await loadCloudSignals();
 }
 
-/* MEHRFACHAUSWAHL */
+/* MEHRFACHAUSWAHL VERWALTUNG */
 
-function getVisibleSignals() {
+function getVisibleSignals(){
   const query=$("searchSignals").value.toLowerCase().trim();
 
   return signals.filter(s=>{
     const text=[s.short,s.long,s.meaning,s.category]
-      .map(v=>String(v||""))
-      .join(" ")
-      .toLowerCase();
-
+      .map(v=>String(v||"")).join(" ").toLowerCase();
     return text.includes(query);
   });
 }
 
-function updateSelectionUI() {
+function updateSelectionUI(){
   const count=selectedSignalIds.size;
   const countElement=$("selectionCount");
   const deleteButton=$("deleteSelected");
   const selectAll=$("selectAllSignals");
 
-  if(countElement) {
+  if(countElement){
     countElement.textContent=count+" "+(count===1?"Signal ausgewählt":"Signale ausgewählt");
   }
 
-  if(deleteButton) {
-    deleteButton.disabled=count===0 || bulkDeleteRunning;
+  if(deleteButton){
+    deleteButton.disabled=count===0||bulkDeleteRunning;
     deleteButton.textContent=count>0
-      ? "🗑 "+count+" ausgewählte löschen"
-      : "🗑 Ausgewählte löschen";
+      ?"🗑 "+count+" ausgewählte löschen"
+      :"🗑 Ausgewählte löschen";
   }
 
-  if(selectAll) {
+  if(selectAll){
     const visible=getVisibleSignals();
     const selectedVisible=visible.filter(s=>selectedSignalIds.has(String(s.id))).length;
-
-    selectAll.checked=visible.length>0 && selectedVisible===visible.length;
-    selectAll.indeterminate=selectedVisible>0 && selectedVisible<visible.length;
-    selectAll.disabled=visible.length===0 || bulkDeleteRunning;
+    selectAll.checked=visible.length>0&&selectedVisible===visible.length;
+    selectAll.indeterminate=selectedVisible>0&&selectedVisible<visible.length;
+    selectAll.disabled=visible.length===0||bulkDeleteRunning;
   }
 }
 
-function toggleSignalSelection(id,checked) {
+function toggleSignalSelection(id,checked){
   const key=String(id);
-
-  if(checked) {
-    selectedSignalIds.add(key);
-  } else {
-    selectedSignalIds.delete(key);
-  }
+  if(checked)selectedSignalIds.add(key);
+  else selectedSignalIds.delete(key);
 
   updateSelectionUI();
 
   const card=document.querySelector(`.signal-card[data-id="${CSS.escape(key)}"]`);
-  if(card) card.classList.toggle("selected",checked);
+  if(card)card.classList.toggle("selected",checked);
 }
 
-function selectAllVisibleSignals(checked) {
-  const visible=getVisibleSignals();
-
-  visible.forEach(signal=>{
+function selectAllVisibleSignals(checked){
+  getVisibleSignals().forEach(signal=>{
     const id=String(signal.id);
-
-    if(checked) {
-      selectedSignalIds.add(id);
-    } else {
-      selectedSignalIds.delete(id);
-    }
+    if(checked)selectedSignalIds.add(id);
+    else selectedSignalIds.delete(id);
   });
-
   renderList();
 }
 
-function clearSelection() {
-  if(bulkDeleteRunning) return;
-
+function clearSelection(){
+  if(bulkDeleteRunning)return;
   selectedSignalIds.clear();
   renderList();
   notify("Auswahl wurde aufgehoben.");
 }
 
-/* MEHRERE SIGNALE EINZELN LÖSCHEN – TIMEOUT-SCHUTZ */
+/* MEHRFACHLÖSCHEN – EINZELNE ABFRAGEN */
 
-async function deleteSelectedSignals() {
-  if(!currentUser || bulkDeleteRunning) return;
+async function deleteSelectedSignals(){
+  if(!currentUser||bulkDeleteRunning)return;
 
   const ids=[...selectedSignalIds];
-
-  if(ids.length===0) {
-    notify("Bitte zuerst mindestens ein Signal auswählen.");
-    return;
-  }
+  if(!ids.length)return notify("Bitte zuerst mindestens ein Signal auswählen.");
 
   const confirmed=confirm(
     "Möchtest du wirklich "+ids.length+
     " ausgewählte "+(ids.length===1?"Signal":"Signale")+
     " dauerhaft löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden."
   );
-
-  if(!confirmed) return;
+  if(!confirmed)return;
 
   bulkDeleteRunning=true;
 
@@ -1053,337 +956,169 @@ async function deleteSelectedSignals() {
   const clearButton=$("clearSelection");
 
   button.disabled=true;
-  if(selectAll) selectAll.disabled=true;
-  if(clearButton) clearButton.disabled=true;
+  if(selectAll)selectAll.disabled=true;
+  if(clearButton)clearButton.disabled=true;
 
   let deletedCount=0;
   let failedCount=0;
   const failedIds=[];
 
-  try {
-    for(let i=0;i<ids.length;i++) {
+  try{
+    for(let i=0;i<ids.length;i++){
       const id=ids[i];
-
       button.textContent="Lösche "+(i+1)+" von "+ids.length+"...";
-
       notify("Lösche Signal "+(i+1)+" von "+ids.length+"...");
 
-      try {
+      try{
         const {data,error}=await _supabase
-          .from("signals")
-          .delete()
-          .eq("id",id)
-          .eq("user_id",currentUser.id)
+          .from("signals").delete()
+          .eq("id",id).eq("user_id",currentUser.id)
           .select("id");
 
-        if(error) throw error;
+        if(error)throw error;
 
-        if(data && data.length>0) {
+        if(data&&data.length>0){
           deletedCount++;
           selectedSignalIds.delete(String(id));
-        } else {
+        }else{
           failedCount++;
           failedIds.push(id);
         }
-
-      } catch(err) {
+      }catch(err){
         console.error("Fehler beim Löschen von Signal:",id,err);
         failedCount++;
         failedIds.push(id);
       }
 
-      // Kleine Pause zwischen den Datenbankabfragen.
-      if(i<ids.length-1) {
+      if(i<ids.length-1){
         await new Promise(resolve=>setTimeout(resolve,200));
       }
     }
 
-    // Nach dem Löschvorgang tatsächlichen Datenbestand neu laden.
     await loadCloudSignals();
 
-    if(failedCount===0) {
-      notify(
-        "Erfolgreich! "+deletedCount+
-        " von "+ids.length+" Signalen gelöscht."
-      );
-    } else {
-      notify(
-        deletedCount+" Signale gelöscht. "+
-        failedCount+" konnten nicht gelöscht werden. "+
-        "Bitte versuche es erneut."
-      );
+    if(failedCount===0){
+      notify("Erfolgreich! "+deletedCount+" von "+ids.length+" Signalen gelöscht.");
+    }else{
+      notify(deletedCount+" gelöscht. "+failedCount+" konnten nicht gelöscht werden.");
     }
 
-    console.log("Mehrfachlöschen abgeschlossen:",{
+    console.log("Mehrfachlöschen:",{
       erfolgreich:deletedCount,
       fehlgeschlagen:failedCount,
       fehlgeschlageneIds:failedIds
     });
 
-  } catch(err) {
-    console.error("Fehler beim Mehrfachlöschen:",err);
+  }catch(err){
+    console.error(err);
     notify("Fehler beim Aktualisieren: "+(err.message||String(err)));
-
-  } finally {
+  }finally{
     bulkDeleteRunning=false;
-
-    if(selectAll) selectAll.disabled=false;
-    if(clearButton) clearButton.disabled=false;
-
+    if(selectAll)selectAll.disabled=false;
+    if(clearButton)clearButton.disabled=false;
     updateSelectionUI();
   }
 }
 
-/* EXPORT */
+/* VERWALTUNGSLISTE */
 
-async function exportData() {
-  if(!signals.length) {
-    return notify("Keine Signale zum Exportieren vorhanden.");
+function renderList(){
+  const container=$("signalList");
+  if(!container)return;
+
+  const list=getVisibleSignals();
+  $("signalCount").textContent=signals.length;
+
+  if(!list.length){
+    container.innerHTML="<p class='muted'>Keine Signale vorhanden.</p>";
+    updateSelectionUI();
+    return;
   }
 
-  notify("Bereite Export vor...");
+  container.innerHTML=list.map(s=>{
+    const id=String(s.id);
+    const selected=selectedSignalIds.has(id);
 
-  try {
-    const exportSignals=[];
+    return `
+      <div class="signal-card ${selected?"selected":""}" data-id="${esc(id)}">
+        <div class="signal-select-row">
+          <label>
+            <input type="checkbox" class="signal-checkbox"
+              data-id="${esc(id)}" ${selected?"checked":""}>
+            Dieses Signal auswählen
+          </label>
+        </div>
+        <h3>${esc(s.short)} – ${esc(s.long)}</h3>
+        <small class="muted">Kategorie: <b>${esc(s.category||"Sonstige")}</b></small>
+        <p>${esc(s.meaning||"Keine Bedeutung hinterlegt")}</p>
+        <div class="actions">
+          <button type="button" class="btn-edit" data-id="${esc(id)}">✏️ Bearbeiten</button>
+          <button type="button" class="danger btn-delete" data-id="${esc(id)}">🗑 Löschen</button>
+        </div>
+      </div>`;
+  }).join("");
 
-    for(let i=0;i<signals.length;i++) {
-      const s=signals[i];
-      let image=s.image || "";
-
-      if(image===undefined || image===null) {
-        const {data,error}=await _supabase
-          .from("signals")
-          .select("image")
-          .eq("id",s.id)
-          .eq("user_id",currentUser.id)
-          .maybeSingle();
-
-        if(error) throw error;
-        image=data?.image || "";
-      }
-
-      exportSignals.push({
-        short:s.short,
-        long:s.long,
-        meaning:s.meaning,
-        category:s.category,
-        image:image
-      });
-    }
-
-    const backup={
-      version:5,
-      signals:exportSignals
-    };
-
-    const blob=new Blob(
-      [JSON.stringify(backup,null,2)],
-      {type:"application/json"}
-    );
-
-    const url=URL.createObjectURL(blob);
-    const anchor=document.createElement("a");
-
-    anchor.href=url;
-    anchor.download="signale_backup_"+new Date().toISOString().slice(0,10)+".json";
-
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-
-    setTimeout(()=>URL.revokeObjectURL(url),10000);
-
-    notify("Export erfolgreich gestartet!");
-
-  } catch(err) {
-    console.error(err);
-    notify("Export fehlgeschlagen: "+err.message);
-  }
+  updateSelectionUI();
 }
 
-/* IMPORT – EINZELNER UPLOAD */
+function handleListClick(e){
+  const edit=e.target.closest(".btn-edit");
+  const del=e.target.closest(".btn-delete");
 
-function handleImportFile(file) {
-  if(!file || !currentUser) return;
-
-  notify("Lese Backup-Datei ein...");
-
-  const reader=new FileReader();
-
-  reader.onerror=()=>{
-    notify("Fehler beim Lesen der Datei.");
-  };
-
-  reader.onload=async e=>{
-    try {
-      const textContent=e.target.result;
-
-      if(!textContent || !textContent.trim()) {
-        throw new Error("Die Datei ist leer.");
-      }
-
-      const parsed=JSON.parse(textContent);
-      const rawSignals=extractSignals(parsed);
-
-      if(!rawSignals.length) {
-        throw new Error("Keine gültigen Signal-Daten in der Datei gefunden.");
-      }
-
-      notify("Starte Import von "+rawSignals.length+" Signalen...");
-
-      let successCount=0;
-      let failCount=0;
-
-      for(let i=0;i<rawSignals.length;i++) {
-        const s=rawSignals[i];
-
-        const payloadItem={
-          short:String(s.short||s.shortName||s.kurz||""),
-          long:String(s.long||s.longName||s.lang||""),
-          meaning:String(s.meaning||s.description||s.bedeutung||""),
-          category:String(s.category||s.kategorie||"Sonstige"),
-          image:s.image||s.imageUrl||s.bild||"",
-          user_id:currentUser.id
-        };
-
-        if(!payloadItem.short || !payloadItem.long || !payloadItem.meaning) {
-          failCount++;
-          continue;
-        }
-
-        const {error}=await _supabase
-          .from("signals")
-          .insert([payloadItem]);
-
-        if(error) {
-          console.error("Fehler bei Signal "+(i+1),error);
-          failCount++;
-        } else {
-          successCount++;
-        }
-
-        if((i+1)%3===0 || i===rawSignals.length-1) {
-          notify("Fortschritt: "+(i+1)+" / "+rawSignals.length);
-        }
-      }
-
-      notify("Import fertig! "+successCount+" erfolgreich, "+failCount+" Fehler.");
-
-      await loadCloudSignals();
-
-    } catch(err) {
-      console.error(err);
-      notify("Fehler beim Import: "+err.message);
-    }
-  };
-
-  reader.readAsText(file);
+  if(edit)editSignal(edit.dataset.id);
+  else if(del)deleteSignal(del.dataset.id);
 }
 
-/* NAVIGATION */
+function editSignal(id){
+  const signal=signals.find(s=>String(s.id)===String(id));
+  if(!signal)return notify("Signal nicht gefunden.");
 
-function showPage(page) {
-  ["learn","exam","stats","manage"].forEach(id=>{
-    const visible=id===page;
-    const el=$(id);
+  $("editId").value=signal.id;
+  $("shortName").value=signal.short||"";
+  $("longName").value=signal.long||"";
+  $("meaning").value=signal.meaning||"";
+  $("category").value=signal.category||"Lf";
+  $("imageUrl").value="";
+  tempImageBase64="";
 
-    if(el) {
-      el.hidden=!visible;
-      el.style.display=visible?"block":"none";
-    }
-  });
+  $("formTitle").textContent="Signal bearbeiten";
+  $("saveSignal").textContent="Änderungen speichern";
 
-  document.querySelectorAll("#mainNav button").forEach(btn=>{
-    btn.classList.toggle("active",btn.dataset.page===page);
-  });
-
-  if(page==="stats") renderStats();
-  if(page==="manage") renderList();
-
-  window.scrollTo(0,0);
+  showPage("manage");
+  $("shortName").focus();
+  window.scrollTo({top:0,behavior:"smooth"});
+  notify("Signal in Formular geladen.");
 }
 
-/* KATEGORIEN */
-
-function updateCategories() {
-  const select=$("learnCategory");
-  if(!select) return;
-
-  const old=select.value||"all";
-  select.innerHTML='<option value="all">Alle Signale</option>';
-
-  const baseCats=["Lf","Bü","Ne","Hp","Vr","Ks","Hl","Sh","Ra","Zs","El","So","Sonstige"];
-  const allCatsSet=new Set([...baseCats,...signals.map(s=>s.category||"Sonstige")]);
-  const categories=[...allCatsSet].sort();
-
-  categories.forEach(cat=>{
-    const opt=document.createElement("option");
-    opt.value=cat;
-    opt.textContent=cat;
-    select.appendChild(opt);
-  });
-
-  select.value=[...select.options].some(o=>o.value===old)?old:"all";
+function clearForm(){
+  $("editId").value="";
+  $("shortName").value="";
+  $("longName").value="";
+  $("meaning").value="";
+  $("imageUrl").value="";
+  $("category").value="Lf";
+  $("imageFile").value="";
+  $("cameraFile").value="";
+  tempImageBase64="";
+  $("formTitle").textContent="Signal hinzufügen";
+  $("saveSignal").textContent="Signal speichern";
 }
 
-function filteredSignals() {
-  const catEl=$("learnCategory");
-  const cat=catEl?catEl.value:"all";
+/* ANTWORTEN BEWERTEN */
 
-  return signals.filter(s=>cat==="all" || s.category===cat);
-}
-
-function chooseSignal(list) {
-  if(!list.length) return null;
-  return list[Math.floor(Math.random()*list.length)];
-}
-
-/* BILDER */
-
-function setImage(img,placeholder,src) {
-  if(!img || !placeholder) return;
-
-  img.onerror=null;
-
-  if(src && String(src).trim()!=="") {
-    img.onload=()=>{
-      img.hidden=false;
-      placeholder.hidden=true;
-    };
-
-    img.onerror=()=>{
-      img.hidden=true;
-      placeholder.hidden=false;
-      placeholder.textContent="Bild konnte nicht angezeigt werden.";
-    };
-
-    img.src=src;
-  } else {
-    img.removeAttribute("src");
-    img.hidden=true;
-    placeholder.hidden=false;
-    placeholder.textContent="Kein Signalbild hinterlegt";
-  }
-}
-
-/* ANTWORTEN */
-
-function clean(value) {
+function clean(value){
   return String(value??"").toLowerCase()
-    .replace(/ä/g,"ae")
-    .replace(/ö/g,"oe")
-    .replace(/ü/g,"ue")
-    .replace(/ß/g,"ss")
+    .replace(/ä/g,"ae").replace(/ö/g,"oe")
+    .replace(/ü/g,"ue").replace(/ß/g,"ss")
     .replace(/[.,;:!?()[\]{}"'`]/g," ")
-    .replace(/\s+/g," ")
-    .trim();
+    .replace(/\s+/g," ").trim();
 }
 
-function sameAnswer(user,correct) {
+function sameAnswer(user,correct){
   return clean(user)===clean(correct);
 }
 
-function evaluate(signal,short,long,meaning) {
+function evaluate(signal,short,long,meaning){
   return {
     short:sameAnswer(short,signal.short),
     long:sameAnswer(long,signal.long),
@@ -1391,30 +1126,26 @@ function evaluate(signal,short,long,meaning) {
   };
 }
 
-function calculatePoints(result) {
-  if(!result.meaning) return 0;
+function calculatePoints(result){
+  if(!result.meaning)return 0;
   return Number(result.short)+Number(result.long)+1;
 }
 
-function solutionHTML(signal) {
-  const short=String(signal.short||"").trim();
-  const long=String(signal.long||"").trim();
-  const meaning=String(signal.meaning||"").trim();
-
+function solutionHTML(signal){
   const valueHTML=v=>v
-    ? `<span class="solution-value">${esc(v)}</span>`
-    : `<span class="missing">FEHLT IN DATENBANK</span>`;
+    ?`<span class="solution-value">${esc(v)}</span>`
+    :`<span class="missing">FEHLT IN DATENBANK</span>`;
 
   return `
     <div class="solution">
       <h3>✓ Musterlösung</h3>
-      <p><b>Kurzbezeichnung:</b><br>${valueHTML(short)}</p>
-      <p><b>Langbezeichnung:</b><br>${valueHTML(long)}</p>
-      <p><b>Bedeutung:</b><br>${valueHTML(meaning)}</p>
+      <p><b>Kurzbezeichnung:</b><br>${valueHTML(signal.short)}</p>
+      <p><b>Langbezeichnung:</b><br>${valueHTML(signal.long)}</p>
+      <p><b>Bedeutung:</b><br>${valueHTML(signal.meaning)}</p>
     </div>`;
 }
 
-function feedbackHTML(signal,result) {
+function feedbackHTML(signal,result){
   const points=calculatePoints(result);
   const allCorrect=points===3;
 
@@ -1433,7 +1164,7 @@ function feedbackHTML(signal,result) {
   html+=line("Langbezeichnung",result.long);
   html+=line("Bedeutung",result.meaning);
 
-  if(!result.meaning) {
+  if(!result.meaning){
     html+=`
       <div class="warning">
         <h3>⚠ BETRIEBSGEFAHR</h3>
@@ -1441,36 +1172,38 @@ function feedbackHTML(signal,result) {
       </div>`;
   }
 
-  if(!allCorrect) html+=solutionHTML(signal);
-
+  if(!allCorrect)html+=solutionHTML(signal);
   html+=`<hr><h3>Ergebnis: ${points} von 3 Punkten</h3>`;
-
   return html;
 }
 
 /* LERNMODUS */
 
-function nextLearn() {
-  const list=filteredSignals();
+function getLearnSignals(){
+  return signals.filter(s=>selectedLearnCategories.has(s.category||"Sonstige"));
+}
 
-  if(!list.length) {
+function nextLearn(){
+  const list=getLearnSignals();
+  updateLearnAvailable();
+
+  if(!list.length){
     current=null;
-
     imageLoadToken++;
-
     $("learnImage").hidden=true;
     $("learnNoImage").hidden=false;
-    $("learnNoImage").textContent="Keine Signale in dieser Kategorie. Wechsel in die Verwaltung zum Anlegen.";
+    $("learnNoImage").textContent=signals.length
+      ?"Bitte wähle mindestens eine Signalgruppe aus, in der Signale vorhanden sind."
+      :"Noch keine Signale vorhanden. Lege zuerst Signale in der Verwaltung an.";
     $("learnCounter").textContent="Keine Frage";
     $("learnFeedback").hidden=true;
     $("nextLearn").hidden=true;
     $("checkLearn").disabled=true;
     $("skipLearn").disabled=true;
-
     return;
   }
 
-  current=chooseSignal(list);
+  current=list[Math.floor(Math.random()*list.length)];
   learnNumber++;
   learnDone=false;
 
@@ -1480,189 +1213,447 @@ function nextLearn() {
   $("learnImage").hidden=true;
   $("learnNoImage").hidden=false;
   $("learnNoImage").textContent="Signalbild wird geladen...";
-
   loadSignalImage(current,$("learnImage"),$("learnNoImage"));
 
   $("learnShort").value="";
   $("learnLong").value="";
   $("learnMeaning").value="";
-
   $("learnFeedback").hidden=true;
   $("nextLearn").hidden=true;
   $("checkLearn").disabled=false;
   $("skipLearn").disabled=false;
 }
 
-function checkLearn() {
-  if(!current || learnDone) return;
+function checkLearn(){
+  if(!current||learnDone)return;
 
   const result=evaluate(
-    current,
-    $("learnShort").value,
-    $("learnLong").value,
-    $("learnMeaning").value
+    current,$("learnShort").value,
+    $("learnLong").value,$("learnMeaning").value
   );
 
   learnDone=true;
-
   $("learnFeedback").innerHTML=feedbackHTML(current,result);
   $("learnFeedback").hidden=false;
   $("checkLearn").disabled=true;
   $("skipLearn").disabled=true;
   $("nextLearn").hidden=false;
+
+  stats.answered++;
+  stats.points+=calculatePoints(result);
+  renderStats();
 }
 
-function skipLearn() {
-  if(!learnDone) nextLearn();
+function skipLearn(){
+  if(!learnDone)nextLearn();
 }
 
-/* VERWALTUNG */
+/* PRÜFUNGSMODUS */
 
-function clearForm() {
-  $("editId").value="";
-  $("shortName").value="";
-  $("longName").value="";
-  $("meaning").value="";
-  $("imageUrl").value="";
-  $("category").value="Lf";
-  $("imageFile").value="";
-  $("cameraFile").value="";
-
-  tempImageBase64="";
-
-  $("formTitle").textContent="Signal hinzufügen";
-  $("saveSignal").textContent="Signal speichern";
+function stopExamTimer(){
+  if(examTimerInterval){
+    clearInterval(examTimerInterval);
+    examTimerInterval=null;
+  }
 }
 
-function renderList() {
-  const container=$("signalList");
+function updateExamTimer(){
+  if(!examStarted)return;
+  const seconds=Math.floor((Date.now()-examStarted)/1000);
+  const minutes=String(Math.floor(seconds/60)).padStart(2,"0");
+  const rest=String(seconds%60).padStart(2,"0");
+  $("examTimer").textContent=minutes+":"+rest;
+}
 
-  if(!container) return;
+function startExam(){
+  const available=signals.filter(s=>
+    selectedExamCategories.has(s.category||"Sonstige")
+  );
 
-  const list=getVisibleSignals();
+  if(selectedExamCategories.size===0){
+    return notify("Bitte wähle mindestens eine Signalgruppe aus.");
+  }
 
-  $("signalCount").textContent=signals.length;
+  if(!available.length){
+    return notify("In den ausgewählten Signalgruppen sind keine Signale vorhanden.");
+  }
 
-  if(!list.length) {
-    container.innerHTML="<p class='muted'>Keine Signale vorhanden.</p>";
-    updateSelectionUI();
+  const requested=Number($("examLength").value)||10;
+  examList=shuffle(available).slice(0,Math.min(requested,available.length));
+
+  examIndex=0;
+  examPoints=0;
+  examAnswered=false;
+  examQuestionResults=[];
+  examStarted=Date.now();
+
+  $("examConfig").hidden=true;
+  $("examArea").hidden=false;
+  $("examResult").hidden=true;
+
+  if(examList.length<requested){
+    notify("Hinweis: Es sind nur "+examList.length+" passende Signale vorhanden. Die Prüfung nutzt alle verfügbaren Signale.");
+  }else{
+    notify("Prüfung gestartet!");
+  }
+
+  stopExamTimer();
+  updateExamTimer();
+  examTimerInterval=setInterval(updateExamTimer,1000);
+
+  showExamQuestion();
+}
+
+function showExamQuestion(){
+  if(examIndex>=examList.length){
+    finishExam();
     return;
   }
 
-  container.innerHTML=list.map(s=>{
-    const id=String(s.id);
-    const isSelected=selectedSignalIds.has(id);
+  const signal=examList[examIndex];
+  examAnswered=false;
 
-    return `
-      <div class="signal-card ${isSelected?"selected":""}" data-id="${esc(id)}">
-        <div class="signal-select-row">
-          <label>
-            <input
-              type="checkbox"
-              class="signal-checkbox"
-              data-id="${esc(id)}"
-              ${isSelected?"checked":""}
-            >
-            Dieses Signal auswählen
-          </label>
-        </div>
+  $("examCounter").textContent=
+    "Frage "+(examIndex+1)+" von "+examList.length;
 
-        <h3>${esc(s.short)} – ${esc(s.long)}</h3>
-        <small class="muted">Kategorie: <b>${esc(s.category)}</b></small>
-        <p>${esc(s.meaning||"Keine Bedeutung hinterlegt")}</p>
-        <div class="actions">
-          <button type="button" class="btn-edit" data-id="${esc(id)}">✏️ Bearbeiten</button>
-          <button type="button" class="danger btn-delete" data-id="${esc(id)}">🗑 Löschen</button>
-        </div>
-      </div>`;
-  }).join("");
+  $("examProgress").style.width=
+    ((examIndex)/examList.length*100)+"%";
 
-  updateSelectionUI();
+  $("examImage").hidden=true;
+  $("examNoImage").hidden=false;
+  $("examNoImage").textContent="Signalbild wird geladen...";
+  loadSignalImage(signal,$("examImage"),$("examNoImage"));
+
+  $("examShort").value="";
+  $("examLong").value="";
+  $("examMeaning").value="";
+  $("examFeedback").hidden=true;
+  $("examNext").hidden=true;
+  $("submitExam").hidden=false;
+  $("submitExam").disabled=false;
 }
 
-function handleListClick(e) {
-  const btnEdit=e.target.closest(".btn-edit");
-  const btnDelete=e.target.closest(".btn-delete");
+function submitExamAnswer(){
+  if(examAnswered)return;
 
-  if(btnEdit) {
-    editSignal(btnEdit.getAttribute("data-id"));
-  } else if(btnDelete) {
-    deleteSignal(btnDelete.getAttribute("data-id"));
-  }
+  const signal=examList[examIndex];
+  if(!signal)return;
+
+  const result=evaluate(
+    signal,$("examShort").value,
+    $("examLong").value,$("examMeaning").value
+  );
+
+  const points=calculatePoints(result);
+  examPoints+=points;
+  examAnswered=true;
+
+  examQuestionResults.push({
+    signal:signal,
+    result:result,
+    points:points
+  });
+
+  stats.answered++;
+  stats.points+=points;
+
+  $("examFeedback").innerHTML=feedbackHTML(signal,result);
+  $("examFeedback").hidden=false;
+  $("submitExam").disabled=true;
+  $("submitExam").hidden=true;
+  $("examNext").hidden=false;
+
+  $("examNext").textContent=
+    examIndex===examList.length-1
+      ?"Prüfung auswerten"
+      :"Nächste Frage ➔";
+
+  renderStats();
 }
 
-async function editSignal(id) {
-  const signal=signals.find(s=>String(s.id)===String(id));
+function nextExamQuestion(){
+  if(!examAnswered)return;
+  examIndex++;
+  showExamQuestion();
+}
 
-  if(!signal) {
-    notify("Signal nicht gefunden.");
-    return;
-  }
+function finishExam(){
+  stopExamTimer();
 
-  $("editId").value=signal.id;
-  $("shortName").value=signal.short||"";
-  $("longName").value=signal.long||"";
-  $("meaning").value=signal.meaning||"";
-  $("category").value=signal.category||"Lf";
+  const maxPoints=examList.length*3;
+  const percent=maxPoints?Math.round(examPoints/maxPoints*100):0;
+  const seconds=Math.floor((Date.now()-examStarted)/1000);
+  const duration=String(Math.floor(seconds/60)).padStart(2,"0")+":"+
+    String(seconds%60).padStart(2,"0");
 
-  $("imageUrl").value="";
-  tempImageBase64="";
+  stats.exams++;
+  stats.lastExam={
+    points:examPoints,
+    maxPoints:maxPoints,
+    percent:percent,
+    duration:duration,
+    questions:examList.length
+  };
 
-  $("formTitle").textContent="Signal bearbeiten";
-  $("saveSignal").textContent="Änderungen speichern";
+  $("examArea").hidden=true;
+  $("examConfig").hidden=true;
+  $("examResult").hidden=false;
+  $("examProgress").style.width="100%";
 
-  showPage("manage");
+  let resultClass=percent>=80?"correct":"incorrect";
 
-  $("shortName").focus();
-  window.scrollTo({top:0,behavior:"smooth"});
+  $("examResult").innerHTML=`
+    <h2>Prüfung abgeschlossen!</h2>
+    <h1 class="${resultClass}" style="font-size:32px;">${percent} %</h1>
+    <h3>${examPoints} von ${maxPoints} Punkten</h3>
+    <p>Beantwortete Fragen: ${examList.length}</p>
+    <p>Benötigte Zeit: ${duration}</p>
+    <p>${percent>=80?"Sehr gut! Du hast mindestens 80 % erreicht.":"Weiter üben! Du kannst die Prüfung jederzeit wiederholen."}</p>
+    <hr>
+    <h3>Auswertung</h3>
+    ${examQuestionResults.map((item,i)=>`
+      <div class="signal-card">
+        <b>${i+1}. ${esc(item.signal.short)} – ${esc(item.signal.long)}</b>
+        <p>${item.points} von 3 Punkten</p>
+        <p class="${item.points===3?"correct":"incorrect"}">
+          ${item.points===3?"✓ Vollständig richtig":"✗ Nicht vollständig richtig"}
+        </p>
+      </div>
+    `).join("")}
+    <button type="button" class="primary" id="restartExam" style="width:100%;margin-top:12px;">
+      Neue Prüfung starten
+    </button>
+  `;
 
-  notify("Signal in Formular geladen.");
+  $("restartExam").addEventListener("click",resetExamScreen);
+  renderStats();
+  notify("Prüfung beendet: "+examPoints+" von "+maxPoints+" Punkten.");
+}
+
+function resetExamScreen(){
+  stopExamTimer();
+  $("examConfig").hidden=false;
+  $("examArea").hidden=true;
+  $("examResult").hidden=true;
+  $("examProgress").style.width="0%";
+  updateExamAvailable();
 }
 
 /* STATISTIK */
 
-function renderStats() {
+function renderStats(){
   $("statAnswered").textContent=stats.answered||0;
   $("statPoints").textContent=stats.points||0;
-  $("statRate").textContent="0 %";
+  $("statRate").textContent=stats.answered
+    ?Math.round((stats.points/(stats.answered*3))*100)+" %"
+    :"0 %";
   $("statExams").textContent=stats.exams||0;
+
+  if(stats.lastExam){
+    $("lastExamResult").textContent=
+      stats.lastExam.points+" von "+stats.lastExam.maxPoints+
+      " Punkten ("+stats.lastExam.percent+" %) · "+
+      stats.lastExam.duration+" Minuten";
+  }else{
+    $("lastExamResult").textContent="Noch keine Prüfung absolviert.";
+  }
+}
+
+function resetStats(){
+  if(!confirm("Möchtest du deine gesamte Lernstatistik zurücksetzen?"))return;
+  stats={answered:0,points:0,exams:0,lastExam:null};
+  renderStats();
+  notify("Statistik zurückgesetzt.");
 }
 
 /* BILDAUSWAHL */
 
-function handleImageInput(file) {
-  if(!file) return;
+function handleImageInput(file){
+  if(!file)return;
 
   const reader=new FileReader();
-
   reader.onload=e=>{
     tempImageBase64=e.target.result;
     notify("Bild erfolgreich ausgewählt!");
   };
+  reader.onerror=()=>notify("Bild konnte nicht gelesen werden.");
+  reader.readAsDataURL(file);
+}
 
-  reader.onerror=()=>{
-    notify("Bild konnte nicht gelesen werden.");
+/* EXPORT */
+
+async function exportData(){
+  if(!signals.length)return notify("Keine Signale zum Exportieren vorhanden.");
+
+  notify("Bereite Export vor...");
+
+  try{
+    const exportSignals=[];
+
+    for(let i=0;i<signals.length;i++){
+      const s=signals[i];
+      let image=s.image||"";
+
+      if(image===undefined||image===null){
+        const {data,error}=await _supabase
+          .from("signals").select("image")
+          .eq("id",s.id).eq("user_id",currentUser.id).maybeSingle();
+
+        if(error)throw error;
+        image=data?.image||"";
+      }
+
+      exportSignals.push({
+        short:s.short,long:s.long,meaning:s.meaning,
+        category:s.category,image:image
+      });
+    }
+
+    const backup={version:6,signals:exportSignals};
+    const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const anchor=document.createElement("a");
+
+    anchor.href=url;
+    anchor.download="signale_backup_"+new Date().toISOString().slice(0,10)+".json";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
+    notify("Export erfolgreich gestartet!");
+
+  }catch(err){
+    console.error(err);
+    notify("Export fehlgeschlagen: "+err.message);
+  }
+}
+
+/* IMPORT – AUCH ÄLTERE BACKUPS */
+
+function handleImportFile(file){
+  if(!file||!currentUser)return;
+
+  notify("Lese Backup-Datei ein...");
+  const reader=new FileReader();
+
+  reader.onerror=()=>notify("Fehler beim Lesen der Datei.");
+
+  reader.onload=async e=>{
+    try{
+      const textContent=e.target.result;
+      if(!textContent||!textContent.trim())throw new Error("Die Datei ist leer.");
+
+      const parsed=JSON.parse(textContent);
+      const rawSignals=extractSignals(parsed);
+      if(!rawSignals.length)throw new Error("Keine gültigen Signal-Daten gefunden.");
+
+      const confirmed=confirm(
+        rawSignals.length+" Signale importieren?\n\n"+
+        "Die vorhandenen Signale werden nicht überschrieben."
+      );
+      if(!confirmed)return;
+
+      notify("Starte Import von "+rawSignals.length+" Signalen...");
+
+      let successCount=0;
+      let failCount=0;
+
+      for(let i=0;i<rawSignals.length;i++){
+        const s=rawSignals[i];
+
+        const payloadItem={
+          short:String(s.short||s.shortName||s.kurz||""),
+          long:String(s.long||s.longName||s.lang||""),
+          meaning:String(s.meaning||s.description||s.bedeutung||""),
+          category:String(s.category||s.kategorie||"Sonstige"),
+          image:s.image||s.imageUrl||s.bild||"",
+          user_id:currentUser.id
+        };
+
+        if(!payloadItem.short||!payloadItem.long||!payloadItem.meaning){
+          failCount++;
+          continue;
+        }
+
+        const {error}=await _supabase.from("signals").insert([payloadItem]);
+
+        if(error){
+          console.error("Fehler bei Signal "+(i+1),error);
+          failCount++;
+        }else{
+          successCount++;
+        }
+
+        notify("Import-Fortschritt: "+(i+1)+" / "+rawSignals.length);
+      }
+
+      await loadCloudSignals();
+      notify("Import fertig! "+successCount+" erfolgreich, "+failCount+" Fehler.");
+
+    }catch(err){
+      console.error(err);
+      notify("Fehler beim Import: "+err.message);
+    }
   };
 
-  reader.readAsDataURL(file);
+  reader.readAsText(file);
+}
+
+/* NAVIGATION */
+
+function showPage(page){
+  ["learn","exam","stats","manage"].forEach(id=>{
+    const visible=id===page;
+    const el=$(id);
+    if(el){
+      el.hidden=!visible;
+      el.style.display=visible?"block":"none";
+    }
+  });
+
+  document.querySelectorAll("#mainNav button").forEach(btn=>{
+    btn.classList.toggle("active",btn.dataset.page===page);
+  });
+
+  if(page==="stats")renderStats();
+  if(page==="manage")renderList();
+  if(page==="exam")updateExamAvailable();
+
+  window.scrollTo(0,0);
 }
 
 /* EVENTS */
 
-function initEvents() {
+function initEvents(){
   $("loginBtn").addEventListener("click",handleLogin);
   $("signUpBtn").addEventListener("click",handleSignUp);
   $("logoutBtn").addEventListener("click",handleLogout);
 
   $("mainNav").addEventListener("click",e=>{
     const btn=e.target.closest("button[data-page]");
-    if(btn) showPage(btn.dataset.page);
+    if(btn)showPage(btn.dataset.page);
   });
+
+  $("learnCategoryChoices").addEventListener("change",e=>
+    handleCategoryChange(e,"learn")
+  );
+  $("examCategoryChoices").addEventListener("change",e=>
+    handleCategoryChange(e,"exam")
+  );
+
+  $("learnSelectAll").addEventListener("click",()=>toggleAllCategories("learn"));
+  $("examSelectAll").addEventListener("click",()=>toggleAllCategories("exam"));
 
   $("checkLearn").addEventListener("click",checkLearn);
   $("nextLearn").addEventListener("click",nextLearn);
   $("skipLearn").addEventListener("click",skipLearn);
-  $("learnCategory").addEventListener("change",nextLearn);
+
+  $("startExam").addEventListener("click",startExam);
+  $("submitExam").addEventListener("click",submitExamAnswer);
+  $("examNext").addEventListener("click",nextExamQuestion);
+
+  $("resetStats").addEventListener("click",resetStats);
 
   $("saveSignal").addEventListener("click",saveSignal);
   $("clearForm").addEventListener("click",clearForm);
@@ -1672,18 +1663,14 @@ function initEvents() {
 
   $("signalList").addEventListener("change",e=>{
     const checkbox=e.target.closest(".signal-checkbox");
-
-    if(checkbox) {
-      toggleSignalSelection(
-        checkbox.getAttribute("data-id"),
-        checkbox.checked
-      );
+    if(checkbox){
+      toggleSignalSelection(checkbox.dataset.id,checkbox.checked);
     }
   });
 
-  $("selectAllSignals").addEventListener("change",e=>{
-    selectAllVisibleSignals(e.target.checked);
-  });
+  $("selectAllSignals").addEventListener("change",e=>
+    selectAllVisibleSignals(e.target.checked)
+  );
 
   $("clearSelection").addEventListener("click",clearSelection);
   $("deleteSelected").addEventListener("click",deleteSelectedSignals);
@@ -1702,7 +1689,6 @@ function initEvents() {
   });
 
   $("exportData").addEventListener("click",exportData);
-
   $("importButton").addEventListener("click",()=>$("importFile").click());
 
   $("importFile").addEventListener("change",function(){
@@ -1711,14 +1697,18 @@ function initEvents() {
   });
 }
 
-function init() {
+/* START */
+
+function init(){
   initEvents();
+  renderCategoryChoices();
+  renderCategorySelect();
   checkSession();
 }
 
-if(document.readyState==="loading") {
+if(document.readyState==="loading"){
   document.addEventListener("DOMContentLoaded",init);
-} else {
+}else{
   init();
 }
 
