@@ -637,9 +637,8 @@ let examDone = false;
 let examAnswered = false;
 let tempImageBase64 = "";
 let imageLoadToken = 0;
-
-/* NEU: Mehrfachauswahl */
 let selectedSignalIds = new Set();
+let bulkDeleteRunning = false;
 
 function notify(message) {
   const el = $("notice");
@@ -779,7 +778,6 @@ async function loadCloudSignals() {
 
     signals=allData;
 
-    /* Auswahl verwerfen, wenn Signale nicht mehr existieren */
     const existingIds=new Set(signals.map(s=>String(s.id)));
     selectedSignalIds=new Set(
       [...selectedSignalIds].filter(id=>existingIds.has(String(id)))
@@ -947,7 +945,7 @@ async function deleteSignal(id) {
   await loadCloudSignals();
 }
 
-/* NEU: MEHRERE SIGNALE AUSWÄHLEN */
+/* MEHRFACHAUSWAHL */
 
 function getVisibleSignals() {
   const query=$("searchSignals").value.toLowerCase().trim();
@@ -973,7 +971,7 @@ function updateSelectionUI() {
   }
 
   if(deleteButton) {
-    deleteButton.disabled=count===0;
+    deleteButton.disabled=count===0 || bulkDeleteRunning;
     deleteButton.textContent=count>0
       ? "🗑 "+count+" ausgewählte löschen"
       : "🗑 Ausgewählte löschen";
@@ -985,7 +983,7 @@ function updateSelectionUI() {
 
     selectAll.checked=visible.length>0 && selectedVisible===visible.length;
     selectAll.indeterminate=selectedVisible>0 && selectedVisible<visible.length;
-    selectAll.disabled=visible.length===0;
+    selectAll.disabled=visible.length===0 || bulkDeleteRunning;
   }
 }
 
@@ -1021,15 +1019,17 @@ function selectAllVisibleSignals(checked) {
 }
 
 function clearSelection() {
+  if(bulkDeleteRunning) return;
+
   selectedSignalIds.clear();
   renderList();
   notify("Auswahl wurde aufgehoben.");
 }
 
-/* NEU: MEHRERE SIGNALE LÖSCHEN */
+/* MEHRERE SIGNALE EINZELN LÖSCHEN – TIMEOUT-SCHUTZ */
 
 async function deleteSelectedSignals() {
-  if(!currentUser) return;
+  if(!currentUser || bulkDeleteRunning) return;
 
   const ids=[...selectedSignalIds];
 
@@ -1046,43 +1046,90 @@ async function deleteSelectedSignals() {
 
   if(!confirmed) return;
 
+  bulkDeleteRunning=true;
+
   const button=$("deleteSelected");
+  const selectAll=$("selectAllSignals");
+  const clearButton=$("clearSelection");
+
   button.disabled=true;
-  button.textContent="Wird gelöscht...";
+  if(selectAll) selectAll.disabled=true;
+  if(clearButton) clearButton.disabled=true;
+
+  let deletedCount=0;
+  let failedCount=0;
+  const failedIds=[];
 
   try {
-    const {data,error}=await _supabase
-      .from("signals")
-      .delete()
-      .in("id",ids)
-      .eq("user_id",currentUser.id)
-      .select("id");
+    for(let i=0;i<ids.length;i++) {
+      const id=ids[i];
 
-    if(error) throw error;
+      button.textContent="Lösche "+(i+1)+" von "+ids.length+"...";
 
-    const deletedCount=data ? data.length : 0;
+      notify("Lösche Signal "+(i+1)+" von "+ids.length+"...");
 
-    if(deletedCount===0) {
-      notify("Es wurde kein Signal gelöscht. Bitte Berechtigungen prüfen.");
-      updateSelectionUI();
-      return;
+      try {
+        const {data,error}=await _supabase
+          .from("signals")
+          .delete()
+          .eq("id",id)
+          .eq("user_id",currentUser.id)
+          .select("id");
+
+        if(error) throw error;
+
+        if(data && data.length>0) {
+          deletedCount++;
+          selectedSignalIds.delete(String(id));
+        } else {
+          failedCount++;
+          failedIds.push(id);
+        }
+
+      } catch(err) {
+        console.error("Fehler beim Löschen von Signal:",id,err);
+        failedCount++;
+        failedIds.push(id);
+      }
+
+      // Kleine Pause zwischen den Datenbankabfragen.
+      if(i<ids.length-1) {
+        await new Promise(resolve=>setTimeout(resolve,200));
+      }
     }
 
-    selectedSignalIds.clear();
-
-    notify(
-      deletedCount+" von "+ids.length+
-      " ausgewählten Signalen erfolgreich gelöscht."
-    );
-
+    // Nach dem Löschvorgang tatsächlichen Datenbestand neu laden.
     await loadCloudSignals();
+
+    if(failedCount===0) {
+      notify(
+        "Erfolgreich! "+deletedCount+
+        " von "+ids.length+" Signalen gelöscht."
+      );
+    } else {
+      notify(
+        deletedCount+" Signale gelöscht. "+
+        failedCount+" konnten nicht gelöscht werden. "+
+        "Bitte versuche es erneut."
+      );
+    }
+
+    console.log("Mehrfachlöschen abgeschlossen:",{
+      erfolgreich:deletedCount,
+      fehlgeschlagen:failedCount,
+      fehlgeschlageneIds:failedIds
+    });
 
   } catch(err) {
     console.error("Fehler beim Mehrfachlöschen:",err);
-    notify("Fehler beim Mehrfachlöschen: "+(err.message||String(err)));
-    updateSelectionUI();
+    notify("Fehler beim Aktualisieren: "+(err.message||String(err)));
 
   } finally {
+    bulkDeleteRunning=false;
+
+    if(selectAll) selectAll.disabled=false;
+    if(clearButton) clearButton.disabled=false;
+
     updateSelectionUI();
   }
 }
@@ -1623,7 +1670,6 @@ function initEvents() {
   $("searchSignals").addEventListener("input",renderList);
   $("signalList").addEventListener("click",handleListClick);
 
-  /* NEU: Checkboxen der einzelnen Signale */
   $("signalList").addEventListener("change",e=>{
     const checkbox=e.target.closest(".signal-checkbox");
 
@@ -1635,15 +1681,11 @@ function initEvents() {
     }
   });
 
-  /* NEU: Alle sichtbaren Signale auswählen */
   $("selectAllSignals").addEventListener("change",e=>{
     selectAllVisibleSignals(e.target.checked);
   });
 
-  /* NEU: Auswahl aufheben */
   $("clearSelection").addEventListener("click",clearSelection);
-
-  /* NEU: Mehrfachlöschung */
   $("deleteSelected").addEventListener("click",deleteSelectedSignals);
 
   $("pickGallery").addEventListener("click",()=>$("imageFile").click());
