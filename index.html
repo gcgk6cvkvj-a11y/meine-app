@@ -245,7 +245,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
       <div id="learnCategoryChoices" class="category-grid"></div>
       <div id="learnCategorySummary" class="category-summary"></div>
       <button type="button" class="category-toggle" id="learnToggleCategories">
-        Auswahl schließen ▲
+        Signalgruppen auswählen ▼
       </button>
     </div>
 
@@ -296,7 +296,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
         <div id="examCategoryChoices" class="category-grid"></div>
         <div id="examCategorySummary" class="category-summary"></div>
         <button type="button" class="category-toggle" id="examToggleCategories">
-          Auswahl schließen ▲
+          Signalgruppen auswählen ▼
         </button>
       </div>
 
@@ -480,10 +480,10 @@ let selectedLearnCategories=new Set(BASE_CATEGORIES);
 let selectedExamCategories=new Set(BASE_CATEGORIES);
 let knownCategories=new Set(BASE_CATEGORIES);
 
-/* NEU: STATUS DER AUF- UND ZUKLAPPBAREN AUSWAHL */
+/* AUSWAHL DER SIGNALGRUPPEN: STANDARDMÄSSIG EINGEKLAPPT */
 
-let learnCategoriesOpen=true;
-let examCategoriesOpen=true;
+let learnCategoriesOpen=false;
+let examCategoriesOpen=false;
 
 let examList=[];
 let examIndex=0;
@@ -604,14 +604,13 @@ function renderCategoryChoices(){
     "examCat","examCategorySummary"
   );
 
-  /* NEU: Sichtbarkeit nach jedem Neuzeichnen beibehalten */
   applyCategoryPickerVisibility();
 
   updateLearnAvailable();
   updateExamAvailable();
 }
 
-/* NEU: AUSWAHL EIN- UND AUSBLENDEN */
+/* AUSWAHL EIN- UND AUSBLENDEN */
 
 function applyCategoryPickerVisibility(){
   const learnGrid=$("learnCategoryChoices");
@@ -1714,7 +1713,6 @@ function initEvents(){
   $("learnSelectAll").addEventListener("click",()=>toggleAllCategories("learn"));
   $("examSelectAll").addEventListener("click",()=>toggleAllCategories("exam"));
 
-  /* NEU: BUTTONS ZUM SCHLIESSEN UND ÖFFNEN */
   $("learnToggleCategories").addEventListener("click",()=>toggleCategoryPicker("learn"));
   $("examToggleCategories").addEventListener("click",()=>toggleCategoryPicker("exam"));
 
