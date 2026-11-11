@@ -624,6 +624,66 @@ async function deleteSignal(id) {
   }
 }
 
+/* 💾 DATENSICHERUNG (EXPORT & IMPORT) */
+function exportData() {
+  if (!signals.length) {
+    return notify("Keine Signale zum Exportieren vorhanden.");
+  }
+  
+  const exportSignals = signals.map(s => ({
+    short: s.short,
+    long: s.long,
+    meaning: s.meaning,
+    category: s.category,
+    image: s.image
+  }));
+
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportSignals, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", `signale_backup_${new Date().toISOString().slice(0,10)}.json`);
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+  
+  notify("Export erfolgreich gestartet!");
+}
+
+function handleImportFile(file) {
+  if (!file || !currentUser) return;
+  
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const importedData = JSON.parse(e.target.result);
+      if (!Array.isArray(importedData)) {
+        throw new Error("Die JSON-Datei muss ein Array von Signalen sein.");
+      }
+
+      notify("Importiere Daten in Supabase...");
+
+      const payload = importedData.map(s => ({
+        short: s.short || "",
+        long: s.long || "",
+        meaning: s.meaning || "",
+        category: s.category || "Sonstige",
+        image: s.image || "",
+        user_id: currentUser.id
+      }));
+
+      const { error } = await _supabase.from('signals').insert(payload);
+      if (error) throw error;
+
+      notify("Daten erfolgreich importiert!");
+      loadCloudSignals();
+    } catch (err) {
+      console.error(err);
+      notify("Fehler beim Import: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
 /* Page Navigation */
 function showPage(page) {
   ["learn", "exam", "stats", "manage"].forEach(id => {
@@ -918,6 +978,14 @@ function initEvents() {
   $("pickCamera").addEventListener("click", () => $("cameraFile").click());
   $("imageFile").addEventListener("change", function() { handleImageInput(this.files[0]); this.value = ""; });
   $("cameraFile").addEventListener("change", function() { handleImageInput(this.files[0]); this.value = ""; });
+
+  /* 💾 EXPORT & IMPORT EVENTS */
+  $("exportData").addEventListener("click", exportData);
+  $("importButton").addEventListener("click", () => $("importFile").click());
+  $("importFile").addEventListener("change", function() {
+    handleImportFile(this.files[0]);
+    this.value = "";
+  });
 }
 
 function init() {
