@@ -624,7 +624,7 @@ async function deleteSignal(id) {
   }
 }
 
-/* 💾 DATENSICHERUNG (EXPORT & IMPORT) */
+/* 💾 DATENSICHERUNG (EXPORT & FLEXibler IMPORT) */
 function exportData() {
   if (!signals.length) {
     return notify("Keine Signale zum Exportieren vorhanden.");
@@ -656,18 +656,28 @@ function handleImportFile(file) {
   reader.onload = async (e) => {
     try {
       const importedData = JSON.parse(e.target.result);
-      if (!Array.isArray(importedData)) {
-        throw new Error("Die JSON-Datei muss ein Array von Signalen sein.");
+      let rawSignals = [];
+
+      // Flexibel prüfen, ob die Daten ein direktes Array oder verschachtelt sind
+      if (Array.isArray(importedData)) {
+        rawSignals = importedData;
+      } else if (typeof importedData === "object" && importedData !== null) {
+        rawSignals = importedData.signals || importedData.data || importedData.items || [];
       }
 
-      notify("Importiere Daten in Supabase...");
+      if (!Array.isArray(rawSignals) || rawSignals.length === 0) {
+        throw new Error("Keine gültigen Signal-Daten in der Datei gefunden.");
+      }
 
-      const payload = importedData.map(s => ({
-        short: s.short || "",
-        long: s.long || "",
-        meaning: s.meaning || "",
+      notify(`Importiere ${rawSignals.length} Signale...`);
+
+      // Payload aufbereiten (Unabhängig von alten IDs und passend zum aktuellen User)
+      const payload = rawSignals.map(s => ({
+        short: s.short || s.shortName || "",
+        long: s.long || s.longName || "",
+        meaning: s.meaning || s.description || "",
         category: s.category || "Sonstige",
-        image: s.image || "",
+        image: s.image || s.imageUrl || "",
         user_id: currentUser.id
       }));
 
