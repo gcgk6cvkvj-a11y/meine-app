@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -10,15 +9,9 @@
 
 <style>
 :root {
-  --bg:#101722;
-  --panel:#1b2735;
-  --panel2:#243448;
-  --text:#f3f6fa;
-  --muted:#aab8c8;
-  --accent:#48a6ff;
-  --green:#38c98b;
-  --red:#ff6474;
-  --orange:#ffad42;
+  --bg:#101722;--panel:#1b2735;--panel2:#243448;
+  --text:#f3f6fa;--muted:#aab8c8;--accent:#48a6ff;
+  --green:#38c98b;--red:#ff6474;--orange:#ffad42;
   --border:#34465b;
 }
 * {box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -111,6 +104,35 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 .solution p {margin:8px 0}
 .solution-value {white-space:pre-wrap;word-break:break-word;color:#fff;font-weight:600}
 .missing {color:#ffbd70;font-weight:700}
+
+/* NEU: SICHTBARE RECHTSCHREIBUNGSKORREKTUR */
+
+.spelling-note {
+  background:#29202a;
+  border:1px solid #75404a;
+  border-radius:10px;
+  padding:11px;
+  margin:10px 0;
+  font-size:13px;
+  line-height:1.6;
+}
+.spelling-note strong {display:block;margin-bottom:5px}
+.spelling-error {
+  color:#fff;
+  background:#853542;
+  border:1px solid #ff6474;
+  border-radius:4px;
+  padding:1px 4px;
+  font-weight:700;
+}
+.spelling-correction {
+  color:#38c98b;
+  font-weight:700;
+}
+.spelling-arrow {
+  color:#aab8c8;
+  padding:0 5px;
+}
 .progress {
   height:8px;background:#101722;border-radius:10px;
   overflow:hidden;margin:10px 0;
@@ -163,14 +185,11 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 .category-grid {
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
 }
-.category-grid.collapsed {
-  display:none;
-}
+.category-grid.collapsed {display:none}
 .category-option {
   display:flex;align-items:center;gap:8px;
   padding:9px;background:#1b2735;border:1px solid var(--border);
-  border-radius:9px;color:var(--text);font-size:13px;
-  min-width:0;
+  border-radius:9px;color:var(--text);font-size:13px;min-width:0;
 }
 .category-option input {
   width:19px;height:19px;margin:0;flex-shrink:0;
@@ -181,12 +200,8 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
   color:var(--accent);font-size:13px;font-weight:700;margin-top:10px;
 }
 .category-toggle {
-  width:100%;
-  margin-top:10px;
-  padding:10px;
-  font-size:13px;
-  background:#243448;
-  border:1px solid var(--border);
+  width:100%;margin-top:10px;padding:10px;font-size:13px;
+  background:#243448;border:1px solid var(--border);
 }
 hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 #notice {
@@ -480,8 +495,6 @@ let selectedLearnCategories=new Set(BASE_CATEGORIES);
 let selectedExamCategories=new Set(BASE_CATEGORIES);
 let knownCategories=new Set(BASE_CATEGORIES);
 
-/* AUSWAHL DER SIGNALGRUPPEN: STANDARDMÄSSIG EINGEKLAPPT */
-
 let learnCategoriesOpen=false;
 let examCategoriesOpen=false;
 
@@ -595,22 +608,12 @@ function renderOneCategoryPicker(containerId,selectedSet,prefix,summaryId){
 }
 
 function renderCategoryChoices(){
-  renderOneCategoryPicker(
-    "learnCategoryChoices",selectedLearnCategories,
-    "learnCat","learnCategorySummary"
-  );
-  renderOneCategoryPicker(
-    "examCategoryChoices",selectedExamCategories,
-    "examCat","examCategorySummary"
-  );
-
+  renderOneCategoryPicker("learnCategoryChoices",selectedLearnCategories,"learnCat","learnCategorySummary");
+  renderOneCategoryPicker("examCategoryChoices",selectedExamCategories,"examCat","examCategorySummary");
   applyCategoryPickerVisibility();
-
   updateLearnAvailable();
   updateExamAvailable();
 }
-
-/* AUSWAHL EIN- UND AUSBLENDEN */
 
 function applyCategoryPickerVisibility(){
   const learnGrid=$("learnCategoryChoices");
@@ -618,36 +621,23 @@ function applyCategoryPickerVisibility(){
   const learnButton=$("learnToggleCategories");
   const examButton=$("examToggleCategories");
 
-  if(learnGrid){
-    learnGrid.classList.toggle("collapsed",!learnCategoriesOpen);
-  }
-
-  if(examGrid){
-    examGrid.classList.toggle("collapsed",!examCategoriesOpen);
-  }
+  if(learnGrid)learnGrid.classList.toggle("collapsed",!learnCategoriesOpen);
+  if(examGrid)examGrid.classList.toggle("collapsed",!examCategoriesOpen);
 
   if(learnButton){
-    learnButton.textContent=learnCategoriesOpen
-      ?"Auswahl schließen ▲"
-      :"Signalgruppen auswählen ▼";
+    learnButton.textContent=learnCategoriesOpen?"Auswahl schließen ▲":"Signalgruppen auswählen ▼";
     learnButton.setAttribute("aria-expanded",String(learnCategoriesOpen));
   }
 
   if(examButton){
-    examButton.textContent=examCategoriesOpen
-      ?"Auswahl schließen ▲"
-      :"Signalgruppen auswählen ▼";
+    examButton.textContent=examCategoriesOpen?"Auswahl schließen ▲":"Signalgruppen auswählen ▼";
     examButton.setAttribute("aria-expanded",String(examCategoriesOpen));
   }
 }
 
 function toggleCategoryPicker(type){
-  if(type==="learn"){
-    learnCategoriesOpen=!learnCategoriesOpen;
-  }else{
-    examCategoriesOpen=!examCategoriesOpen;
-  }
-
+  if(type==="learn")learnCategoriesOpen=!learnCategoriesOpen;
+  else examCategoriesOpen=!examCategoriesOpen;
   applyCategoryPickerVisibility();
 }
 
@@ -662,7 +652,6 @@ function handleCategoryChange(e,type){
   else set.delete(category);
 
   renderCategoryChoices();
-
   if(type==="learn")nextLearn();
 }
 
@@ -675,7 +664,6 @@ function toggleAllCategories(type){
   else categories.forEach(cat=>set.add(cat));
 
   renderCategoryChoices();
-
   if(type==="learn")nextLearn();
 }
 
@@ -687,9 +675,7 @@ function updateLearnAvailable(){
 function updateExamAvailable(){
   const count=signals.filter(s=>selectedExamCategories.has(s.category||"Sonstige")).length;
   const el=$("examAvailable");
-  if(el){
-    el.textContent=count+" Signale stehen für die Prüfung zur Verfügung.";
-  }
+  if(el)el.textContent=count+" Signale stehen für die Prüfung zur Verfügung.";
 }
 
 /* AUTHENTIFIZIERUNG */
@@ -781,9 +767,7 @@ async function loadCloudSignals(){
     signals=allData;
 
     const existingIds=new Set(signals.map(s=>String(s.id)));
-    selectedSignalIds=new Set(
-      [...selectedSignalIds].filter(id=>existingIds.has(String(id)))
-    );
+    selectedSignalIds=new Set([...selectedSignalIds].filter(id=>existingIds.has(String(id))));
 
     syncCategories();
     renderList();
@@ -874,9 +858,7 @@ async function saveSignal(){
   const existing=id?signals.find(s=>String(s.id)===String(id)):null;
   let imageValue=tempImageBase64||$("imageUrl").value.trim();
 
-  if(id&&!imageValue&&existing){
-    imageValue=existing.image||"";
-  }
+  if(id&&!imageValue&&existing)imageValue=existing.image||"";
 
   if(id&&!imageValue&&existing&&existing.image===undefined){
     const {data,error}=await _supabase
@@ -887,11 +869,7 @@ async function saveSignal(){
     imageValue=data?.image||"";
   }
 
-  const payload={
-    short,long,meaning,category,
-    image:imageValue,
-    user_id:currentUser.id
-  };
+  const payload={short,long,meaning,category,image:imageValue,user_id:currentUser.id};
 
   if(id){
     const {error}=await _supabase
@@ -960,9 +938,7 @@ function updateSelectionUI(){
 
   if(deleteButton){
     deleteButton.disabled=count===0||bulkDeleteRunning;
-    deleteButton.textContent=count>0
-      ?"🗑 "+count+" ausgewählte löschen"
-      :"🗑 Ausgewählte löschen";
+    deleteButton.textContent=count>0?"🗑 "+count+" ausgewählte löschen":"🗑 Ausgewählte löschen";
   }
 
   if(selectAll){
@@ -1058,9 +1034,7 @@ async function deleteSelectedSignals(){
         failedIds.push(id);
       }
 
-      if(i<ids.length-1){
-        await new Promise(resolve=>setTimeout(resolve,200));
-      }
+      if(i<ids.length-1)await new Promise(resolve=>setTimeout(resolve,200));
     }
 
     await loadCloudSignals();
@@ -1172,7 +1146,7 @@ function clearForm(){
   $("saveSignal").textContent="Signal speichern";
 }
 
-/* ANTWORTEN BEWERTEN */
+/* ANTWORTEN BEWERTEN – MIT RECHTSCHREIBUNGSTOLERANZ */
 
 function clean(value){
   return String(value??"").toLowerCase()
@@ -1182,21 +1156,196 @@ function clean(value){
     .replace(/\s+/g," ").trim();
 }
 
-function sameAnswer(user,correct){
-  return clean(user)===clean(correct);
+/*
+  Ermittelt die Anzahl der Zeichenänderungen.
+  Auch vertauschte Nachbarbuchstaben zählen als ein Fehler.
+*/
+function editDistance(a,b){
+  a=String(a);
+  b=String(b);
+
+  const rows=a.length+1;
+  const cols=b.length+1;
+  const dp=Array.from({length:rows},()=>Array(cols).fill(0));
+
+  for(let i=0;i<rows;i++)dp[i][0]=i;
+  for(let j=0;j<cols;j++)dp[0][j]=j;
+
+  for(let i=1;i<rows;i++){
+    for(let j=1;j<cols;j++){
+      const cost=a[i-1]===b[j-1]?0:1;
+
+      dp[i][j]=Math.min(
+        dp[i-1][j]+1,
+        dp[i][j-1]+1,
+        dp[i-1][j-1]+cost
+      );
+
+      if(
+        i>1&&j>1&&
+        a[i-1]===b[j-2]&&
+        a[i-2]===b[j-1]
+      ){
+        dp[i][j]=Math.min(dp[i][j],dp[i-2][j-2]+1);
+      }
+    }
+  }
+
+  return dp[a.length][b.length];
+}
+
+function tokenizeAnswer(value){
+  return String(value??"").trim().split(/\s+/)
+    .filter(Boolean)
+    .map(original=>({
+      original:original,
+      normalized:clean(original)
+    }))
+    .filter(token=>token.normalized.length>0);
+}
+
+/*
+  Rechtschreibfehler werden nur vorsichtig toleriert:
+  - Die Anzahl der Wörter muss gleich sein.
+  - Kurze Wörter und Abkürzungen werden nicht unscharf verglichen.
+  - Pro Wort sind maximal ein bzw. zwei Zeichenfehler erlaubt.
+  - Die Anzahl tolerierter fehlerhafter Wörter ist begrenzt.
+  - Inhaltlich andere oder fehlende Wörter bleiben falsch.
+*/
+function compareAnswer(user,correct){
+  const userText=String(user??"");
+  const correctText=String(correct??"");
+
+  const userTokens=tokenizeAnswer(userText);
+  const correctTokens=tokenizeAnswer(correctText);
+
+  if(clean(userText)===clean(correctText)){
+    return {
+      correct:true,
+      spelling:false,
+      user:userText,
+      corrected:correctText,
+      mistakes:[]
+    };
+  }
+
+  if(
+    !userTokens.length||
+    userTokens.length!==correctTokens.length
+  ){
+    return {
+      correct:false,
+      spelling:false,
+      user:userText,
+      corrected:correctText,
+      mistakes:[]
+    };
+  }
+
+  const mistakes=[];
+  let allowedMistakes=Math.max(1,Math.floor(correctTokens.length/8));
+
+  for(let i=0;i<correctTokens.length;i++){
+    const userWord=userTokens[i].normalized;
+    const correctWord=correctTokens[i].normalized;
+
+    if(userWord===correctWord)continue;
+
+    // Keine automatische Korrektur bei kurzen Fachbegriffen.
+    if(userWord.length<4||correctWord.length<4){
+      return {
+        correct:false,
+        spelling:false,
+        user:userText,
+        corrected:correctText,
+        mistakes:[]
+      };
+    }
+
+    const distance=editDistance(userWord,correctWord);
+    const maxDistance=correctWord.length>=8?2:1;
+
+    if(distance<1||distance>maxDistance){
+      return {
+        correct:false,
+        spelling:false,
+        user:userText,
+        corrected:correctText,
+        mistakes:[]
+      };
+    }
+
+    mistakes.push({
+      index:i,
+      user:userTokens[i].original,
+      correct:correctTokens[i].original
+    });
+  }
+
+  if(!mistakes.length||mistakes.length>allowedMistakes){
+    return {
+      correct:false,
+      spelling:false,
+      user:userText,
+      corrected:correctText,
+      mistakes:[]
+    };
+  }
+
+  return {
+    correct:true,
+    spelling:true,
+    user:userText,
+    corrected:correctText,
+    mistakes:mistakes
+  };
 }
 
 function evaluate(signal,short,long,meaning){
   return {
-    short:sameAnswer(short,signal.short),
-    long:sameAnswer(long,signal.long),
-    meaning:sameAnswer(meaning,signal.meaning)
+    short:compareAnswer(short,signal.short),
+    long:compareAnswer(long,signal.long),
+    meaning:compareAnswer(meaning,signal.meaning)
   };
 }
 
 function calculatePoints(result){
-  if(!result.meaning)return 0;
-  return Number(result.short)+Number(result.long)+1;
+  if(!result.meaning.correct)return 0;
+  return Number(result.short.correct)+Number(result.long.correct)+1;
+}
+
+/* RECHTSCHREIBUNGSFEHLER SICHTBAR DARSTELLEN */
+
+function spellingHTML(result){
+  if(!result||!result.spelling||!result.mistakes.length)return "";
+
+  const tokens=String(result.user??"").trim().split(/\s+/);
+  const mistakeMap=new Map(
+    result.mistakes.map(m=>[m.index,m])
+  );
+
+  const markedAnswer=tokens.map((word,index)=>{
+    const mistake=mistakeMap.get(index);
+    if(mistake){
+      return `<span class="spelling-error">${esc(word)}</span>`;
+    }
+    return esc(word);
+  }).join(" ");
+
+  const corrections=result.mistakes.map(m=>
+    `<span class="spelling-error">${esc(m.user)}</span>`+
+    `<span class="spelling-arrow">→</span>`+
+    `<span class="spelling-correction">${esc(m.correct)}</span>`
+  ).join("<br>");
+
+  return `
+    <div class="spelling-note">
+      <strong>✏️ Rechtschreibfehler erkannt – Antwort wird trotzdem gewertet</strong>
+      <div>Deine Antwort: ${markedAnswer}</div>
+      <div style="margin-top:7px;">
+        Richtige Schreibweise:<br>${corrections}
+      </div>
+    </div>`;
 }
 
 function solutionHTML(signal){
@@ -1217,11 +1366,16 @@ function feedbackHTML(signal,result){
   const points=calculatePoints(result);
   const allCorrect=points===3;
 
-  const line=(label,isOk)=>`
+  const line=(label,answerResult)=>`
     <p class="score-line">
       <span>${label}</span>
-      <b class="${isOk?"correct":"incorrect"}">${isOk?"✓ Richtig":"✗ Falsch"}</b>
-    </p>`;
+      <b class="${answerResult.correct?"correct":"incorrect"}">
+        ${answerResult.correct
+          ?(answerResult.spelling?"✓ Richtig (Schreibfehler)":"✓ Richtig")
+          :"✗ Falsch"}
+      </b>
+    </p>
+    ${spellingHTML(answerResult)}`;
 
   let html=`
     <h3 class="${allCorrect?"correct":"incorrect"}">
@@ -1232,7 +1386,7 @@ function feedbackHTML(signal,result){
   html+=line("Langbezeichnung",result.long);
   html+=line("Bedeutung",result.meaning);
 
-  if(!result.meaning){
+  if(!result.meaning.correct){
     html+=`
       <div class="warning">
         <h3>⚠ BETRIEBSGEFAHR</h3>
@@ -1240,7 +1394,16 @@ function feedbackHTML(signal,result){
       </div>`;
   }
 
-  if(!allCorrect)html+=solutionHTML(signal);
+  // Musterlösung auch dann anzeigen, wenn die Antwort nur Schreibfehler hatte.
+  const hasSpellingError=
+    result.short.spelling||
+    result.long.spelling||
+    result.meaning.spelling;
+
+  if(!allCorrect||hasSpellingError){
+    html+=solutionHTML(signal);
+  }
+
   html+=`<hr><h3>Ergebnis: ${points} von 3 Punkten</h3>`;
   return html;
 }
@@ -1381,11 +1544,8 @@ function showExamQuestion(){
   const signal=examList[examIndex];
   examAnswered=false;
 
-  $("examCounter").textContent=
-    "Frage "+(examIndex+1)+" von "+examList.length;
-
-  $("examProgress").style.width=
-    ((examIndex)/examList.length*100)+"%";
+  $("examCounter").textContent="Frage "+(examIndex+1)+" von "+examList.length;
+  $("examProgress").style.width=((examIndex)/examList.length*100)+"%";
 
   $("examImage").hidden=true;
   $("examNoImage").hidden=false;
@@ -1486,6 +1646,9 @@ function finishExam(){
         <p class="${item.points===3?"correct":"incorrect"}">
           ${item.points===3?"✓ Vollständig richtig":"✗ Nicht vollständig richtig"}
         </p>
+        ${item.result.short.spelling||item.result.long.spelling||item.result.meaning.spelling
+          ?`<p class="correct">Rechtschreibfehler wurden toleriert.</p>`
+          :""}
       </div>
     `).join("")}
     <button type="button" class="primary" id="restartExam" style="width:100%;margin-top:12px;">
@@ -1703,12 +1866,8 @@ function initEvents(){
     if(btn)showPage(btn.dataset.page);
   });
 
-  $("learnCategoryChoices").addEventListener("change",e=>
-    handleCategoryChange(e,"learn")
-  );
-  $("examCategoryChoices").addEventListener("change",e=>
-    handleCategoryChange(e,"exam")
-  );
+  $("learnCategoryChoices").addEventListener("change",e=>handleCategoryChange(e,"learn"));
+  $("examCategoryChoices").addEventListener("change",e=>handleCategoryChange(e,"exam"));
 
   $("learnSelectAll").addEventListener("click",()=>toggleAllCategories("learn"));
   $("examSelectAll").addEventListener("click",()=>toggleAllCategories("exam"));
@@ -1734,9 +1893,7 @@ function initEvents(){
 
   $("signalList").addEventListener("change",e=>{
     const checkbox=e.target.closest(".signal-checkbox");
-    if(checkbox){
-      toggleSignalSelection(checkbox.dataset.id,checkbox.checked);
-    }
+    if(checkbox)toggleSignalSelection(checkbox.dataset.id,checkbox.checked);
   });
 
   $("selectAllSignals").addEventListener("change",e=>
