@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -5,251 +6,325 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#101722">
 <title>Signale lernen ByArmando</title>
-<!-- Supabase SDK einbinden -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
-  --bg: #101722;
-  --panel: #1b2735;
-  --panel2: #243448;
-  --text: #f3f6fa;
-  --muted: #aab8c8;
-  --accent: #48a6ff;
-  --green: #38c98b;
-  --red: #ff6474;
-  --orange: #ffad42;
-  --border: #34465b;
+  --bg:#101722;
+  --panel:#1b2735;
+  --panel2:#243448;
+  --text:#f3f6fa;
+  --muted:#aab8c8;
+  --accent:#48a6ff;
+  --green:#38c98b;
+  --red:#ff6474;
+  --orange:#ffad42;
+  --border:#34465b;
 }
 
 * {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 body {
-  margin: 0;
-  padding: 12px 12px 90px 12px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin:0;
+  padding:12px 12px 90px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 
-header, main {
-  max-width: 900px;
-  margin: auto;
+header,main {
+  max-width:900px;
+  margin:auto;
 }
 
 header {
-  padding: 8px 3px 14px 3px;
-  text-align: left;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding:8px 3px 14px;
+  text-align:left;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 h1 {
-  font-size: 24px;
-  margin: 4px 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-size:24px;
+  margin:4px 0;
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
-h2 { font-size: 20px; margin-top: 0; margin-bottom: 12px; }
-h3 { font-size: 16px; margin: 10px 0; }
-p { line-height: 1.5; margin: 8px 0; }
-small, .muted { color: var(--muted); }
-.brand { color: var(--accent); }
+h2 {font-size:20px;margin-top:0;margin-bottom:12px}
+h3 {font-size:16px;margin:10px 0}
+p {line-height:1.5;margin:8px 0}
+small,.muted {color:var(--muted)}
+.brand {color:var(--accent)}
 
-/* Feste Mobile Bottom Navigation */
 nav#mainNav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #0d131d;
-  border-top: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px)) 4px;
-  z-index: 1000;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#0d131d;
+  border-top:1px solid var(--border);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));
+  z-index:1000;
+  box-shadow:0 -4px 20px rgba(0,0,0,.5);
 }
 
 nav#mainNav button {
-  background: transparent;
-  border: none;
-  border-radius: 8px;
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 6px 2px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  background:transparent;
+  border:none;
+  border-radius:8px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:600;
+  padding:6px 2px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  cursor:pointer;
 }
 
-nav#mainNav button .icon {
-  font-size: 18px;
-}
-
+nav#mainNav button .icon {font-size:18px}
 nav#mainNav button.active {
-  color: var(--accent);
-  background: rgba(72, 166, 255, 0.1);
+  color:var(--accent);
+  background:rgba(72,166,255,.1);
 }
 
-/* Formulare & Buttons */
-button, input, select, textarea {
-  font: inherit;
-  border-radius: 10px;
-  border: 1px solid var(--border);
+button,input,select,textarea {
+  font:inherit;
+  border-radius:10px;
+  border:1px solid var(--border);
 }
 
 button {
-  background: var(--panel2);
-  color: var(--text);
-  padding: 12px 14px;
-  cursor: pointer;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  user-select: none;
-  transition: opacity 0.1s ease, transform 0.1s ease;
+  background:var(--panel2);
+  color:var(--text);
+  padding:12px 14px;
+  cursor:pointer;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  user-select:none;
 }
 
-button:active {
-  transform: scale(0.98);
+button:active {transform:scale(.98)}
+button.primary {
+  background:var(--accent);
+  color:#071522;
+  border-color:var(--accent);
+}
+button.good {
+  background:#176e50;
+  color:#fff;
+  border-color:#26795b;
+}
+button.danger {
+  background:#853542;
+  color:#fff;
+  border-color:#a84353;
+}
+button:disabled {opacity:.45;cursor:not-allowed}
+
+input,select,textarea {
+  width:100%;
+  padding:12px;
+  margin:6px 0 14px;
+  background:#111c29;
+  color:var(--text);
+  outline:none;
 }
 
-button.primary { background: var(--accent); color: #071522; border-color: var(--accent); }
-button.good { background: #176e50; color: #fff; border-color: #26795b; }
-button.danger { background: #853542; color: #fff; border-color: #a84353; }
-button:disabled { opacity: 0.45; cursor: not-allowed; }
-
-input, select, textarea {
-  width: 100%;
-  padding: 12px;
-  margin: 6px 0 14px 0;
-  background: #111c29;
-  color: var(--text);
-  outline: none;
+input:focus,select:focus,textarea:focus {
+  border-color:var(--accent);
 }
 
-input:focus, select:focus, textarea:focus {
-  border-color: var(--accent);
+textarea {min-height:95px;resize:vertical}
+label {
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:500;
 }
-
-textarea { min-height: 95px; resize: vertical; }
-label { display: block; color: var(--muted); font-size: 13px; font-weight: 500; }
 
 .panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
 
-.page { display: block; }
-.page[hidden] { display: none !important; }
+.page {display:block}
+.page[hidden] {display:none!important}
 
-.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.row > * { flex: 1; min-width: 130px; }
+.row {
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.row>* {flex:1;min-width:130px}
 
-.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-.actions button { flex: 1; min-width: 110px; }
+.actions {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.actions button {flex:1;min-width:110px}
 
-/* Signal-Bilder */
 .signal-image {
-  width: 100%;
-  height: 240px;
-  object-fit: contain;
-  background: #ffffff;
-  border-radius: 12px;
-  margin: 10px 0;
-  border: 1px solid var(--border);
+  width:100%;
+  height:240px;
+  object-fit:contain;
+  background:#fff;
+  border-radius:12px;
+  margin:10px 0;
+  border:1px solid var(--border);
 }
 
 .placeholder {
-  height: 180px;
-  background: #111c29;
-  border: 1px dashed var(--border);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
-  text-align: center;
-  padding: 20px;
-  margin: 10px 0;
+  height:180px;
+  background:#111c29;
+  border:1px dashed var(--border);
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--muted);
+  text-align:center;
+  padding:20px;
+  margin:10px 0;
 }
 
-/* Feedback & Antworten */
-.answer { background: #111c29; border-radius: 12px; padding: 14px; margin-top: 14px; border: 1px solid var(--border); }
-.correct { color: var(--green); }
-.incorrect { color: var(--red); }
+.answer {
+  background:#111c29;
+  border-radius:12px;
+  padding:14px;
+  margin-top:14px;
+  border:1px solid var(--border);
+}
+
+.correct {color:var(--green)}
+.incorrect {color:var(--red)}
 
 .warning {
-  background: #3d1c18;
-  border: 1px solid #b65b36;
-  border-radius: 10px;
-  padding: 12px;
-  margin-top: 12px;
-  color: #ffd4b8;
+  background:#3d1c18;
+  border:1px solid #b65b36;
+  border-radius:10px;
+  padding:12px;
+  margin-top:12px;
+  color:#ffd4b8;
 }
-.warning h3 { color: #ff8b68; margin-top: 0; }
+.warning h3 {color:#ff8b68;margin-top:0}
 
 .solution {
-  background: #103328;
-  border: 1px solid #26795b;
-  border-radius: 10px;
-  padding: 14px;
-  margin-top: 12px;
+  background:#103328;
+  border:1px solid #26795b;
+  border-radius:10px;
+  padding:14px;
+  margin-top:12px;
 }
-.solution h3 { color: #d9fff0; margin-top: 0; }
-.solution p { margin: 8px 0; }
-.solution-value { white-space: pre-wrap; word-break: break-word; color: #fff; font-weight: 600; }
-.missing { color: #ffbd70; font-weight: 700; }
+.solution h3 {color:#d9fff0;margin-top:0}
+.solution p {margin:8px 0}
+.solution-value {
+  white-space:pre-wrap;
+  word-break:break-word;
+  color:#fff;
+  font-weight:600;
+}
+.missing {color:#ffbd70;font-weight:700}
 
-.progress { height: 8px; background: #101722; border-radius: 10px; overflow: hidden; margin: 10px 0; }
-.progress span { display: block; height: 100%; background: var(--green); width: 0%; transition: width 0.3s ease; }
+.progress {
+  height:8px;
+  background:#101722;
+  border-radius:10px;
+  overflow:hidden;
+  margin:10px 0;
+}
+.progress span {
+  display:block;
+  height:100%;
+  background:var(--green);
+  width:0%;
+  transition:width .3s ease;
+}
 
-.stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.stat { background: #111c29; border-radius: 12px; padding: 14px; border: 1px solid var(--border); }
-.stat strong { display: block; font-size: 24px; margin-top: 6px; color: var(--accent); }
+.stat-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.stat {
+  background:#111c29;
+  border-radius:12px;
+  padding:14px;
+  border:1px solid var(--border);
+}
+.stat strong {
+  display:block;
+  font-size:24px;
+  margin-top:6px;
+  color:var(--accent);
+}
 
-/* Karten in der Liste */
 .signal-card {
-  background: #111c29;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
-  margin: 10px 0;
+  background:#111c29;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  margin:10px 0;
 }
-.signal-card h3 { margin: 0 0 6px 0; color: #fff; font-size: 17px; }
-.signal-card p { margin: 8px 0; color: #d0dbe7; font-size: 14px; }
+.signal-card h3 {
+  margin:0 0 6px;
+  color:#fff;
+  font-size:17px;
+}
+.signal-card p {
+  margin:8px 0;
+  color:#d0dbe7;
+  font-size:14px;
+}
 
-hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
-#notice { min-height: 20px; color: var(--green); font-weight: 600; font-size: 14px; margin-top: 4px; }
-.score-line { display: flex; justify-content: space-between; gap: 8px; margin: 6px 0; }
+hr {
+  border:0;
+  border-top:1px solid var(--border);
+  margin:16px 0;
+}
+#notice {
+  min-height:20px;
+  color:var(--green);
+  font-weight:600;
+  font-size:14px;
+  margin-top:4px;
+}
+.score-line {
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+}
 
-/* Login Container */
-#authPanel { max-width: 420px; margin: 40px auto; }
+#authPanel {max-width:420px;margin:40px auto}
 
-@media(max-width: 520px) {
-  body { padding: 8px 8px 85px 8px; }
-  .panel { padding: 12px; }
-  .signal-image { height: 200px; }
-  .stat-grid { grid-template-columns: 1fr; }
+@media(max-width:520px) {
+  body {padding:8px 8px 85px}
+  .panel {padding:12px}
+  .signal-image {height:200px}
+  .stat-grid {grid-template-columns:1fr}
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -257,74 +332,76 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
     <h1>🚦 Signale lernen <span class="brand">ByArmando</span></h1>
     <p class="muted">Signale erkennen · Bedeutungen lernen · Prüfung bestehen</p>
   </div>
-  <button id="logoutBtn" class="danger" style="display:none; padding: 6px 12px; font-size:12px;">Abmelden</button>
+  <button id="logoutBtn" class="danger" style="display:none;padding:6px 12px;font-size:12px;">Abmelden</button>
 </header>
 
-<div id="notice" aria-live="polite" style="max-width:900px; margin:auto;"></div>
+<div id="notice" aria-live="polite" style="max-width:900px;margin:auto;"></div>
 
-<!-- 🔐 LOGIN / REGISTRIERUNG -->
 <section id="authPanel" class="panel">
   <h2 id="authTitle">Anmelden</h2>
+
   <label for="authEmail">E-Mail Adresse</label>
   <input type="email" id="authEmail" placeholder="deine@email.de" autocomplete="email">
-  
+
   <label for="authPassword">Passwort</label>
   <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
-  
+
   <div class="actions">
     <button type="button" class="primary" id="loginBtn">Einloggen</button>
     <button type="button" id="signUpBtn">Konto erstellen</button>
   </div>
 </section>
 
-<!-- HAUPT-APP (Wird erst nach Login sichtbar) -->
 <main id="appMain" hidden>
-<!-- 📚 LERNMODUS -->
+
 <section id="learn" class="page">
   <div class="panel">
     <h2>Lernmodus</h2>
+
     <div class="row">
       <div>
         <label for="learnCategory">Kategorie</label>
-        <select id="learnCategory"><option value="all">Alle Signale</option></select>
+        <select id="learnCategory">
+          <option value="all">Alle Signale</option>
+        </select>
       </div>
       <div>
         <label>Fortschritt</label>
-        <strong id="learnCounter" style="display:block; margin-top:12px;">Frage 1</strong>
+        <strong id="learnCounter" style="display:block;margin-top:12px;">Frage 1</strong>
       </div>
     </div>
+
     <div class="progress"><span id="learnProgress"></span></div>
-    
+
     <img id="learnImage" class="signal-image" alt="Signalbild" hidden>
     <div id="learnNoImage" class="placeholder">Kein Signalbild hinterlegt</div>
-    
+
     <p><b>Erkenne das Signal. Trage alle drei Angaben selbst ein:</b></p>
-    
+
     <label for="learnShort">1. Kurzbezeichnung</label>
     <input id="learnShort" placeholder="z. B. Ne 1" autocomplete="off">
-    
+
     <label for="learnLong">2. Langbezeichnung</label>
     <input id="learnLong" placeholder="z. B. Trapeztafel" autocomplete="off">
-    
+
     <label for="learnMeaning">3. Bedeutung</label>
     <textarea id="learnMeaning" placeholder="Vollständige Bedeutung des Signals..."></textarea>
-    
+
     <div class="actions">
       <button type="button" class="primary" id="checkLearn">Antwort prüfen</button>
       <button type="button" id="skipLearn">Überspringen</button>
     </div>
-    
+
     <div id="learnFeedback" class="answer" hidden></div>
-    <button type="button" class="good" id="nextLearn" hidden style="width:100%; margin-top:12px;">Nächstes Signal ➔</button>
+    <button type="button" class="good" id="nextLearn" hidden style="width:100%;margin-top:12px;">Nächstes Signal ➔</button>
   </div>
 </section>
 
-<!-- 📝 PRÜFUNGSMODUS -->
 <section id="exam" class="page" hidden>
   <div class="panel">
     <h2>Prüfungsmodus</h2>
     <p class="muted">Test unter Prüfungsbedingungen. Maximal 3 Punkte pro Frage.</p>
-    
+
     <div id="examConfig">
       <label for="examLength">Anzahl der Fragen</label>
       <select id="examLength">
@@ -333,7 +410,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
         <option value="30">30 Fragen</option>
         <option value="50">50 Fragen</option>
       </select>
-      <button type="button" class="primary" id="startExam" style="width:100%; margin-top:8px;">Prüfung starten</button>
+      <button type="button" class="primary" id="startExam" style="width:100%;margin-top:8px;">Prüfung starten</button>
     </div>
 
     <div id="examArea" hidden>
@@ -343,67 +420,65 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
         <strong id="examTimer" style="text-align:right;">00:00</strong>
       </div>
       <div class="progress"><span id="examProgress"></span></div>
-      
+
       <img id="examImage" class="signal-image" alt="Signalbild" hidden>
       <div id="examNoImage" class="placeholder" hidden>Kein Signalbild hinterlegt</div>
-      
+
       <label for="examShort">1. Kurzbezeichnung</label>
       <input id="examShort" placeholder="Kurzbezeichnung" autocomplete="off">
-      
+
       <label for="examLong">2. Langbezeichnung</label>
       <input id="examLong" placeholder="Langbezeichnung" autocomplete="off">
-      
+
       <label for="examMeaning">3. Bedeutung</label>
       <textarea id="examMeaning" placeholder="Bedeutung des Signals"></textarea>
-      
+
       <button type="button" class="primary" id="submitExam" style="width:100%;">Antwort abgeben</button>
       <div id="examFeedback" class="answer" hidden></div>
-      <button type="button" id="examNext" hidden style="width:100%; margin-top:12px;">Weiter ➔</button>
+      <button type="button" id="examNext" hidden style="width:100%;margin-top:12px;">Weiter ➔</button>
     </div>
-    
+
     <div id="examResult" class="answer" hidden></div>
   </div>
 </section>
 
-<!-- 📊 STATISTIK -->
 <section id="stats" class="page" hidden>
   <div class="panel">
     <h2>Deine Lernstatistik</h2>
+
     <div class="stat-grid">
       <div class="stat">Beantwortete Fragen<strong id="statAnswered">0</strong></div>
       <div class="stat">Erreichte Punkte<strong id="statPoints">0</strong></div>
       <div class="stat">Punktequote<strong id="statRate">0 %</strong></div>
       <div class="stat">Absolvierte Prüfungen<strong id="statExams">0</strong></div>
     </div>
-    
+
     <hr>
     <h3>Schwierige Signale</h3>
     <div id="difficultSignals"></div>
-    
+
     <hr>
     <h3>Leistung nach Kategorie</h3>
     <div id="categoryStats"></div>
-    
-    <button type="button" class="danger" id="resetStats" style="width:100%; margin-top:14px;">Statistik zurücksetzen</button>
+
+    <button type="button" class="danger" id="resetStats" style="width:100%;margin-top:14px;">Statistik zurücksetzen</button>
   </div>
 </section>
 
-<!-- ⚙️ VERWALTUNG -->
 <section id="manage" class="page" hidden>
   <div class="panel">
     <h2 id="formTitle">Signal hinzufügen</h2>
     <input type="hidden" id="editId">
-    
+
     <label for="shortName">Kurzbezeichnung</label>
     <input id="shortName" placeholder="z. B. Lf 1">
-    
+
     <label for="longName">Langbezeichnung</label>
     <input id="longName" placeholder="z. B. Trapeztafel">
-    
+
     <label for="meaning">Bedeutung / Musterlösung</label>
     <textarea id="meaning" placeholder="Vollständige Bedeutung..."></textarea>
-    
-    <!-- Feste Kategorien-Auswahl mit Lf und Bü -->
+
     <label for="category">Kategorie</label>
     <select id="category">
       <option value="Lf">Lf – Langsamfahrsignale</option>
@@ -420,14 +495,15 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
       <option value="So">So – Sonstige Signale</option>
       <option value="Sonstige">Sonstige</option>
     </select>
-    
+
     <label for="imageUrl">Bild-URL (optional)</label>
     <input id="imageUrl" placeholder="https://...">
-    
+
     <div class="actions">
       <button type="button" id="pickGallery">🖼️ Galerie</button>
       <button type="button" id="pickCamera">📸 Kamera</button>
     </div>
+
     <input type="file" id="imageFile" accept="image/*" hidden>
     <input type="file" id="cameraFile" accept="image/*" capture="environment" hidden>
 
@@ -440,8 +516,6 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
   <div class="panel">
     <h3>Gespeicherte Signale: <span id="signalCount" class="brand">0</span></h3>
     <input id="searchSignals" placeholder="Signal suchen (Kurz, Lang, Kategorie)...">
-    
-    <!-- Liste für dynamisches Rendering -->
     <div id="signalList"></div>
   </div>
 
@@ -455,9 +529,9 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
     <input type="file" id="importFile" accept=".json,application/json" hidden>
   </div>
 </section>
+
 </main>
 
-<!-- Bottom Nav Bar -->
 <nav id="mainNav" hidden>
   <button type="button" class="active" data-page="learn"><span class="icon">📚</span><span>Lernen</span></button>
   <button type="button" data-page="exam"><span class="icon">📝</span><span>Prüfung</span></button>
@@ -469,16 +543,15 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
 (function(){
 "use strict";
 
-// 🔐 SUPABASE-ZUGANGSDATEN
 const SUPABASE_URL = "https://qfitlansvvbspwutcjgh.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_u2Kw3xle2rZQCeP0Bsk9PA_hI4TDeoy";
 
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const _supabase = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id);
 
 let currentUser = null;
 let signals = [];
-let stats = { answered: 0, points: 0, exams: 0, bySignal: {} };
+let stats = {answered:0,points:0,exams:0,bySignal:{}};
 let current = null;
 let learnNumber = 0;
 let learnDone = false;
@@ -489,62 +562,69 @@ let examStarted = 0;
 let examDone = false;
 let examAnswered = false;
 let tempImageBase64 = "";
+let imageLoadToken = 0;
 
 function notify(message) {
   const el = $("notice");
   if (!el) return;
   el.textContent = message;
-  setTimeout(() => {
-    if (el.textContent === message) el.textContent = "";
-  }, 4500);
+  setTimeout(()=>{
+    if(el.textContent===message) el.textContent="";
+  },4500);
 }
 
 function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  return String(value??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[c]);
 }
 
 function extractSignals(data) {
-  if (Array.isArray(data)) return data;
-  if (!data || typeof data !== "object") return [];
+  if(Array.isArray(data)) return data;
+  if(!data || typeof data!=="object") return [];
 
-  for (const key of ["signals", "items", "data", "signale", "database", "entries"]) {
-    if (Array.isArray(data[key])) return data[key];
-    if (data[key] && typeof data[key] === "object") {
-      const values = Object.values(data[key]);
-      if (values.length && values.some(v => v && typeof v === "object")) return values;
+  for(const key of ["signals","items","data","signale","database","entries"]) {
+    if(Array.isArray(data[key])) return data[key];
+    if(data[key] && typeof data[key]==="object") {
+      const values=Object.values(data[key]);
+      if(values.length && values.some(v=>v && typeof v==="object")) return values;
     }
   }
-  const values = Object.values(data);
-  if (values.length && values.every(v => v && typeof v === "object")) return values;
+
+  const values=Object.values(data);
+  if(values.length && values.every(v=>v && typeof v==="object")) return values;
   return [];
 }
 
-/* 🔐 AUTHENTIFIZIERUNG (SUPABASE) */
-async function handleLogin() {
-  const email = $("authEmail").value.trim();
-  const password = $("authPassword").value.trim();
-  if (!email || !password) return notify("Bitte E-Mail und Passwort eingeben.");
+/* AUTHENTIFIZIERUNG */
 
-  const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
-  if (error) {
-    notify("Login fehlgeschlagen: " + error.message);
+async function handleLogin() {
+  const email=$("authEmail").value.trim();
+  const password=$("authPassword").value.trim();
+
+  if(!email || !password) return notify("Bitte E-Mail und Passwort eingeben.");
+
+  const {data,error}=await _supabase.auth.signInWithPassword({email,password});
+
+  if(error) {
+    notify("Login fehlgeschlagen: "+error.message);
   } else {
-    currentUser = data.user;
+    currentUser=data.user;
     notify("Erfolgreich angemeldet!");
     initUserSession();
   }
 }
 
 async function handleSignUp() {
-  const email = $("authEmail").value.trim();
-  const password = $("authPassword").value.trim();
-  if (!email || !password) return notify("Bitte E-Mail und Passwort eingeben.");
+  const email=$("authEmail").value.trim();
+  const password=$("authPassword").value.trim();
 
-  const { data, error } = await _supabase.auth.signUp({ email, password });
-  if (error) {
-    notify("Registrierung fehlgeschlagen: " + error.message);
+  if(!email || !password) return notify("Bitte E-Mail und Passwort eingeben.");
+
+  const {data,error}=await _supabase.auth.signUp({email,password});
+
+  if(error) {
+    notify("Registrierung fehlgeschlagen: "+error.message);
   } else {
     notify("Konto erstellt! Du kannst dich jetzt einloggen.");
   }
@@ -552,302 +632,499 @@ async function handleSignUp() {
 
 async function handleLogout() {
   await _supabase.auth.signOut();
-  currentUser = null;
-  signals = [];
-  $("appMain").hidden = true;
-  $("mainNav").hidden = true;
-  $("logoutBtn").style.display = "none";
-  $("authPanel").hidden = false;
+
+  currentUser=null;
+  signals=[];
+  current=null;
+
+  $("appMain").hidden=true;
+  $("mainNav").hidden=true;
+  $("logoutBtn").style.display="none";
+  $("authPanel").hidden=false;
+
   notify("Erfolgreich abgemeldet.");
 }
 
 async function checkSession() {
-  const { data } = await _supabase.auth.getSession();
-  if (data.session) {
-    currentUser = data.session.user;
+  const {data,error}=await _supabase.auth.getSession();
+
+  if(error) {
+    notify("Sitzungsfehler: "+error.message);
+    return;
+  }
+
+  if(data.session) {
+    currentUser=data.session.user;
     initUserSession();
   }
 }
 
 function initUserSession() {
-  $("authPanel").hidden = true;
-  $("appMain").hidden = false;
-  $("mainNav").hidden = false;
-  $("logoutBtn").style.display = "block";
+  $("authPanel").hidden=true;
+  $("appMain").hidden=false;
+  $("mainNav").hidden=false;
+  $("logoutBtn").style.display="block";
   loadCloudSignals();
 }
 
-/* ☁️ DATENBANK-OPERATIONEN (ROBUSTES LADEN MIT SEITENWEISEM ABRUF) */
+/* SIGNALDATEN OHNE BILDER LADEN */
+
 async function loadCloudSignals() {
-  if (!currentUser) return;
+  if(!currentUser) return;
+
   notify("Lade deine Signale...");
-  
+
   try {
-    let allData = [];
-    let page = 0;
-    const pageSize = 20; // 20 Signale pro Anfrage, um Payload-Limits zu umgehen
-    let fetchMore = true;
+    let allData=[];
+    let page=0;
+    const pageSize=20;
+    let fetchMore=true;
 
-    while (fetchMore) {
-      const { data, error } = await _supabase
-        .from('signals')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .range(page * pageSize, (page + 1) * pageSize - 1);
+    while(fetchMore) {
+      const {data,error}=await _supabase
+        .from("signals")
+        .select("id, short, long, meaning, category, user_id")
+        .eq("user_id",currentUser.id)
+        .range(page*pageSize,(page+1)*pageSize-1);
 
-      if (error) throw error;
+      if(error) throw error;
 
-      if (data && data.length > 0) {
-        allData = allData.concat(data);
+      if(data && data.length>0) {
+        allData=allData.concat(data);
         page++;
-        if (data.length < pageSize) fetchMore = false;
+
+        if(data.length<pageSize) fetchMore=false;
       } else {
-        fetchMore = false;
+        fetchMore=false;
       }
     }
 
-    signals = allData;
+    signals=allData;
+
     updateCategories();
     renderList();
     nextLearn();
-    notify(`Erfolgreich ${signals.length} Signale geladen!`);
-  } catch (err) {
-    console.error(err);
-    notify("Fehler beim Laden der Signale: " + err.message);
+
+    notify("Erfolgreich "+signals.length+" Signale geladen!");
+
+  } catch(err) {
+    console.error("Fehler beim Laden der Signale:",err);
+    notify("Fehler beim Laden der Signale: "+(err.message||String(err)));
   }
 }
 
-async function saveSignal() {
-  if (!currentUser) return;
-  const id = $("editId").value;
-  const short = $("shortName").value.trim();
-  const long = $("longName").value.trim();
-  const meaning = $("meaning").value.trim();
-  const category = $("category").value || "Sonstige";
+/* EINZELNES SIGNALBILD LADEN */
 
-  if (!short || !long || !meaning) {
+async function loadSignalImage(signal,img,placeholder) {
+  if(!signal || !signal.id || !img || !placeholder || !currentUser) return;
+
+  const token=++imageLoadToken;
+
+  img.hidden=true;
+  placeholder.hidden=false;
+  placeholder.textContent="Signalbild wird geladen...";
+
+  try {
+    const {data,error}=await _supabase
+      .from("signals")
+      .select("image")
+      .eq("id",signal.id)
+      .eq("user_id",currentUser.id)
+      .maybeSingle();
+
+    if(error) throw error;
+
+    if(token!==imageLoadToken) return;
+
+    if(data && data.image) {
+      signal.image=data.image;
+      setImage(img,placeholder,data.image);
+    } else {
+      signal.image="";
+      setImage(img,placeholder,"");
+    }
+
+  } catch(err) {
+    console.error("Bild konnte nicht geladen werden:",err);
+
+    if(token===imageLoadToken) {
+      placeholder.textContent="Bild konnte nicht geladen werden.";
+      img.hidden=true;
+      placeholder.hidden=false;
+    }
+  }
+}
+
+/* SIGNAL SPEICHERN UND BEARBEITEN */
+
+async function saveSignal() {
+  if(!currentUser) return;
+
+  const id=$("editId").value;
+  const short=$("shortName").value.trim();
+  const long=$("longName").value.trim();
+  const meaning=$("meaning").value.trim();
+  const category=$("category").value||"Sonstige";
+
+  if(!short || !long || !meaning) {
     notify("Bitte Kurzbezeichnung, Langbezeichnung und Bedeutung ausfüllen.");
     return;
   }
 
-  const payload = {
-    short, long, meaning, category,
-    image: tempImageBase64 || $("imageUrl").value.trim(),
-    user_id: currentUser.id
+  const existing=id ? signals.find(s=>String(s.id)===String(id)) : null;
+
+  let imageValue=tempImageBase64 || $("imageUrl").value.trim();
+
+  /* Vorhandenes Bild nicht versehentlich löschen */
+  if(id && !imageValue && existing) {
+    imageValue=existing.image || "";
+  }
+
+  if(id && !imageValue && existing && existing.image===undefined) {
+    const {data,error}=await _supabase
+      .from("signals")
+      .select("image")
+      .eq("id",id)
+      .eq("user_id",currentUser.id)
+      .maybeSingle();
+
+    if(error) {
+      notify("Vorhandenes Bild konnte nicht geprüft werden: "+error.message);
+      return;
+    }
+
+    imageValue=data?.image || "";
+  }
+
+  const payload={
+    short,
+    long,
+    meaning,
+    category,
+    image:imageValue,
+    user_id:currentUser.id
   };
 
-  if (id) {
-    const { error } = await _supabase.from('signals').update(payload).eq('id', id);
-    if (error) notify("Fehler beim Aktualisieren: " + error.message);
-    else notify("Signal aktualisiert!");
+  if(id) {
+    const {error}=await _supabase
+      .from("signals")
+      .update(payload)
+      .eq("id",id)
+      .eq("user_id",currentUser.id);
+
+    if(error) {
+      notify("Fehler beim Aktualisieren: "+error.message);
+      return;
+    }
+
+    notify("Signal aktualisiert!");
+
   } else {
-    const { error } = await _supabase.from('signals').insert([payload]);
-    if (error) notify("Fehler beim Speichern: " + error.message);
-    else notify("Neues Signal gespeichert!");
+    const {error}=await _supabase
+      .from("signals")
+      .insert([payload]);
+
+    if(error) {
+      notify("Fehler beim Speichern: "+error.message);
+      return;
+    }
+
+    notify("Neues Signal gespeichert!");
   }
 
   clearForm();
-  loadCloudSignals();
+  await loadCloudSignals();
 }
 
 async function deleteSignal(id) {
-  if (!confirm("Möchtest du dieses Signal wirklich löschen?")) return;
-  const { error } = await _supabase.from('signals').delete().eq('id', id);
-  if (error) notify("Fehler beim Löschen.");
-  else {
+  if(!confirm("Möchtest du dieses Signal wirklich löschen?")) return;
+
+  const {error}=await _supabase
+    .from("signals")
+    .delete()
+    .eq("id",id)
+    .eq("user_id",currentUser.id);
+
+  if(error) {
+    notify("Fehler beim Löschen: "+error.message);
+  } else {
     notify("Signal gelöscht.");
-    loadCloudSignals();
+    await loadCloudSignals();
   }
 }
 
-/* 💾 DATENSICHERUNG (EXPORT & EINZEL-UPLOAD) */
-function exportData() {
-  if (!signals.length) {
+/* EXPORT */
+
+async function exportData() {
+  if(!signals.length) {
     return notify("Keine Signale zum Exportieren vorhanden.");
   }
-  
-  const exportSignals = signals.map(s => ({
-    short: s.short,
-    long: s.long,
-    meaning: s.meaning,
-    category: s.category,
-    image: s.image
-  }));
 
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ version: 5, signals: exportSignals }, null, 2));
-  const downloadAnchor = document.createElement('a');
-  downloadAnchor.setAttribute("href", dataStr);
-  downloadAnchor.setAttribute("download", `signale_backup_${new Date().toISOString().slice(0,10)}.json`);
-  document.body.appendChild(downloadAnchor);
-  downloadAnchor.click();
-  downloadAnchor.remove();
-  
-  notify("Export erfolgreich gestartet!");
+  notify("Bereite Export vor...");
+
+  try {
+    const exportSignals=[];
+
+    for(let i=0;i<signals.length;i++) {
+      const s=signals[i];
+      let image=s.image || "";
+
+      if(image===undefined || image===null) {
+        const {data,error}=await _supabase
+          .from("signals")
+          .select("image")
+          .eq("id",s.id)
+          .eq("user_id",currentUser.id)
+          .maybeSingle();
+
+        if(error) throw error;
+        image=data?.image || "";
+      }
+
+      exportSignals.push({
+        short:s.short,
+        long:s.long,
+        meaning:s.meaning,
+        category:s.category,
+        image:image
+      });
+    }
+
+    const backup={
+      version:5,
+      signals:exportSignals
+    };
+
+    const blob=new Blob(
+      [JSON.stringify(backup,null,2)],
+      {type:"application/json"}
+    );
+
+    const url=URL.createObjectURL(blob);
+    const anchor=document.createElement("a");
+
+    anchor.href=url;
+    anchor.download="signale_backup_"+new Date().toISOString().slice(0,10)+".json";
+
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
+
+    notify("Export erfolgreich gestartet!");
+
+  } catch(err) {
+    console.error(err);
+    notify("Export fehlgeschlagen: "+err.message);
+  }
 }
 
+/* IMPORT – EINZELNER UPLOAD */
+
 function handleImportFile(file) {
-  if (!file || !currentUser) return;
-  
-  notify("Lese große Backup-Datei ein...");
-  
-  const reader = new FileReader();
-  
-  reader.onerror = () => {
+  if(!file || !currentUser) return;
+
+  notify("Lese Backup-Datei ein...");
+
+  const reader=new FileReader();
+
+  reader.onerror=()=>{
     notify("Fehler beim Lesen der Datei.");
   };
 
-  reader.onload = async (e) => {
+  reader.onload=async e=>{
     try {
-      const textContent = e.target.result;
-      if (!textContent || textContent.trim() === "") {
+      const textContent=e.target.result;
+
+      if(!textContent || !textContent.trim()) {
         throw new Error("Die Datei ist leer.");
       }
 
-      const parsed = JSON.parse(textContent);
-      const rawSignals = extractSignals(parsed);
+      const parsed=JSON.parse(textContent);
+      const rawSignals=extractSignals(parsed);
 
-      if (!rawSignals.length) {
+      if(!rawSignals.length) {
         throw new Error("Keine gültigen Signal-Daten in der Datei gefunden.");
       }
 
-      notify(`Starte Einzel-Import von ${rawSignals.length} Signalen...`);
+      notify("Starte Import von "+rawSignals.length+" Signalen...");
 
-      let successCount = 0;
-      let failCount = 0;
+      let successCount=0;
+      let failCount=0;
 
-      for (let i = 0; i < rawSignals.length; i++) {
-        const s = rawSignals[i];
-        const payloadItem = {
-          short: s.short || s.shortName || s.kurz || "",
-          long: s.long || s.longName || s.lang || "",
-          meaning: s.meaning || s.description || s.bedeutung || "",
-          category: s.category || s.kategorie || "Sonstige",
-          image: s.image || s.imageUrl || s.bild || "",
-          user_id: currentUser.id
+      for(let i=0;i<rawSignals.length;i++) {
+        const s=rawSignals[i];
+
+        const payloadItem={
+          short:String(s.short||s.shortName||s.kurz||""),
+          long:String(s.long||s.longName||s.lang||""),
+          meaning:String(s.meaning||s.description||s.bedeutung||""),
+          category:String(s.category||s.kategorie||"Sonstige"),
+          image:s.image||s.imageUrl||s.bild||"",
+          user_id:currentUser.id
         };
 
-        const { error } = await _supabase.from('signals').insert([payloadItem]);
-        
-        if (error) {
-          console.error(`Fehler bei Signal ${i+1}:`, error.message);
+        if(!payloadItem.short || !payloadItem.long || !payloadItem.meaning) {
+          failCount++;
+          continue;
+        }
+
+        const {error}=await _supabase
+          .from("signals")
+          .insert([payloadItem]);
+
+        if(error) {
+          console.error("Fehler bei Signal "+(i+1),error);
           failCount++;
         } else {
           successCount++;
         }
 
-        if ((i + 1) % 3 === 0 || i === rawSignals.length - 1) {
-          notify(`Fortschritt: ${i + 1} / ${rawSignals.length} importiert...`);
+        if((i+1)%3===0 || i===rawSignals.length-1) {
+          notify("Fortschritt: "+(i+1)+" / "+rawSignals.length);
         }
       }
 
-      notify(`Import fertig! ${successCount} erfolgreich, ${failCount} Fehler.`);
-      loadCloudSignals();
-    } catch (err) {
+      notify("Import fertig! "+successCount+" erfolgreich, "+failCount+" Fehler.");
+
+      await loadCloudSignals();
+
+    } catch(err) {
       console.error(err);
-      notify("Fehler beim Import: " + err.message);
+      notify("Fehler beim Import: "+err.message);
     }
   };
 
   reader.readAsText(file);
 }
 
-/* Page Navigation */
+/* NAVIGATION */
+
 function showPage(page) {
-  ["learn", "exam", "stats", "manage"].forEach(id => {
-    const visible = id === page;
-    const el = $(id);
-    if (el) {
-      el.hidden = !visible;
-      el.style.display = visible ? "block" : "none";
+  ["learn","exam","stats","manage"].forEach(id=>{
+    const visible=id===page;
+    const el=$(id);
+
+    if(el) {
+      el.hidden=!visible;
+      el.style.display=visible?"block":"none";
     }
   });
 
-  document.querySelectorAll("#mainNav button").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.page === page);
+  document.querySelectorAll("#mainNav button").forEach(btn=>{
+    btn.classList.toggle("active",btn.dataset.page===page);
   });
 
-  if (page === "stats") renderStats();
-  if (page === "manage") renderList();
-  window.scrollTo(0, 0);
+  if(page==="stats") renderStats();
+  if(page==="manage") renderList();
+
+  window.scrollTo(0,0);
 }
 
+/* KATEGORIEN */
+
 function updateCategories() {
-  const select = $("learnCategory");
-  if (!select) return;
-  const old = select.value || "all";
-  select.innerHTML = '<option value="all">Alle Signale</option>';
+  const select=$("learnCategory");
+  if(!select) return;
 
-  const baseCats = ["Lf", "Bü", "Ne", "Hp", "Vr", "Ks", "Hl", "Sh", "Ra", "Zs", "El", "So", "Sonstige"];
-  const allCatsSet = new Set([...baseCats, ...signals.map(s => s.category || "Sonstige")]);
-  const categories = [...allCatsSet].sort();
+  const old=select.value||"all";
+  select.innerHTML='<option value="all">Alle Signale</option>';
 
-  categories.forEach(cat => {
-    const opt = document.createElement("option");
-    opt.value = cat;
-    opt.textContent = cat;
+  const baseCats=["Lf","Bü","Ne","Hp","Vr","Ks","Hl","Sh","Ra","Zs","El","So","Sonstige"];
+  const allCatsSet=new Set([...baseCats,...signals.map(s=>s.category||"Sonstige")]);
+  const categories=[...allCatsSet].sort();
+
+  categories.forEach(cat=>{
+    const opt=document.createElement("option");
+    opt.value=cat;
+    opt.textContent=cat;
     select.appendChild(opt);
   });
 
-  select.value = [...select.options].some(o => o.value === old) ? old : "all";
+  select.value=[...select.options].some(o=>o.value===old)?old:"all";
 }
 
 function filteredSignals() {
-  const catEl = $("learnCategory");
-  const cat = catEl ? catEl.value : "all";
-  return signals.filter(s => cat === "all" || s.category === cat);
+  const catEl=$("learnCategory");
+  const cat=catEl?catEl.value:"all";
+
+  return signals.filter(s=>cat==="all" || s.category===cat);
 }
 
 function chooseSignal(list) {
-  if (!list.length) return null;
-  return list[Math.floor(Math.random() * list.length)];
+  if(!list.length) return null;
+  return list[Math.floor(Math.random()*list.length)];
 }
 
-function setImage(img, placeholder, src) {
-  if (!img || !placeholder) return;
-  img.onerror = null;
-  if (src && src.trim() !== "") {
-    img.src = src;
-    img.hidden = false;
-    placeholder.hidden = true;
-    img.onerror = () => { img.hidden = true; placeholder.hidden = false; };
+/* BILDER */
+
+function setImage(img,placeholder,src) {
+  if(!img || !placeholder) return;
+
+  img.onerror=null;
+
+  if(src && String(src).trim()!=="") {
+    img.onload=()=>{
+      img.hidden=false;
+      placeholder.hidden=true;
+    };
+
+    img.onerror=()=>{
+      img.hidden=true;
+      placeholder.hidden=false;
+      placeholder.textContent="Bild konnte nicht angezeigt werden.";
+    };
+
+    img.src=src;
   } else {
     img.removeAttribute("src");
-    img.hidden = true;
-    placeholder.hidden = false;
+    img.hidden=true;
+    placeholder.hidden=false;
+    placeholder.textContent="Kein Signalbild hinterlegt";
   }
 }
 
+/* ANTWORTEN */
+
 function clean(value) {
-  return String(value ?? "").toLowerCase()
-    .replace(/ä/g, "ae").replace(/ö/g, "oe")
-    .replace(/ü/g, "ue").replace(/ß/g, "ss")
-    .replace(/[.,;:!?()[\]{}"'`]/g, " ")
-    .replace(/\s+/g, " ").trim();
+  return String(value??"").toLowerCase()
+    .replace(/ä/g,"ae")
+    .replace(/ö/g,"oe")
+    .replace(/ü/g,"ue")
+    .replace(/ß/g,"ss")
+    .replace(/[.,;:!?()[\]{}"'`]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
 }
 
-function sameAnswer(user, correct) {
-  return clean(user) === clean(correct);
+function sameAnswer(user,correct) {
+  return clean(user)===clean(correct);
 }
 
-function evaluate(signal, short, long, meaning) {
+function evaluate(signal,short,long,meaning) {
   return {
-    short: sameAnswer(short, signal.short),
-    long: sameAnswer(long, signal.long),
-    meaning: sameAnswer(meaning, signal.meaning)
+    short:sameAnswer(short,signal.short),
+    long:sameAnswer(long,signal.long),
+    meaning:sameAnswer(meaning,signal.meaning)
   };
 }
 
+/* BEWERTUNG: JE FELD 1 PUNKT, ABER FALSCHE BEDEUTUNG = 0 */
+
 function calculatePoints(result) {
-  if (!result.meaning) return 0;
-  return Number(result.short) + Number(result.long) + 1;
+  if(!result.meaning) return 0;
+  return Number(result.short)+Number(result.long)+1;
 }
 
 function solutionHTML(signal) {
-  const short = String(signal.short || "").trim();
-  const long = String(signal.long || "").trim();
-  const meaning = String(signal.meaning || "").trim();
+  const short=String(signal.short||"").trim();
+  const long=String(signal.long||"").trim();
+  const meaning=String(signal.meaning||"").trim();
 
-  const valueHTML = v => v ? `<span class="solution-value">${esc(v)}</span>` : `<span class="missing">FEHLT IN DATENBANK</span>`;
+  const valueHTML=v=>v
+    ? `<span class="solution-value">${esc(v)}</span>`
+    : `<span class="missing">FEHLT IN DATENBANK</span>`;
 
   return `
     <div class="solution">
@@ -858,115 +1135,153 @@ function solutionHTML(signal) {
     </div>`;
 }
 
-function feedbackHTML(signal, result) {
-  const points = calculatePoints(result);
-  const allCorrect = points === 3;
-  const line = (label, isOk) => `
+function feedbackHTML(signal,result) {
+  const points=calculatePoints(result);
+  const allCorrect=points===3;
+
+  const line=(label,isOk)=>`
     <p class="score-line">
       <span>${label}</span>
-      <b class="${isOk ? "correct" : "incorrect"}">${isOk ? "✓ Richtig" : "✗ Falsch"}</b>
+      <b class="${isOk?"correct":"incorrect"}">${isOk?"✓ Richtig":"✗ Falsch"}</b>
     </p>`;
 
-  let html = `<h3 class="${allCorrect ? "correct" : "incorrect"}">${allCorrect ? "✓ Alles richtig!" : "✗ Nicht vollständig richtig"}</h3>`;
-  html += line("Kurzbezeichnung", result.short);
-  html += line("Langbezeichnung", result.long);
-  html += line("Bedeutung", result.meaning);
+  let html=`
+    <h3 class="${allCorrect?"correct":"incorrect"}">
+      ${allCorrect?"✓ Alles richtig!":"✗ Nicht vollständig richtig"}
+    </h3>`;
 
-  if (!result.meaning) {
-    html += `
+  html+=line("Kurzbezeichnung",result.short);
+  html+=line("Langbezeichnung",result.long);
+  html+=line("Bedeutung",result.meaning);
+
+  if(!result.meaning) {
+    html+=`
       <div class="warning">
         <h3>⚠ BETRIEBSGEFAHR</h3>
         <p>Die Signalbedeutung ist falsch. Sämtliche Punkte für diese Frage verfallen (0 Punkte).</p>
       </div>`;
   }
-  if (!allCorrect) html += solutionHTML(signal);
-  html += `<hr><h3>Ergebnis: ${points} von 3 Punkten</h3>`;
+
+  if(!allCorrect) html+=solutionHTML(signal);
+
+  html+=`<hr><h3>Ergebnis: ${points} von 3 Punkten</h3>`;
+
   return html;
 }
 
-/* Lernmodus Logik */
+/* LERNMODUS */
+
 function nextLearn() {
-  const list = filteredSignals();
-  if (!list.length) {
-    current = null;
-    $("learnImage").hidden = true;
-    $("learnNoImage").hidden = false;
-    $("learnNoImage").textContent = "Keine Signale in dieser Kategorie. Wechsel in die Verwaltung zum Anlegen.";
-    $("learnCounter").textContent = "Keine Frage";
-    $("learnFeedback").hidden = true;
-    $("nextLearn").hidden = true;
-    $("checkLearn").disabled = true;
-    $("skipLearn").disabled = true;
+  const list=filteredSignals();
+
+  if(!list.length) {
+    current=null;
+
+    imageLoadToken++;
+
+    $("learnImage").hidden=true;
+    $("learnNoImage").hidden=false;
+    $("learnNoImage").textContent="Keine Signale in dieser Kategorie. Wechsel in die Verwaltung zum Anlegen.";
+    $("learnCounter").textContent="Keine Frage";
+    $("learnFeedback").hidden=true;
+    $("nextLearn").hidden=true;
+    $("checkLearn").disabled=true;
+    $("skipLearn").disabled=true;
+
     return;
   }
-  current = chooseSignal(list);
-  learnNumber++;
-  learnDone = false;
-  $("learnCounter").textContent = "Frage " + learnNumber;
-  $("learnProgress").style.width = ((learnNumber % 10) * 10 || 10) + "%";
-  setImage($("learnImage"), $("learnNoImage"), current.image);
 
-  $("learnShort").value = "";
-  $("learnLong").value = "";
-  $("learnMeaning").value = "";
-  $("learnFeedback").hidden = true;
-  $("nextLearn").hidden = true;
-  $("checkLearn").disabled = false;
-  $("skipLearn").disabled = false;
+  current=chooseSignal(list);
+  learnNumber++;
+  learnDone=false;
+
+  $("learnCounter").textContent="Frage "+learnNumber;
+  $("learnProgress").style.width=((learnNumber%10)*10||10)+"%";
+
+  $("learnImage").hidden=true;
+  $("learnNoImage").hidden=false;
+  $("learnNoImage").textContent="Signalbild wird geladen...";
+
+  loadSignalImage(current,$("learnImage"),$("learnNoImage"));
+
+  $("learnShort").value="";
+  $("learnLong").value="";
+  $("learnMeaning").value="";
+
+  $("learnFeedback").hidden=true;
+  $("nextLearn").hidden=true;
+  $("checkLearn").disabled=false;
+  $("skipLearn").disabled=false;
 }
 
 function checkLearn() {
-  if (!current || learnDone) return;
-  const result = evaluate(current, $("learnShort").value, $("learnLong").value, $("learnMeaning").value);
-  learnDone = true;
-  $("learnFeedback").innerHTML = feedbackHTML(current, result);
-  $("learnFeedback").hidden = false;
-  $("checkLearn").disabled = true;
-  $("skipLearn").disabled = true;
-  $("nextLearn").hidden = false;
+  if(!current || learnDone) return;
+
+  const result=evaluate(
+    current,
+    $("learnShort").value,
+    $("learnLong").value,
+    $("learnMeaning").value
+  );
+
+  learnDone=true;
+
+  $("learnFeedback").innerHTML=feedbackHTML(current,result);
+  $("learnFeedback").hidden=false;
+  $("checkLearn").disabled=true;
+  $("skipLearn").disabled=true;
+  $("nextLearn").hidden=false;
 }
 
 function skipLearn() {
-  if (!learnDone) nextLearn();
+  if(!learnDone) nextLearn();
 }
 
-/* VERWALTUNG & FORMULAR */
+/* VERWALTUNG */
+
 function clearForm() {
-  $("editId").value = "";
-  $("shortName").value = "";
-  $("longName").value = "";
-  $("meaning").value = "";
-  $("imageUrl").value = "";
-  $("category").value = "Lf";
-  $("imageFile").value = "";
-  $("cameraFile").value = "";
-  tempImageBase64 = "";
-  $("formTitle").textContent = "Signal hinzufügen";
-  $("saveSignal").textContent = "Signal speichern";
+  $("editId").value="";
+  $("shortName").value="";
+  $("longName").value="";
+  $("meaning").value="";
+  $("imageUrl").value="";
+  $("category").value="Lf";
+  $("imageFile").value="";
+  $("cameraFile").value="";
+
+  tempImageBase64="";
+
+  $("formTitle").textContent="Signal hinzufügen";
+  $("saveSignal").textContent="Signal speichern";
 }
 
 function renderList() {
-  const query = $("searchSignals") ? $("searchSignals").value.toLowerCase().trim() : "";
-  const container = $("signalList");
-  if (!container) return;
+  const query=$("searchSignals")?$("searchSignals").value.toLowerCase().trim():"";
+  const container=$("signalList");
 
-  const list = signals.filter(s => {
-    const text = [s.short, s.long, s.meaning, s.category].map(v => String(v || "")).join(" ").toLowerCase();
+  if(!container) return;
+
+  const list=signals.filter(s=>{
+    const text=[s.short,s.long,s.meaning,s.category]
+      .map(v=>String(v||""))
+      .join(" ")
+      .toLowerCase();
+
     return text.includes(query);
   });
 
-  $("signalCount").textContent = signals.length;
+  $("signalCount").textContent=signals.length;
 
-  if (!list.length) {
-    container.innerHTML = "<p class='muted'>Keine Signale vorhanden.</p>";
+  if(!list.length) {
+    container.innerHTML="<p class='muted'>Keine Signale vorhanden.</p>";
     return;
   }
 
-  container.innerHTML = list.map(s => `
+  container.innerHTML=list.map(s=>`
     <div class="signal-card">
       <h3>${esc(s.short)} – ${esc(s.long)}</h3>
       <small class="muted">Kategorie: <b>${esc(s.category)}</b></small>
-      <p>${esc(s.meaning || "Keine Bedeutung hinterlegt")}</p>
+      <p>${esc(s.meaning||"Keine Bedeutung hinterlegt")}</p>
       <div class="actions">
         <button type="button" class="btn-edit" data-id="${esc(s.id)}">✏️ Bearbeiten</button>
         <button type="button" class="danger btn-delete" data-id="${esc(s.id)}">🗑 Löschen</button>
@@ -975,89 +1290,115 @@ function renderList() {
 }
 
 function handleListClick(e) {
-  const btnEdit = e.target.closest(".btn-edit");
-  const btnDelete = e.target.closest(".btn-delete");
+  const btnEdit=e.target.closest(".btn-edit");
+  const btnDelete=e.target.closest(".btn-delete");
 
-  if (btnEdit) {
+  if(btnEdit) {
     editSignal(btnEdit.getAttribute("data-id"));
-  } else if (btnDelete) {
+  } else if(btnDelete) {
     deleteSignal(btnDelete.getAttribute("data-id"));
   }
 }
 
-function editSignal(id) {
-  const signal = signals.find(s => String(s.id) === String(id));
-  if (!signal) {
+async function editSignal(id) {
+  const signal=signals.find(s=>String(s.id)===String(id));
+
+  if(!signal) {
     notify("Signal nicht gefunden.");
     return;
   }
 
-  $("editId").value = signal.id;
-  $("shortName").value = signal.short || "";
-  $("longName").value = signal.long || "";
-  $("meaning").value = signal.meaning || "";
-  $("category").value = signal.category || "Lf";
-  $("imageUrl").value = signal.image || "";
-  tempImageBase64 = "";
+  $("editId").value=signal.id;
+  $("shortName").value=signal.short||"";
+  $("longName").value=signal.long||"";
+  $("meaning").value=signal.meaning||"";
+  $("category").value=signal.category||"Lf";
 
-  $("formTitle").textContent = "Signal bearbeiten";
-  $("saveSignal").textContent = "Änderungen speichern";
+  $("imageUrl").value="";
+  tempImageBase64="";
+
+  $("formTitle").textContent="Signal bearbeiten";
+  $("saveSignal").textContent="Änderungen speichern";
 
   showPage("manage");
+
   $("shortName").focus();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({top:0,behavior:"smooth"});
+
   notify("Signal in Formular geladen.");
 }
 
-/* Statistik Platzhalter */
+/* STATISTIK */
+
 function renderStats() {
-  $("statAnswered").textContent = stats.answered || 0;
-  $("statPoints").textContent = stats.points || 0;
-  $("statRate").textContent = "0 %";
-  $("statExams").textContent = stats.exams || 0;
+  $("statAnswered").textContent=stats.answered||0;
+  $("statPoints").textContent=stats.points||0;
+  $("statRate").textContent="0 %";
+  $("statExams").textContent=stats.exams||0;
 }
 
+/* BILDAUSWAHL */
+
 function handleImageInput(file) {
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    tempImageBase64 = e.target.result;
+  if(!file) return;
+
+  const reader=new FileReader();
+
+  reader.onload=e=>{
+    tempImageBase64=e.target.result;
     notify("Bild erfolgreich ausgewählt!");
   };
+
+  reader.onerror=()=>{
+    notify("Bild konnte nicht gelesen werden.");
+  };
+
   reader.readAsDataURL(file);
 }
 
-function initEvents() {
-  $("loginBtn").addEventListener("click", handleLogin);
-  $("signUpBtn").addEventListener("click", handleSignUp);
-  $("logoutBtn").addEventListener("click", handleLogout);
+/* EVENTS */
 
-  $("mainNav").addEventListener("click", e => {
-    const btn = e.target.closest("button[data-page]");
-    if (btn) showPage(btn.dataset.page);
+function initEvents() {
+  $("loginBtn").addEventListener("click",handleLogin);
+  $("signUpBtn").addEventListener("click",handleSignUp);
+  $("logoutBtn").addEventListener("click",handleLogout);
+
+  $("mainNav").addEventListener("click",e=>{
+    const btn=e.target.closest("button[data-page]");
+    if(btn) showPage(btn.dataset.page);
   });
 
-  $("checkLearn").addEventListener("click", checkLearn);
-  $("nextLearn").addEventListener("click", nextLearn);
-  $("skipLearn").addEventListener("click", skipLearn);
-  $("learnCategory").addEventListener("change", nextLearn);
+  $("checkLearn").addEventListener("click",checkLearn);
+  $("nextLearn").addEventListener("click",nextLearn);
+  $("skipLearn").addEventListener("click",skipLearn);
+  $("learnCategory").addEventListener("change",nextLearn);
 
-  $("saveSignal").addEventListener("click", saveSignal);
-  $("clearForm").addEventListener("click", clearForm);
-  if ($("searchSignals")) $("searchSignals").addEventListener("input", renderList);
-  if ($("signalList")) $("signalList").addEventListener("click", handleListClick);
+  $("saveSignal").addEventListener("click",saveSignal);
+  $("clearForm").addEventListener("click",clearForm);
 
-  $("pickGallery").addEventListener("click", () => $("imageFile").click());
-  $("pickCamera").addEventListener("click", () => $("cameraFile").click());
-  $("imageFile").addEventListener("change", function() { handleImageInput(this.files[0]); this.value = ""; });
-  $("cameraFile").addEventListener("change", function() { handleImageInput(this.files[0]); this.value = ""; });
+  $("searchSignals").addEventListener("input",renderList);
+  $("signalList").addEventListener("click",handleListClick);
 
-  /* 💾 EXPORT & IMPORT EVENTS */
-  $("exportData").addEventListener("click", exportData);
-  $("importButton").addEventListener("click", () => $("importFile").click());
-  $("importFile").addEventListener("change", function() {
+  $("pickGallery").addEventListener("click",()=>$("imageFile").click());
+  $("pickCamera").addEventListener("click",()=>$("cameraFile").click());
+
+  $("imageFile").addEventListener("change",function(){
+    handleImageInput(this.files[0]);
+    this.value="";
+  });
+
+  $("cameraFile").addEventListener("change",function(){
+    handleImageInput(this.files[0]);
+    this.value="";
+  });
+
+  $("exportData").addEventListener("click",exportData);
+
+  $("importButton").addEventListener("click",()=>$("importFile").click());
+
+  $("importFile").addEventListener("change",function(){
     handleImportFile(this.files[0]);
-    this.value = "";
+    this.value="";
   });
 }
 
@@ -1066,11 +1407,12 @@ function init() {
   checkSession();
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
+if(document.readyState==="loading") {
+  document.addEventListener("DOMContentLoaded",init);
 } else {
   init();
 }
+
 })();
 </script>
 </body>
