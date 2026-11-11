@@ -492,6 +492,7 @@ let tempImageBase64 = "";
 
 function notify(message) {
   const el = $("notice");
+  if (!el) return;
   el.textContent = message;
   setTimeout(() => {
     if (el.textContent === message) el.textContent = "";
@@ -641,7 +642,7 @@ async function deleteSignal(id) {
   }
 }
 
-/* 💾 DATENSICHERUNG (EXPORT & CHUNK-BASIERTER IMPORT FÜR GROSSE 100MB+ DATEIEN) */
+/* 💾 DATENSICHERUNG (EXPORT & ROBUSTER CHUNK-IMPORT FÜR RIESIGE DATEIEN) */
 function exportData() {
   if (!signals.length) {
     return notify("Keine Signale zum Exportieren vorhanden.");
@@ -669,19 +670,30 @@ function exportData() {
 function handleImportFile(file) {
   if (!file || !currentUser) return;
   
+  notify("Lese große Backup-Datei ein...");
+  
   const reader = new FileReader();
+  
+  reader.onerror = () => {
+    notify("Fehler beim Lesen der Datei.");
+  };
+
   reader.onload = async (e) => {
     try {
-      const parsed = JSON.parse(e.target.result);
+      const textContent = e.target.result;
+      if (!textContent || textContent.trim() === "") {
+        throw new Error("Die Datei ist leer.");
+      }
+
+      const parsed = JSON.parse(textContent);
       const rawSignals = extractSignals(parsed);
 
       if (!rawSignals.length) {
         throw new Error("Keine gültigen Signal-Daten in der Datei gefunden.");
       }
 
-      notify(`Starte Import von ${rawSignals.length} Signalen in Paketen...`);
+      notify(`Starte Import von ${rawSignals.length} Signalen...`);
 
-      // Flexible Felderkennung aus alten oder neuen Backups + Zuwendung zur aktuellen User-ID
       const payload = rawSignals.map(s => ({
         short: s.short || s.shortName || s.kurz || "",
         long: s.long || s.longName || s.lang || "",
@@ -691,13 +703,15 @@ function handleImportFile(file) {
         user_id: currentUser.id
       }));
 
-      // In Häppchen (Chunks) von je 5 Signalen aufteilen, damit Supabase bei riesigen Base64-Bildern nicht abbricht
+      // In sicheren Chunks von je 5 Signalen hochladen, um Server-Limits zu umgehen
       const chunkSize = 5;
       for (let i = 0; i < payload.length; i += chunkSize) {
         const chunk = payload.slice(i, i + chunkSize);
         const { error } = await _supabase.from('signals').insert(chunk);
         if (error) throw error;
-        notify(`Fortschritt: ${Math.min(i + chunkSize, payload.length)} / ${payload.length} importiert...`);
+        
+        const importedCount = Math.min(i + chunkSize, payload.length);
+        notify(`Fortschritt: ${importedCount} / ${payload.length} importiert...`);
       }
 
       notify("Daten erfolgreich importiert!");
@@ -707,6 +721,7 @@ function handleImportFile(file) {
       notify("Fehler beim Import: " + err.message);
     }
   };
+
   reader.readAsText(file);
 }
 
@@ -715,8 +730,10 @@ function showPage(page) {
   ["learn", "exam", "stats", "manage"].forEach(id => {
     const visible = id === page;
     const el = $(id);
-    el.hidden = !visible;
-    el.style.display = visible ? "block" : "none";
+    if (el) {
+      el.hidden = !visible;
+      el.style.display = visible ? "block" : "none";
+    }
   });
 
   document.querySelectorAll("#mainNav button").forEach(btn => {
@@ -730,6 +747,7 @@ function showPage(page) {
 
 function updateCategories() {
   const select = $("learnCategory");
+  if (!select) return;
   const old = select.value || "all";
   select.innerHTML = '<option value="all">Alle Signale</option>';
 
@@ -748,7 +766,8 @@ function updateCategories() {
 }
 
 function filteredSignals() {
-  const cat = $("learnCategory").value;
+  const catEl = $("learnCategory");
+  const cat = catEl ? catEl.value : "all";
   return signals.filter(s => cat === "all" || s.category === cat);
 }
 
@@ -758,6 +777,7 @@ function chooseSignal(list) {
 }
 
 function setImage(img, placeholder, src) {
+  if (!img || !placeholder) return;
   img.onerror = null;
   if (src && src.trim() !== "") {
     img.src = src;
@@ -902,6 +922,7 @@ function clearForm() {
 function renderList() {
   const query = $("searchSignals") ? $("searchSignals").value.toLowerCase().trim() : "";
   const container = $("signalList");
+  if (!container) return;
 
   const list = signals.filter(s => {
     const text = [s.short, s.long, s.meaning, s.category].map(v => String(v || "")).join(" ").toLowerCase();
