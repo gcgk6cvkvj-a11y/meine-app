@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -374,7 +375,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
       <div class="stat">Heute aktiv<strong id="adminToday">–</strong></div>
       <div class="stat">Letzte 7 Tage<strong id="adminWeek">–</strong></div>
       <div class="stat">Letzte 30 Tage<strong id="adminMonth">–</strong></div>
-      <div class="stat">Erfasste Nutzer insgesamt<strong id="adminTotal">–</strong></div>
+      <div class="stat">Insgesamt registriert<strong id="adminTotal">–</strong></div>
     </div>
 
     <p class="muted" id="adminStatsUpdated" style="font-size:12px;">Wird geladen …</p>
@@ -719,7 +720,9 @@ async function loadAdminStats(){
     $("adminToday").textContent=data?.active_today??0;
     $("adminWeek").textContent=data?.active_7_days??0;
     $("adminMonth").textContent=data?.active_30_days??0;
-    $("adminTotal").textContent=data?.tracked_users??0;
+
+    /* NEU: Tatsächliche Gesamtzahl aller registrierten Konten */
+    $("adminTotal").textContent=data?.registered_users??0;
 
     $("adminStatsUpdated").textContent=
       "Zuletzt aktualisiert: "+new Date().toLocaleTimeString("de-DE");
