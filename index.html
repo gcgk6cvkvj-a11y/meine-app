@@ -505,7 +505,6 @@ function esc(value) {
   })[c]);
 }
 
-/* Hilfsfunktion zum Extrahieren von Signalen aus unterschiedlichen JSON-Formaten */
 function extractSignals(data) {
   if (Array.isArray(data)) return data;
   if (!data || typeof data !== "object") return [];
@@ -642,7 +641,7 @@ async function deleteSignal(id) {
   }
 }
 
-/* 💾 DATENSICHERUNG (EXPORT & ROBUSTER CHUNK-IMPORT FÜR RIESIGE DATEIEN) */
+/* 💾 DATENSICHERUNG (EXPORT & ULTRA-ROBUSTER EINZEL-UPLOAD) */
 function exportData() {
   if (!signals.length) {
     return notify("Keine Signale zum Exportieren vorhanden.");
@@ -692,29 +691,39 @@ function handleImportFile(file) {
         throw new Error("Keine gültigen Signal-Daten in der Datei gefunden.");
       }
 
-      notify(`Starte Import von ${rawSignals.length} Signalen...`);
+      notify(`Starte Einzel-Import von ${rawSignals.length} Signalen...`);
 
-      const payload = rawSignals.map(s => ({
-        short: s.short || s.shortName || s.kurz || "",
-        long: s.long || s.longName || s.lang || "",
-        meaning: s.meaning || s.description || s.bedeutung || "",
-        category: s.category || s.kategorie || "Sonstige",
-        image: s.image || s.imageUrl || s.bild || "",
-        user_id: currentUser.id
-      }));
+      let successCount = 0;
+      let failCount = 0;
 
-      // In sicheren Chunks von je 5 Signalen hochladen, um Server-Limits zu umgehen
-      const chunkSize = 5;
-      for (let i = 0; i < payload.length; i += chunkSize) {
-        const chunk = payload.slice(i, i + chunkSize);
-        const { error } = await _supabase.from('signals').insert(chunk);
-        if (error) throw error;
+      // Jedes Signal einzeln (1er-Schritte) hochladen, damit riesige Base64-Bilder niemals ein Payload-Limit sprengen
+      for (let i = 0; i < rawSignals.length; i++) {
+        const s = rawSignals[i];
+        const payloadItem = {
+          short: s.short || s.shortName || s.kurz || "",
+          long: s.long || s.longName || s.lang || "",
+          meaning: s.meaning || s.description || s.bedeutung || "",
+          category: s.category || s.kategorie || "Sonstige",
+          image: s.image || s.imageUrl || s.bild || "",
+          user_id: currentUser.id
+        };
+
+        const { error } = await _supabase.from('signals').insert([payloadItem]);
         
-        const importedCount = Math.min(i + chunkSize, payload.length);
-        notify(`Fortschritt: ${importedCount} / ${payload.length} importiert...`);
+        if (error) {
+          console.error(`Fehler bei Signal ${i+1}:`, error.message);
+          failCount++;
+        } else {
+          successCount++;
+        }
+
+        // Live-Status alle paar Signale aktualisieren
+        if ((i + 1) % 3 === 0 || i === rawSignals.length - 1) {
+          notify(`Fortschritt: ${i + 1} / ${rawSignals.length} verarbeitet...`);
+        }
       }
 
-      notify("Daten erfolgreich importiert!");
+      notify(`Import beendet! ${successCount} erfolgreich, ${failCount} fehlgeschlagen.`);
       loadCloudSignals();
     } catch (err) {
       console.error(err);
@@ -1043,7 +1052,7 @@ function init() {
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init);
 } else {
-  init();
+    init();
 }
 })();
 </script>
