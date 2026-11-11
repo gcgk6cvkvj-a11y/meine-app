@@ -157,11 +157,14 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 }
 .category-picker-header {
   display:flex;align-items:center;justify-content:space-between;
-  gap:10px;margin-bottom:10px;
+  gap:10px;margin-bottom:10px;flex-wrap:wrap;
 }
 .category-picker-header strong {font-size:14px}
 .category-grid {
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
+}
+.category-grid.collapsed {
+  display:none;
 }
 .category-option {
   display:flex;align-items:center;gap:8px;
@@ -177,6 +180,14 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 .category-summary {
   color:var(--accent);font-size:13px;font-weight:700;margin-top:10px;
 }
+.category-toggle {
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  font-size:13px;
+  background:#243448;
+  border:1px solid var(--border);
+}
 hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 #notice {
   min-height:20px;color:var(--green);font-weight:600;
@@ -190,6 +201,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   .signal-image {height:200px}
   .stat-grid {grid-template-columns:1fr}
   .category-grid {grid-template-columns:1fr 1fr}
+  .category-picker-header button {font-size:11px!important}
 }
 </style>
 </head>
@@ -232,6 +244,9 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
       </div>
       <div id="learnCategoryChoices" class="category-grid"></div>
       <div id="learnCategorySummary" class="category-summary"></div>
+      <button type="button" class="category-toggle" id="learnToggleCategories">
+        Auswahl schließen ▲
+      </button>
     </div>
 
     <div class="row">
@@ -280,6 +295,9 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
         </div>
         <div id="examCategoryChoices" class="category-grid"></div>
         <div id="examCategorySummary" class="category-summary"></div>
+        <button type="button" class="category-toggle" id="examToggleCategories">
+          Auswahl schließen ▲
+        </button>
       </div>
 
       <label for="examLength">Anzahl der Fragen</label>
@@ -462,6 +480,11 @@ let selectedLearnCategories=new Set(BASE_CATEGORIES);
 let selectedExamCategories=new Set(BASE_CATEGORIES);
 let knownCategories=new Set(BASE_CATEGORIES);
 
+/* NEU: STATUS DER AUF- UND ZUKLAPPBAREN AUSWAHL */
+
+let learnCategoriesOpen=true;
+let examCategoriesOpen=true;
+
 let examList=[];
 let examIndex=0;
 let examPoints=0;
@@ -580,8 +603,53 @@ function renderCategoryChoices(){
     "examCategoryChoices",selectedExamCategories,
     "examCat","examCategorySummary"
   );
+
+  /* NEU: Sichtbarkeit nach jedem Neuzeichnen beibehalten */
+  applyCategoryPickerVisibility();
+
   updateLearnAvailable();
   updateExamAvailable();
+}
+
+/* NEU: AUSWAHL EIN- UND AUSBLENDEN */
+
+function applyCategoryPickerVisibility(){
+  const learnGrid=$("learnCategoryChoices");
+  const examGrid=$("examCategoryChoices");
+  const learnButton=$("learnToggleCategories");
+  const examButton=$("examToggleCategories");
+
+  if(learnGrid){
+    learnGrid.classList.toggle("collapsed",!learnCategoriesOpen);
+  }
+
+  if(examGrid){
+    examGrid.classList.toggle("collapsed",!examCategoriesOpen);
+  }
+
+  if(learnButton){
+    learnButton.textContent=learnCategoriesOpen
+      ?"Auswahl schließen ▲"
+      :"Signalgruppen auswählen ▼";
+    learnButton.setAttribute("aria-expanded",String(learnCategoriesOpen));
+  }
+
+  if(examButton){
+    examButton.textContent=examCategoriesOpen
+      ?"Auswahl schließen ▲"
+      :"Signalgruppen auswählen ▼";
+    examButton.setAttribute("aria-expanded",String(examCategoriesOpen));
+  }
+}
+
+function toggleCategoryPicker(type){
+  if(type==="learn"){
+    learnCategoriesOpen=!learnCategoriesOpen;
+  }else{
+    examCategoriesOpen=!examCategoriesOpen;
+  }
+
+  applyCategoryPickerVisibility();
 }
 
 function handleCategoryChange(e,type){
@@ -914,7 +982,8 @@ function toggleSignalSelection(id,checked){
 
   updateSelectionUI();
 
-  const card=document.querySelector(`.signal-card[data-id="${CSS.escape(key)}"]`);
+  const card=[...document.querySelectorAll(".signal-card[data-id]")]
+    .find(el=>el.dataset.id===key);
   if(card)card.classList.toggle("selected",checked);
 }
 
@@ -1645,6 +1714,10 @@ function initEvents(){
   $("learnSelectAll").addEventListener("click",()=>toggleAllCategories("learn"));
   $("examSelectAll").addEventListener("click",()=>toggleAllCategories("exam"));
 
+  /* NEU: BUTTONS ZUM SCHLIESSEN UND ÖFFNEN */
+  $("learnToggleCategories").addEventListener("click",()=>toggleCategoryPicker("learn"));
+  $("examToggleCategories").addEventListener("click",()=>toggleCategoryPicker("exam"));
+
   $("checkLearn").addEventListener("click",checkLearn);
   $("nextLearn").addEventListener("click",nextLearn);
   $("skipLearn").addEventListener("click",skipLearn);
@@ -1703,6 +1776,7 @@ function init(){
   initEvents();
   renderCategoryChoices();
   renderCategorySelect();
+  applyCategoryPickerVisibility();
   checkSession();
 }
 
