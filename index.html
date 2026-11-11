@@ -469,7 +469,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
 (function(){
 "use strict";
 
-// 🔐 SUPABASE-ZUGANGSDATEN EINGETRAGEN
+// 🔐 SUPABASE-ZUGANGSDATEN
 const SUPABASE_URL = "https://qfitlansvvbspwutcjgh.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_u2Kw3xle2rZQCeP0Bsk9PA_hI4TDeoy";
 
@@ -495,13 +495,30 @@ function notify(message) {
   el.textContent = message;
   setTimeout(() => {
     if (el.textContent === message) el.textContent = "";
-  }, 3500);
+  }, 4500);
 }
 
 function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, c => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   })[c]);
+}
+
+/* Hilfsfunktion zum Extrahieren von Signalen aus unterschiedlichen JSON-Formaten */
+function extractSignals(data) {
+  if (Array.isArray(data)) return data;
+  if (!data || typeof data !== "object") return [];
+
+  for (const key of ["signals", "items", "data", "signale", "database", "entries"]) {
+    if (Array.isArray(data[key])) return data[key];
+    if (data[key] && typeof data[key] === "object") {
+      const values = Object.values(data[key]);
+      if (values.length && values.some(v => v && typeof v === "object")) return values;
+    }
+  }
+  const values = Object.values(data);
+  if (values.length && values.every(v => v && typeof v === "object")) return values;
+  return [];
 }
 
 /* 🔐 AUTHENTIFIZIERUNG (SUPABASE) */
@@ -624,7 +641,7 @@ async function deleteSignal(id) {
   }
 }
 
-/* 💾 DATENSICHERUNG (EXPORT & FLEXibler IMPORT) */
+/* 💾 DATENSICHERUNG (EXPORT & CHUNK-BASIERTER IMPORT FÜR GROSSE 100MB+ DATEIEN) */
 function exportData() {
   if (!signals.length) {
     return notify("Keine Signale zum Exportieren vorhanden.");
@@ -638,7 +655,7 @@ function exportData() {
     image: s.image
   }));
 
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportSignals, null, 2));
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ version: 5, signals: exportSignals }, null, 2));
   const downloadAnchor = document.createElement('a');
   downloadAnchor.setAttribute("href", dataStr);
   downloadAnchor.setAttribute("download", `signale_backup_${new Date().toISOString().slice(0,10)}.json`);
@@ -655,34 +672,33 @@ function handleImportFile(file) {
   const reader = new FileReader();
   reader.onload = async (e) => {
     try {
-      const importedData = JSON.parse(e.target.result);
-      let rawSignals = [];
+      const parsed = JSON.parse(e.target.result);
+      const rawSignals = extractSignals(parsed);
 
-      // Flexibel prüfen, ob die Daten ein direktes Array oder verschachtelt sind
-      if (Array.isArray(importedData)) {
-        rawSignals = importedData;
-      } else if (typeof importedData === "object" && importedData !== null) {
-        rawSignals = importedData.signals || importedData.data || importedData.items || [];
-      }
-
-      if (!Array.isArray(rawSignals) || rawSignals.length === 0) {
+      if (!rawSignals.length) {
         throw new Error("Keine gültigen Signal-Daten in der Datei gefunden.");
       }
 
-      notify(`Importiere ${rawSignals.length} Signale...`);
+      notify(`Starte Import von ${rawSignals.length} Signalen in Paketen...`);
 
-      // Payload aufbereiten (Unabhängig von alten IDs und passend zum aktuellen User)
+      // Flexible Felderkennung aus alten oder neuen Backups + Zuwendung zur aktuellen User-ID
       const payload = rawSignals.map(s => ({
-        short: s.short || s.shortName || "",
-        long: s.long || s.longName || "",
-        meaning: s.meaning || s.description || "",
-        category: s.category || "Sonstige",
-        image: s.image || s.imageUrl || "",
+        short: s.short || s.shortName || s.kurz || "",
+        long: s.long || s.longName || s.lang || "",
+        meaning: s.meaning || s.description || s.bedeutung || "",
+        category: s.category || s.kategorie || "Sonstige",
+        image: s.image || s.imageUrl || s.bild || "",
         user_id: currentUser.id
       }));
 
-      const { error } = await _supabase.from('signals').insert(payload);
-      if (error) throw error;
+      // In Häppchen (Chunks) von je 5 Signalen aufteilen, damit Supabase bei riesigen Base64-Bildern nicht abbricht
+      const chunkSize = 5;
+      for (let i = 0; i < payload.length; i += chunkSize) {
+        const chunk = payload.slice(i, i + chunkSize);
+        const { error } = await _supabase.from('signals').insert(chunk);
+        if (error) throw error;
+        notify(`Fortschritt: ${Math.min(i + chunkSize, payload.length)} / ${payload.length} importiert...`);
+      }
 
       notify("Daten erfolgreich importiert!");
       loadCloudSignals();
@@ -946,7 +962,7 @@ function editSignal(id) {
   notify("Signal in Formular geladen.");
 }
 
-/* StatistikPlatzhalter */
+/* Statistik Platzhalter */
 function renderStats() {
   $("statAnswered").textContent = stats.answered || 0;
   $("statPoints").textContent = stats.points || 0;
