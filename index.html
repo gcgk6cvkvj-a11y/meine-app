@@ -296,6 +296,63 @@ label {
   font-size:14px;
 }
 
+.signal-select-row {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+}
+
+.signal-select-row label {
+  color:var(--text);
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  cursor:pointer;
+  flex:1;
+}
+
+.signal-select-row input[type="checkbox"],
+.signal-card input[type="checkbox"] {
+  width:22px;
+  height:22px;
+  margin:0;
+  accent-color:var(--accent);
+  flex-shrink:0;
+}
+
+.signal-card.selected {
+  border-color:var(--accent);
+  background:#14283b;
+}
+
+.bulk-toolbar {
+  background:#111c29;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  margin:10px 0 14px;
+}
+
+.bulk-toolbar .actions {
+  margin-top:8px;
+}
+
+.bulk-toolbar button {
+  font-size:13px;
+  padding:11px 8px;
+}
+
+.selection-count {
+  color:var(--accent);
+  font-weight:700;
+  font-size:14px;
+  margin-top:8px;
+}
+
 hr {
   border:0;
   border-top:1px solid var(--border);
@@ -516,6 +573,23 @@ hr {
   <div class="panel">
     <h3>Gespeicherte Signale: <span id="signalCount" class="brand">0</span></h3>
     <input id="searchSignals" placeholder="Signal suchen (Kurz, Lang, Kategorie)...">
+
+    <div class="bulk-toolbar">
+      <div class="signal-select-row">
+        <label>
+          <input type="checkbox" id="selectAllSignals">
+          Alle angezeigten Signale auswählen
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="clearSelection">Auswahl aufheben</button>
+        <button type="button" class="danger" id="deleteSelected" disabled>🗑 Ausgewählte löschen</button>
+      </div>
+
+      <div id="selectionCount" class="selection-count">0 Signale ausgewählt</div>
+    </div>
+
     <div id="signalList"></div>
   </div>
 
@@ -563,6 +637,9 @@ let examDone = false;
 let examAnswered = false;
 let tempImageBase64 = "";
 let imageLoadToken = 0;
+
+/* NEU: Mehrfachauswahl */
+let selectedSignalIds = new Set();
 
 function notify(message) {
   const el = $("notice");
@@ -636,6 +713,7 @@ async function handleLogout() {
   currentUser=null;
   signals=[];
   current=null;
+  selectedSignalIds.clear();
 
   $("appMain").hidden=true;
   $("mainNav").hidden=true;
@@ -700,6 +778,12 @@ async function loadCloudSignals() {
     }
 
     signals=allData;
+
+    /* Auswahl verwerfen, wenn Signale nicht mehr existieren */
+    const existingIds=new Set(signals.map(s=>String(s.id)));
+    selectedSignalIds=new Set(
+      [...selectedSignalIds].filter(id=>existingIds.has(String(id)))
+    );
 
     updateCategories();
     renderList();
@@ -775,7 +859,6 @@ async function saveSignal() {
 
   let imageValue=tempImageBase64 || $("imageUrl").value.trim();
 
-  /* Vorhandenes Bild nicht versehentlich löschen */
   if(id && !imageValue && existing) {
     imageValue=existing.image || "";
   }
@@ -836,20 +919,171 @@ async function saveSignal() {
   await loadCloudSignals();
 }
 
+/* EINZELNES SIGNAL LÖSCHEN */
+
 async function deleteSignal(id) {
   if(!confirm("Möchtest du dieses Signal wirklich löschen?")) return;
 
-  const {error}=await _supabase
+  const {data,error}=await _supabase
     .from("signals")
     .delete()
     .eq("id",id)
-    .eq("user_id",currentUser.id);
+    .eq("user_id",currentUser.id)
+    .select("id");
 
   if(error) {
     notify("Fehler beim Löschen: "+error.message);
+    console.error(error);
+    return;
+  }
+
+  if(!data || data.length===0) {
+    notify("Signal wurde nicht gelöscht. Es wurde kein passender Datensatz gefunden oder die Berechtigung fehlt.");
+    return;
+  }
+
+  selectedSignalIds.delete(String(id));
+  notify("Signal erfolgreich gelöscht.");
+  await loadCloudSignals();
+}
+
+/* NEU: MEHRERE SIGNALE AUSWÄHLEN */
+
+function getVisibleSignals() {
+  const query=$("searchSignals").value.toLowerCase().trim();
+
+  return signals.filter(s=>{
+    const text=[s.short,s.long,s.meaning,s.category]
+      .map(v=>String(v||""))
+      .join(" ")
+      .toLowerCase();
+
+    return text.includes(query);
+  });
+}
+
+function updateSelectionUI() {
+  const count=selectedSignalIds.size;
+  const countElement=$("selectionCount");
+  const deleteButton=$("deleteSelected");
+  const selectAll=$("selectAllSignals");
+
+  if(countElement) {
+    countElement.textContent=count+" "+(count===1?"Signal ausgewählt":"Signale ausgewählt");
+  }
+
+  if(deleteButton) {
+    deleteButton.disabled=count===0;
+    deleteButton.textContent=count>0
+      ? "🗑 "+count+" ausgewählte löschen"
+      : "🗑 Ausgewählte löschen";
+  }
+
+  if(selectAll) {
+    const visible=getVisibleSignals();
+    const selectedVisible=visible.filter(s=>selectedSignalIds.has(String(s.id))).length;
+
+    selectAll.checked=visible.length>0 && selectedVisible===visible.length;
+    selectAll.indeterminate=selectedVisible>0 && selectedVisible<visible.length;
+    selectAll.disabled=visible.length===0;
+  }
+}
+
+function toggleSignalSelection(id,checked) {
+  const key=String(id);
+
+  if(checked) {
+    selectedSignalIds.add(key);
   } else {
-    notify("Signal gelöscht.");
+    selectedSignalIds.delete(key);
+  }
+
+  updateSelectionUI();
+
+  const card=document.querySelector(`.signal-card[data-id="${CSS.escape(key)}"]`);
+  if(card) card.classList.toggle("selected",checked);
+}
+
+function selectAllVisibleSignals(checked) {
+  const visible=getVisibleSignals();
+
+  visible.forEach(signal=>{
+    const id=String(signal.id);
+
+    if(checked) {
+      selectedSignalIds.add(id);
+    } else {
+      selectedSignalIds.delete(id);
+    }
+  });
+
+  renderList();
+}
+
+function clearSelection() {
+  selectedSignalIds.clear();
+  renderList();
+  notify("Auswahl wurde aufgehoben.");
+}
+
+/* NEU: MEHRERE SIGNALE LÖSCHEN */
+
+async function deleteSelectedSignals() {
+  if(!currentUser) return;
+
+  const ids=[...selectedSignalIds];
+
+  if(ids.length===0) {
+    notify("Bitte zuerst mindestens ein Signal auswählen.");
+    return;
+  }
+
+  const confirmed=confirm(
+    "Möchtest du wirklich "+ids.length+
+    " ausgewählte "+(ids.length===1?"Signal":"Signale")+
+    " dauerhaft löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden."
+  );
+
+  if(!confirmed) return;
+
+  const button=$("deleteSelected");
+  button.disabled=true;
+  button.textContent="Wird gelöscht...";
+
+  try {
+    const {data,error}=await _supabase
+      .from("signals")
+      .delete()
+      .in("id",ids)
+      .eq("user_id",currentUser.id)
+      .select("id");
+
+    if(error) throw error;
+
+    const deletedCount=data ? data.length : 0;
+
+    if(deletedCount===0) {
+      notify("Es wurde kein Signal gelöscht. Bitte Berechtigungen prüfen.");
+      updateSelectionUI();
+      return;
+    }
+
+    selectedSignalIds.clear();
+
+    notify(
+      deletedCount+" von "+ids.length+
+      " ausgewählten Signalen erfolgreich gelöscht."
+    );
+
     await loadCloudSignals();
+
+  } catch(err) {
+    console.error("Fehler beim Mehrfachlöschen:",err);
+    notify("Fehler beim Mehrfachlöschen: "+(err.message||String(err)));
+    updateSelectionUI();
+
+  } finally {
+    updateSelectionUI();
   }
 }
 
@@ -1110,8 +1344,6 @@ function evaluate(signal,short,long,meaning) {
   };
 }
 
-/* BEWERTUNG: JE FELD 1 PUNKT, ABER FALSCHE BEDEUTUNG = 0 */
-
 function calculatePoints(result) {
   if(!result.meaning) return 0;
   return Number(result.short)+Number(result.long)+1;
@@ -1256,37 +1488,49 @@ function clearForm() {
 }
 
 function renderList() {
-  const query=$("searchSignals")?$("searchSignals").value.toLowerCase().trim():"";
   const container=$("signalList");
 
   if(!container) return;
 
-  const list=signals.filter(s=>{
-    const text=[s.short,s.long,s.meaning,s.category]
-      .map(v=>String(v||""))
-      .join(" ")
-      .toLowerCase();
-
-    return text.includes(query);
-  });
+  const list=getVisibleSignals();
 
   $("signalCount").textContent=signals.length;
 
   if(!list.length) {
     container.innerHTML="<p class='muted'>Keine Signale vorhanden.</p>";
+    updateSelectionUI();
     return;
   }
 
-  container.innerHTML=list.map(s=>`
-    <div class="signal-card">
-      <h3>${esc(s.short)} – ${esc(s.long)}</h3>
-      <small class="muted">Kategorie: <b>${esc(s.category)}</b></small>
-      <p>${esc(s.meaning||"Keine Bedeutung hinterlegt")}</p>
-      <div class="actions">
-        <button type="button" class="btn-edit" data-id="${esc(s.id)}">✏️ Bearbeiten</button>
-        <button type="button" class="danger btn-delete" data-id="${esc(s.id)}">🗑 Löschen</button>
-      </div>
-    </div>`).join("");
+  container.innerHTML=list.map(s=>{
+    const id=String(s.id);
+    const isSelected=selectedSignalIds.has(id);
+
+    return `
+      <div class="signal-card ${isSelected?"selected":""}" data-id="${esc(id)}">
+        <div class="signal-select-row">
+          <label>
+            <input
+              type="checkbox"
+              class="signal-checkbox"
+              data-id="${esc(id)}"
+              ${isSelected?"checked":""}
+            >
+            Dieses Signal auswählen
+          </label>
+        </div>
+
+        <h3>${esc(s.short)} – ${esc(s.long)}</h3>
+        <small class="muted">Kategorie: <b>${esc(s.category)}</b></small>
+        <p>${esc(s.meaning||"Keine Bedeutung hinterlegt")}</p>
+        <div class="actions">
+          <button type="button" class="btn-edit" data-id="${esc(id)}">✏️ Bearbeiten</button>
+          <button type="button" class="danger btn-delete" data-id="${esc(id)}">🗑 Löschen</button>
+        </div>
+      </div>`;
+  }).join("");
+
+  updateSelectionUI();
 }
 
 function handleListClick(e) {
@@ -1378,6 +1622,29 @@ function initEvents() {
 
   $("searchSignals").addEventListener("input",renderList);
   $("signalList").addEventListener("click",handleListClick);
+
+  /* NEU: Checkboxen der einzelnen Signale */
+  $("signalList").addEventListener("change",e=>{
+    const checkbox=e.target.closest(".signal-checkbox");
+
+    if(checkbox) {
+      toggleSignalSelection(
+        checkbox.getAttribute("data-id"),
+        checkbox.checked
+      );
+    }
+  });
+
+  /* NEU: Alle sichtbaren Signale auswählen */
+  $("selectAllSignals").addEventListener("change",e=>{
+    selectAllVisibleSignals(e.target.checked);
+  });
+
+  /* NEU: Auswahl aufheben */
+  $("clearSelection").addEventListener("click",clearSelection);
+
+  /* NEU: Mehrfachlöschung */
+  $("deleteSelected").addEventListener("click",deleteSelectedSignals);
 
   $("pickGallery").addEventListener("click",()=>$("imageFile").click());
   $("pickCamera").addEventListener("click",()=>$("cameraFile").click());
