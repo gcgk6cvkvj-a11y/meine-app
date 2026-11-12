@@ -36,7 +36,7 @@ small,.muted {color:var(--muted)}
 #menuBtn {
   background:var(--panel2);border:1px solid var(--border);
   color:var(--text);font-size:20px;padding:8px 12px;
-  border-radius:10px;position:relative;
+  border-radius:10px;position:relative;cursor:pointer;
 }
 .badge-dot {
   position:absolute;top:-4px;right:-4px;width:12px;height:12px;
@@ -61,7 +61,8 @@ small,.muted {color:var(--muted)}
 }
 .sidebar-link {
   width:100%;justify-content:flex-start;background:var(--panel);
-  padding:13px 14px;font-size:15px;position:relative;
+  padding:13px 14px;font-size:15px;position:relative;border:1px solid var(--border);border-radius:10px;color:var(--text);cursor:pointer;
+  display:flex;align-items:center;
 }
 .sidebar-link.active {border-color:var(--accent);color:var(--accent)}
 .pill-count {
@@ -87,7 +88,7 @@ nav#mainNav button {
   background:transparent;border:none;border-radius:8px;
   color:var(--muted);font-size:11px;font-weight:600;
   padding:6px 2px;display:flex;flex-direction:column;
-  align-items:center;gap:4px;
+  align-items:center;gap:4px;cursor:pointer;
 }
 nav#mainNav button .icon {font-size:18px}
 nav#mainNav button.active {color:var(--accent);background:rgba(72,166,255,.1)}
@@ -104,7 +105,7 @@ button.good {background:#176e50;color:#fff;border-color:#26795b}
 button.danger {background:#853542;color:#fff;border-color:#a84353}
 button.link-btn {
   background:transparent;border:none;color:var(--accent);
-  padding:6px;font-size:13px;text-decoration:underline;width:100%;margin-top:8px;
+  padding:6px;font-size:13px;text-decoration:underline;width:100%;margin-top:8px;cursor:pointer;
 }
 button:disabled {opacity:.45;cursor:not-allowed}
 input,select,textarea {
@@ -181,11 +182,6 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
   background:#103328;border-left:3px solid var(--green);
   padding:10px 12px;border-radius:8px;margin-top:10px;font-size:14px;
 }
-.tutorial-step {
-  background:#111c29;border:1px solid var(--border);
-  border-radius:12px;padding:14px;margin-bottom:10px;
-}
-.tutorial-step h3 {margin:0 0 6px;color:var(--accent)}
 .signal-select-row {
   display:flex;align-items:center;gap:10px;margin-bottom:12px;
   padding-bottom:10px;border-bottom:1px solid var(--border);
@@ -227,11 +223,11 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 .category-option {
   display:flex;align-items:center;gap:8px;
   padding:9px;background:#1b2735;border:1px solid var(--border);
-  border-radius:9px;color:var(--text);font-size:13px;min-width:0;
+  border-radius:9px;color:var(--text);font-size:13px;min-width:0;cursor:pointer;
 }
 .category-option input {
   width:19px;height:19px;margin:0;flex-shrink:0;
-  accent-color:var(--accent);
+  accent-color:var(--accent);cursor:pointer;
 }
 .category-option span {overflow-wrap:anywhere}
 .category-summary {
@@ -239,19 +235,18 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 }
 .category-toggle {
   width:100%;margin-top:10px;padding:10px;font-size:13px;
-  background:#243448;border:1px solid var(--border);
+  background:#243448;border:1px solid var(--border);cursor:pointer;
 }
 hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 #notice {
   min-height:20px;color:var(--green);font-weight:600;
-  font-size:14px;margin-top:4px;
+  font-size:14px;margin-top:4px;text-align:center;
 }
 #authPanel {max-width:420px;margin:30px auto}
 @media(max-width:520px) {
   body {padding:8px 8px 85px}
   .panel {padding:12px}
   h1 {font-size:19px}
-  .signal-image {height:200px}
   .stat-grid {grid-template-columns:1fr}
   .category-grid {grid-template-columns:1fr 1fr}
 }
@@ -293,9 +288,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 
 <header>
   <div class="header-left">
-    <button type="button" id="menuBtn" hidden aria-label="Menü öffnen">
-      ☰ <span id="menuBadgeDot" class="badge-dot" hidden></span>
-    </button>
+    <button type="button" id="menuBtn" hidden aria-label="Menü öffnen">☰</button>
     <div>
       <h1>🚦 Signale lernen <span class="brand">ByArmando</span></h1>
       <p class="muted" style="margin:0;font-size:13px;">Signale erkennen · Bedeutungen lernen · Prüfung bestehen</p>
@@ -315,9 +308,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <label for="loginPassword">Passwort</label>
     <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
     <button type="button" class="primary" id="loginBtn" style="width:100%;">Einloggen</button>
-    <button type="button" class="link-btn" id="showForgotBtn">Passwort vergessen?</button>
     <hr>
-    <p class="muted" style="text-align:center;font-size:13px;">Noch keinen Zugang?</p>
     <button type="button" id="showRegisterBtn" style="width:100%;">Registrieren</button>
   </div>
 
@@ -327,18 +318,8 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <input type="email" id="regEmail" placeholder="deine@email.de" autocomplete="email">
     <label for="regPassword">Passwort (mind. 6 Zeichen)</label>
     <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password">
-    <label for="regPasswordConfirm">Passwort bestätigen</label>
-    <input type="password" id="regPasswordConfirm" placeholder="••••••••" autocomplete="new-password">
     <button type="button" class="primary" id="registerBtn" style="width:100%;">Konto erstellen</button>
     <button type="button" class="link-btn" id="backToLoginFromReg">← Zurück zum Login</button>
-  </div>
-
-  <div id="forgotView" hidden>
-    <h2>Passwort zurücksetzen</h2>
-    <label for="forgotEmail">E-Mail Adresse</label>
-    <input type="email" id="forgotEmail" placeholder="deine@email.de" autocomplete="email">
-    <button type="button" class="primary" id="sendResetBtn" style="width:100%;">Link anfordern</button>
-    <button type="button" class="link-btn" id="backToLoginFromForgot">← Zurück zum Login</button>
   </div>
 </section>
 
@@ -349,7 +330,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   <div class="panel">
     <h2>Lernmodus</h2>
     <p class="muted">Wähle aus, welche Signalgruppen du lernen möchtest.</p>
-
     <div class="category-picker">
       <div class="category-picker-header">
         <strong>Signalgruppen auswählen</strong>
@@ -357,40 +337,25 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
       </div>
       <div id="learnCategoryChoices" class="category-grid"></div>
       <div id="learnCategorySummary" class="category-summary"></div>
-      <button type="button" class="category-toggle" id="learnToggleCategories">
-        Signalgruppen auswählen ▼
-      </button>
+      <button type="button" class="category-toggle" id="learnToggleCategories">Signalgruppen auswählen ▼</button>
     </div>
-
     <label class="filter-box" for="onlyWrongFilter">
       <input type="checkbox" id="onlyWrongFilter">
       <span>🎯 Nur falsch beantwortete Signale üben (<b id="wrongCount">0</b>)</span>
     </label>
-
     <div class="row">
-      <div>
-        <label>Fortschritt</label>
-        <strong id="learnCounter" style="display:block;margin-top:12px;">Frage 1</strong>
-      </div>
-      <div>
-        <label>Verfügbare Signale</label>
-        <strong id="learnAvailable" style="display:block;margin-top:12px;">0</strong>
-      </div>
+      <div><label>Fortschritt</label><strong id="learnCounter" style="display:block;margin-top:12px;">Frage 1</strong></div>
+      <div><label>Verfügbar</label><strong id="learnAvailable" style="display:block;margin-top:12px;">0</strong></div>
     </div>
-
     <div class="progress"><span id="learnProgress"></span></div>
-
     <img id="learnImage" class="signal-image" alt="Signalbild" hidden>
     <div id="learnNoImage" class="placeholder">Kein Signalbild hinterlegt</div>
-
-    <p><b>Erkenne das Signal. Trage alle drei Angaben selbst ein:</b></p>
     <label for="learnShort">1. Kurzbezeichnung</label>
     <input id="learnShort" placeholder="z. B. Ne 1" autocomplete="off">
     <label for="learnLong">2. Langbezeichnung</label>
     <input id="learnLong" placeholder="z. B. Trapeztafel" autocomplete="off">
     <label for="learnMeaning">3. Bedeutung</label>
-    <textarea id="learnMeaning" placeholder="Vollständige Bedeutung des Signals..."></textarea>
-
+    <textarea id="learnMeaning" placeholder="Vollständige Bedeutung..."></textarea>
     <div class="actions">
       <button type="button" class="primary" id="checkLearn">Antwort prüfen</button>
       <button type="button" id="skipLearn">Überspringen</button>
@@ -412,11 +377,8 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
         </div>
         <div id="examCategoryChoices" class="category-grid"></div>
         <div id="examCategorySummary" class="category-summary"></div>
-        <button type="button" class="category-toggle" id="examToggleCategories">
-          Signalgruppen auswählen ▼
-        </button>
+        <button type="button" class="category-toggle" id="examToggleCategories">Signalgruppen auswählen ▼</button>
       </div>
-
       <label for="examLength">Anzahl der Fragen</label>
       <select id="examLength">
         <option value="10">10 Fragen</option>
@@ -427,7 +389,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
       <button type="button" class="primary" id="startExam" style="width:100%;margin-top:8px;">Prüfung starten</button>
       <div id="examAvailable" class="muted" style="margin-top:10px;"></div>
     </div>
-
     <div id="examArea" hidden>
       <hr>
       <div class="row">
@@ -435,22 +396,18 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
         <strong id="examTimer" style="text-align:right;">00:00</strong>
       </div>
       <div class="progress"><span id="examProgress"></span></div>
-
       <img id="examImage" class="signal-image" alt="Signalbild" hidden>
       <div id="examNoImage" class="placeholder" hidden>Kein Signalbild hinterlegt</div>
-
       <label for="examShort">1. Kurzbezeichnung</label>
       <input id="examShort" placeholder="Kurzbezeichnung" autocomplete="off">
       <label for="examLong">2. Langbezeichnung</label>
       <input id="examLong" placeholder="Langbezeichnung" autocomplete="off">
       <label for="examMeaning">3. Bedeutung</label>
-      <textarea id="examMeaning" placeholder="Bedeutung des Signals"></textarea>
-
+      <textarea id="examMeaning" placeholder="Bedeutung..."></textarea>
       <button type="button" class="primary" id="submitExam" style="width:100%;">Antwort abgeben</button>
       <div id="examFeedback" class="answer" hidden></div>
       <button type="button" id="examNext" hidden style="width:100%;margin-top:12px;">Weiter ➔</button>
     </div>
-
     <div id="examResult" class="answer" hidden></div>
   </div>
 </section>
@@ -495,7 +452,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <div id="createGroupForm" class="panel" style="margin-top:14px;" hidden>
       <h3>Lerngruppe erstellen</h3>
       <label for="newGroupName">Gruppenname</label>
-      <input id="newGroupName" placeholder="z. B. Azubi-Klasse 2026">
+      <input id="newGroupName" placeholder="z. B. Azubi-Klasse">
       <button type="button" class="primary" id="createGroupSubmit">Gruppe anlegen</button>
       <button type="button" id="cancelCreateGroup">Abbrechen</button>
     </div>
@@ -504,10 +461,10 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   </div>
 </section>
 
-<!-- EINZELNE LERNGRUPPEN-ANSICHT -->
+<!-- EINZELNE LERNGRUPPE -->
 <section id="groupDetail" class="page" hidden>
   <div class="panel">
-    <button type="button" id="backToGroups" style="margin-bottom:12px;">← Zurück zu Lerngruppen</button>
+    <button type="button" id="backToGroups" style="margin-bottom:12px;">← Zurück</button>
     <h2 id="groupDetailTitle">Lerngruppe</h2>
     <p class="muted" id="groupDetailCreator"></p>
     <div class="actions" style="margin-bottom:14px;">
@@ -530,7 +487,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <div id="createCourseForm" class="panel" hidden>
       <h3>Kurs erstellen</h3>
       <label for="courseNameInput">Kursname</label>
-      <input id="courseNameInput" placeholder="z. B. Signalbuch Ril 301 Intensiv">
+      <input id="courseNameInput" placeholder="z. B. Signalbuch Intensiv">
       <button type="button" class="primary" id="submitCreateCourse">Kurs anlegen</button>
       <button type="button" id="cancelCreateCourse">Abbrechen</button>
     </div>
@@ -543,7 +500,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <!-- EINZELNER KURS -->
 <section id="courseDetail" class="page" hidden>
   <div class="panel">
-    <button type="button" id="backToCourses" style="margin-bottom:12px;">← Zurück zu Kursen</button>
+    <button type="button" id="backToCourses" style="margin-bottom:12px;">← Zurück</button>
     <h2 id="courseDetailTitle">Kurs</h2>
     <p class="muted" id="courseDetailTrainer"></p>
     <div id="trainerCourseControls" hidden style="margin-bottom:14px;">
@@ -563,7 +520,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <section id="tutorial" class="page" hidden>
   <div class="panel">
     <h2>📖 Tutorial</h2>
-    <p class="muted">Alle Funktionen im Überblick (Lernen, Freunde, Lerngruppen, Kurse, Hausaufgaben).</p>
+    <p class="muted">Alle Funktionen der App im Überblick.</p>
   </div>
 </section>
 
@@ -609,7 +566,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <h2>🛡️ Trainer-Anträge</h2>
     <div id="adminTrainerRequestsList"><p class="muted">Lade...</p></div>
   </div>
-
   <div class="panel" id="adminBroadcastPanel" hidden>
     <h2>📢 Broadcast</h2>
     <label for="bcTarget">Empfänger</label>
@@ -627,7 +583,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <textarea id="bcMessage" placeholder="Nachricht..."></textarea>
     <button type="button" class="primary" id="sendBroadcastBtn" style="width:100%;">Senden</button>
   </div>
-
   <div class="panel" id="adminStatsPanel" hidden>
     <h2>📈 Statistik</h2>
     <div class="stat-grid">
@@ -638,7 +593,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
       <div class="stat">Gesamt<strong id="adminTotal">–</strong></div>
     </div>
   </div>
-
   <div class="panel" id="adminSupportPanel" hidden>
     <h2>📨 Support-Anfragen</h2>
     <div id="adminSupportList"><p class="muted">Lade...</p></div>
@@ -705,7 +659,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   <button type="button" data-page="stats"><span class="icon">📊</span><span>Statistik</span></button>
   <button type="button" data-page="manage"><span class="icon">⚙️</span><span>Verwaltung</span></button>
 </nav>
-
 <script>
 (function(){
 "use strict";
@@ -724,11 +677,7 @@ let current=null;
 let learnNumber=0;
 let learnDone=false;
 let selectedSignalIds=new Set();
-let bulkDeleteRunning=false;
 let exportRunning=false;
-
-let activeGroupId=null;
-let activeCourseId=null;
 
 const BASE_CATEGORIES=["Lf","Bü","Ne","Hp","Vr","Ks","Hl","Sh","Ra","Zs","El","So","Wn","Zp","Zg","Ts","Mastschilder","Sonstige"];
 const CATEGORY_LABELS={"Lf":"Lf – Langsamfahrsignale","Bü":"Bü – Bahnübergangssignale","Ne":"Ne – Nebensignale","Hp":"Hp – Hauptsignale","Vr":"Vr – Vorsignale","Ks":"Ks – Kombinationssignale","Hl":"Hl – Hl-Signale","Sh":"Sh – Schutzsignale","Ra":"Ra – Rangiersignale","Zs":"Zs – Zusatzsignale","El":"El – Fahrleitungssignale","So":"So – Sonstige Signale","Wn":"Wn – Weichensignale","Zp":"Zp – Zugpersonalsignale","Zg":"Zg – Zugbegleitersignale","Ts":"Ts – Türen- und sonstige Betriebssignale","Mastschilder":"Mastschilder","Sonstige":"Sonstige"};
@@ -742,7 +691,6 @@ let examCategoriesOpen=false;
 let examList=[];
 let examIndex=0;
 let examPoints=0;
-let examStarted=0;
 let examTimerInterval=null;
 let examAnswered=false;
 
@@ -868,12 +816,83 @@ async function initUserSession(){
   if($("adminBroadcastPanel"))$("adminBroadcastPanel").hidden=!admin;
   if($("adminTrainerPanel"))$("adminTrainerPanel").hidden=!admin;
 
+  checkTrainerStatus();
   loadCloudSignals();
   loadFriends();
   loadStudyGroups();
   loadCourses();
   loadUserInbox();
   loadSharedSignals();
+  if(admin){
+    loadAdminSupport();
+    loadAdminTrainerRequests();
+    loadAdminStats();
+  }
+}
+
+async function checkTrainerStatus(){
+  if(!currentUser)return;
+  const container=$("trainerStatusContainer");
+  const admin=String(currentUser?.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();
+  try{
+    const {data}=await _supabase.from("user_profiles").select("is_trainer, trainer_requested").eq("id",currentUser.id).maybeSingle();
+    if(admin){
+      container.innerHTML=`<span class="ticket-tag" style="background:var(--accent);color:#000;">Administrator</span>`;
+      return;
+    }
+    if(data?.is_trainer){
+      container.innerHTML=`<span class="ticket-tag" style="background:var(--green);color:#fff;">✓ Aktiver Trainer</span>`;
+      $("trainerActionBox")&&( $("trainerActionBox").hidden=false );
+    }else if(data?.trainer_requested){
+      container.innerHTML=`<span class="ticket-tag">⏳ Antrag ausstehend</span>`;
+    }else{
+      container.innerHTML=`<button type="button" class="link-btn" id="requestTrainerBtn" style="font-size:12px;">Als Trainer bewerben</button>`;
+      $("requestTrainerBtn")?.addEventListener("click", requestTrainerRole);
+    }
+  }catch(err){container.innerHTML="";}
+}
+
+async function requestTrainerRole(){
+  try{
+    await _supabase.from("user_profiles").update({trainer_requested:true}).eq("id",currentUser.id);
+    notify("Trainer-Antrag gesendet!");
+    checkTrainerStatus();
+  }catch(err){notify("Fehler beim Senden.");}
+}
+
+async function loadAdminTrainerRequests(){
+  const container=$("adminTrainerRequestsList");
+  if(!container)return;
+  try{
+    const {data}=await _supabase.from("user_profiles").select("*").eq("trainer_requested",true).eq("is_trainer",false);
+    container.innerHTML=(data||[]).map(u=>`
+      <div class="signal-card">
+        <p><b>${esc(u.email)}</b> möchte Trainer werden.</p>
+        <button type="button" class="good btn-accept-trainer" data-id="${esc(u.id)}">Bestätigen</button>
+      </div>`).join("")||"<p class='muted'>Keine Anträge.</p>";
+  }catch(err){container.innerHTML="<p class='muted'>Fehler.</p>";}
+}
+
+async function loadAdminStats(){
+  try{
+    const {data}=await _supabase.rpc("get_app_user_stats");
+    if(data){
+      if($("adminTotal"))$("adminTotal").textContent=data.registered_users||0;
+      if($("adminOnline"))$("adminOnline").textContent=data.online_now||0;
+      if($("adminToday"))$("adminToday").textContent=data.active_today||0;
+      if($("adminWeek"))$("adminWeek").textContent=data.active_7_days||0;
+      if($("adminMonth"))$("adminMonth").textContent=data.active_30_days||0;
+    }
+  }catch(err){}
+}
+
+async function loadAdminSupport(){
+  const container=$("adminSupportList");
+  if(!container)return;
+  try{
+    const {data}=await _supabase.from("support_messages").select("*").order("created_at",{ascending:false});
+    container.innerHTML=(data||[]).map(m=>`<div class="signal-card"><p><b>${esc(m.user_email||'Unbekannt')}</b>: ${esc(m.message)}</p></div>`).join("")||"<p class='muted'>Keine Anfragen.</p>";
+  }catch(err){container.innerHTML="<p class='muted'>Fehler.</p>";}
 }
 
 async function loadCloudSignals(){
@@ -886,12 +905,9 @@ async function loadCloudSignals(){
     renderList();
     nextLearn();
     updateExamAvailable();
-  }catch(err){
-    notify("Fehler beim Laden.");
-  }
+  }catch(err){notify("Fehler beim Laden der Signale.");}
 }
 
-/* FREUNDE & AUTO-COMPLETE */
 async function loadFriends(){
   const container=$("friendRequestsList");
   if(!container)return;
@@ -907,7 +923,6 @@ async function loadFriends(){
   }catch(err){}
 }
 
-/* LERNGRUPPEN */
 async function loadStudyGroups(){
   const container=$("myStudyGroupsList");
   if(!container)return;
@@ -919,11 +934,10 @@ async function loadStudyGroups(){
       <div class="signal-card">
         <h3>${esc(g.name)}</h3>
         <button type="button" class="primary btn-open-group" data-id="${esc(g.id)}" style="width:100%;margin-top:10px;">Öffnen</button>
-      </div>`).join("")||"<p class='muted'>Keine Gruppen.</p>";
+      </div>`).join("")||"<p class='muted'>Keine Lerngruppen.</p>";
   }catch(err){}
 }
 
-/* KURSE */
 async function loadCourses(){
   const container=$("myCoursesList");
   if(!container)return;
@@ -940,8 +954,7 @@ async function loadCourses(){
   }catch(err){}
 }
 
-/* POSTFACH */
-async function loadUserInbox(mark=false){
+async function loadUserInbox(){
   if(!currentUser)return;
   const container=$("userInboxList");
   try{
@@ -961,11 +974,11 @@ async function loadSharedSignals(){
       <div class="signal-card">
         <h3>${esc(item.signal_data.short)}</h3>
         <button type="button" class="good btn-accept-shared" data-id="${esc(item.id)}">Übernehmen</button>
-      </div>`).join("")||"<p class='muted'>Keine.</p>";
+      </div>`).join("")||"<p class='muted'>Keine geteilten Signale.</p>";
   }catch(err){}
 }
 
-/* BEWERTUNG & LERNMODUS */
+/* LERN- & PRÜFUNGSLOGIK */
 function clean(val){
   return String(val??"").toLocaleLowerCase("de").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[\u2010-\u2015-]/g,"").replace(/[.,;:!?()[\]{}"'`„“”]/g," ").replace(/\s+/g," ").trim();
 }
@@ -1012,7 +1025,7 @@ function nextLearn(){
     current=null;
     $("learnImage").hidden=true;
     $("learnNoImage").hidden=false;
-    $("learnNoImage").textContent="Keine Signale.";
+    $("learnNoImage").textContent=$("onlyWrongFilter")?.checked?"Keine falschen Signale vorhanden!":"Keine Signale.";
     $("learnCounter").textContent="Keine Frage";
     $("learnFeedback").hidden=true;
     $("nextLearn").hidden=true;
@@ -1023,6 +1036,7 @@ function nextLearn(){
   learnNumber++;
   learnDone=false;
   $("learnCounter").textContent="Frage "+learnNumber;
+  $("learnProgress").style.width=((learnNumber%10)*10||10)+"%";
   setImage($("learnImage"),$("learnNoImage"),current.image);
   $("learnShort").value=""; $("learnLong").value=""; $("learnMeaning").value="";
   $("learnFeedback").hidden=true; $("nextLearn").hidden=true;
@@ -1045,6 +1059,65 @@ function checkLearn(){
   renderStats();
 }
 
+function startExam(){
+  const available=signals.filter(s=>selectedExamCategories.has(s.category||"Sonstige"));
+  if(!available.length)return notify("Keine Signale in den gewählten Gruppen.");
+  const req=Number($("examLength").value)||10;
+  examList=shuffle(available).slice(0,Math.min(req,available.length));
+  examIndex=0; examPoints=0; examAnswered=false;
+  $("examConfig").hidden=true; $("examArea").hidden=false;
+  showExamQuestion();
+}
+
+function showExamQuestion(){
+  if(examIndex>=examList.length)return finishExam();
+  const signal=examList[examIndex];
+  examAnswered=false;
+  $("examCounter").textContent="Frage "+(examIndex+1)+" von "+examList.length;
+  $("examProgress").style.width=((examIndex)/examList.length*100)+"%";
+  setImage($("examImage"),$("examNoImage"),signal.image);
+  $("examShort").value=""; $("examLong").value=""; $("examMeaning").value="";
+  $("examFeedback").hidden=true; $("examNext").hidden=true;
+  $("submitExam").hidden=false; $("submitExam").disabled=false;
+}
+
+function submitExamAnswer(){
+  if(examAnswered)return;
+  const signal=examList[examIndex];
+  const res=evaluate(signal,$("examShort").value,$("examLong").value,$("examMeaning").value);
+  const pts=calculatePoints(res);
+  if(pts<3)wrongSignalIds.add(String(signal.id));
+  else wrongSignalIds.delete(String(signal.id));
+  examPoints+=pts; examAnswered=true;
+  stats.answered++; stats.points+=pts;
+  saveLocalProgress();
+  $("examFeedback").innerHTML=feedbackHTML(signal,res);
+  $("examFeedback").hidden=false;
+  $("submitExam").disabled=true; $("submitExam").hidden=true;
+  $("examNext").hidden=false;
+  $("examNext").textContent=examIndex===examList.length-1?"Prüfung auswerten":"Nächste Frage ➔";
+  renderStats();
+}
+
+function finishExam(){
+  const maxPts=examList.length*3;
+  const pct=maxPts?Math.round(examPoints/maxPts*100):0;
+  stats.exams++;
+  stats.lastExam={points:examPoints,maxPoints:maxPts,percent:pct};
+  saveLocalProgress();
+  $("examArea").hidden=true;
+  $("examResult").hidden=false;
+  $("examResult").innerHTML=`
+    <h2>Prüfung beendet!</h2>
+    <h1 class="${pct>=80?"correct":"incorrect"}" style="font-size:32px;">${pct} %</h1>
+    <h3>${examPoints} von ${maxPts} Punkten</h3>
+    <button type="button" class="primary" id="restartExam" style="width:100%;margin-top:12px;">Neue Prüfung</button>`;
+  $("restartExam").addEventListener("click",()=>{
+    $("examResult").hidden=true; $("examConfig").hidden=false; updateExamAvailable();
+  });
+  renderStats();
+}
+
 function setImage(img,placeholder,src){
   if(!img||!placeholder)return;
   if(src&&String(src).trim()!==""){
@@ -1060,20 +1133,23 @@ function renderStats(){
   $("statRate").textContent=stats.answered?Math.round((stats.points/(stats.answered*3))*100)+" %":"0 %";
   $("statExams").textContent=stats.exams||0;
   if($("wrongCount"))$("wrongCount").textContent=wrongSignalIds.size;
+  if(stats.lastExam){
+    $("lastExamResult").innerHTML=`Punkte: ${stats.lastExam.points}/${stats.lastExam.maxPoints} (${stats.lastExam.percent} %)`;
+  }
 }
 
 /* EXPORT & IMPORT */
 async function exportData(){
-  if(exportRunning||!signals.length)return notify("Keine Signale.");
+  if(exportRunning||!signals.length)return notify("Keine Signale zum Exportieren.");
   exportRunning=true;
   try{
-    const blob=new Blob([JSON.stringify({version:11,signals},null,2)],{type:"application/json"});
+    const blob=new Blob([JSON.stringify({version:12,signals},null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob);
     const anchor=document.createElement("a");
-    anchor.href=url; anchor.download="signale_backup.json";
+    anchor.href=url; anchor.download="signale_backup_"+new Date().toISOString().slice(0,10)+".json";
     document.body.appendChild(anchor); anchor.click(); anchor.remove();
     notify("Export erfolgreich!");
-  }catch(err){notify("Fehler.");}
+  }catch(err){notify("Export fehlgeschlagen.");}
   finally{exportRunning=false;}
 }
 
@@ -1092,7 +1168,7 @@ async function handleImportFile(file){
       }
       loadCloudSignals();
       notify("Import erfolgreich!");
-    }catch(err){notify("Fehler.");}
+    }catch(err){notify("Import-Fehler.");}
   };
   reader.readAsText(file);
 }
@@ -1100,12 +1176,36 @@ async function handleImportFile(file){
 function renderList(){
   const container=$("signalList");
   if(!container)return;
-  container.innerHTML=signals.map(s=>`
-    <div class="signal-card">
-      <h3>${esc(s.short)} – ${esc(s.long)}</h3>
-      <p>${esc(s.meaning)}</p>
-      <button type="button" class="danger btn-del" data-id="${esc(s.id)}">Löschen</button>
-    </div>`).join("")||"<p class='muted'>Keine Signale.</p>";
+  const query=$("searchSignals")?.value.toLowerCase().trim()||"";
+  const list=signals.filter(s=>[s.short,s.long,s.meaning,s.category].join(" ").toLowerCase().includes(query));
+  $("signalCount").textContent=signals.length;
+
+  container.innerHTML=list.map(s=>{
+    const id=String(s.id);
+    const sel=selectedSignalIds.has(id);
+    return `
+      <div class="signal-card ${sel?"selected":""}" data-id="${esc(id)}">
+        <div class="signal-select-row">
+          <label><input type="checkbox" class="signal-checkbox" data-id="${esc(id)}" ${sel?"checked":""}> Auswählen</label>
+        </div>
+        <h3>${esc(s.short)} – ${esc(s.long)}</h3>
+        <small class="muted">Kategorie: ${esc(s.category||"Sonstige")}</small>
+        <p>${esc(s.meaning)}</p>
+        <div class="actions">
+          <button type="button" class="btn-edit" data-id="${esc(id)}">Bearbeiten</button>
+          <button type="button" class="primary btn-share" data-id="${esc(id)}">Teilen</button>
+          <button type="button" class="danger btn-del" data-id="${esc(id)}">Löschen</button>
+        </div>
+      </div>`;
+  }).join("")||"<p class='muted'>Keine Signale gefunden.</p>";
+  updateSelectionUI();
+}
+
+function updateSelectionUI(){
+  const count=selectedSignalIds.size;
+  $("selectionCount").textContent=count+" ausgewählt";
+  $("deleteSelected").disabled=count===0;
+  $("shareSelected").disabled=count===0;
 }
 
 function showPage(page){
@@ -1125,9 +1225,13 @@ function showPage(page){
 }
 
 function initEvents(){
-  $("loginBtn").addEventListener("click", async()=>{
+  $("showRegisterBtn")?.addEventListener("click",()=>{$("loginView").hidden=true; $("registerView").hidden=false;});
+  $("backToLoginFromReg")?.addEventListener("click",()=>{$("registerView").hidden=true; $("loginView").hidden=false;});
+
+  $("loginBtn")?.addEventListener("click", async()=>{
     const email=$("loginEmail").value.trim();
     const password=$("loginPassword").value.trim();
+    if(!email||!password)return notify("Bitte E-Mail und Passwort eingeben.");
     const {data,error}=await _supabase.auth.signInWithPassword({email,password});
     if(error)return notify("Login fehlgeschlagen.");
     currentUser=data.user;
@@ -1135,15 +1239,17 @@ function initEvents(){
     notify("Angemeldet!");
   });
 
-  $("registerBtn").addEventListener("click", async()=>{
+  $("registerBtn")?.addEventListener("click", async()=>{
     const email=$("regEmail").value.trim();
     const password=$("regPassword").value.trim();
+    if(!email||!password)return notify("Bitte E-Mail und Passwort ausfüllen.");
     const {error}=await _supabase.auth.signUp({email,password});
     if(error)return notify("Registrierung fehlgeschlagen.");
-    notify("Konto erstellt!");
+    notify("Konto erstellt! Bitte einloggen.");
+    $("registerView").hidden=true; $("loginView").hidden=false;
   });
 
-  $("logoutBtn").addEventListener("click", async()=>{
+  $("logoutBtn")?.addEventListener("click", async()=>{
     await _supabase.auth.signOut();
     currentUser=null; signals=[];
     $("appMain").hidden=true; $("mainNav").hidden=true; $("menuBtn").hidden=true;
@@ -1151,40 +1257,165 @@ function initEvents(){
     notify("Abgemeldet.");
   });
 
-  $("menuBtn").addEventListener("click",()=>{$("sidebar").classList.add("open");$("sidebarBackdrop").hidden=false;});
-  $("closeSidebar").addEventListener("click",()=>{$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;});
-  $("sidebarBackdrop").addEventListener("click",()=>{$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;});
+  $("menuBtn")?.addEventListener("click",()=>{$("sidebar").classList.add("open");$("sidebarBackdrop").hidden=false;});
+  $("closeSidebar")?.addEventListener("click",()=>{$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;});
+  $("sidebarBackdrop")?.addEventListener("click",()=>{$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;});
 
-  $("sidebar").addEventListener("click",e=>{
+  $("sidebar")?.addEventListener("click",e=>{
     const btn=e.target.closest(".sidebar-link[data-page]");
     if(btn){$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;showPage(btn.dataset.page);}
   });
 
-  $("mainNav").addEventListener("click",e=>{
+  $("mainNav")?.addEventListener("click",e=>{
     const btn=e.target.closest("button[data-page]");
     if(btn)showPage(btn.dataset.page);
   });
 
-  $("checkLearn").addEventListener("click",checkLearn);
-  $("nextLearn").addEventListener("click",nextLearn);
-  $("skipLearn").addEventListener("click",nextLearn);
+  $("checkLearn")?.addEventListener("click",checkLearn);
+  $("nextLearn")?.addEventListener("click",nextLearn);
+  $("skipLearn")?.addEventListener("click",nextLearn);
+  $("onlyWrongFilter")?.addEventListener("change",nextLearn);
 
-  $("saveSignal").addEventListener("click", async()=>{
+  $("startExam")?.addEventListener("click",startExam);
+  $("submitExam")?.addEventListener("click",submitExamAnswer);
+  $("examNext")?.addEventListener("click",showExamQuestion);
+
+  $("saveSignal")?.addEventListener("click", async()=>{
+    const id=$("editId").value;
     const short=$("shortName").value.trim();
     const long=$("longName").value.trim();
     const meaning=$("meaning").value.trim();
     const category=$("category").value||"Lf";
     const image=$("imageUrl").value.trim();
-    if(!short||!long||!meaning)return notify("Bitte ausfüllen.");
-    await _supabase.from("signals").insert([{short,long,meaning,category,image,user_id:currentUser.id}]);
-    $("shortName").value=""; $("longName").value=""; $("meaning").value=""; $("imageUrl").value="";
+    if(!short||!long||!meaning)return notify("Bitte alle Felder ausfüllen.");
+    const payload={short,long,meaning,category,image,user_id:currentUser.id};
+    if(id)await _supabase.from("signals").update(payload).eq("id",id);
+    else await _supabase.from("signals").insert([payload]);
+    $("editId").value=""; $("shortName").value=""; $("longName").value=""; $("meaning").value=""; $("imageUrl").value="";
     loadCloudSignals();
-    notify("Gespeichert!");
+    notify("Signal gespeichert!");
   });
 
-  $("exportData").addEventListener("click",exportData);
-  $("importButton").addEventListener("click",()=>$("importFile").click());
-  $("importFile").addEventListener("change",function(){handleImportFile(this.files[0]);this.value="";});
+  $("clearForm")?.addEventListener("click",()=>{
+    $("editId").value=""; $("shortName").value=""; $("longName").value=""; $("meaning").value=""; $("imageUrl").value="";
+  });
+
+  $("searchSignals")?.addEventListener("input",renderList);
+  $("exportData")?.addEventListener("click",exportData);
+  $("importButton")?.addEventListener("click",()=>$("importFile").click());
+  $("importFile")?.addEventListener("change",function(){handleImportFile(this.files[0]);this.value="";});
+
+  $("resetStats")?.addEventListener("click",()=>{
+    if(!confirm("Statistik zurücksetzen?"))return;
+    stats={answered:0,points:0,exams:0,lastExam:null};
+    wrongSignalIds.clear();
+    saveLocalProgress();
+    renderStats();
+    notify("Zurückgesetzt.");
+  });
+
+  $("learnSelectAll")?.addEventListener("click",()=>{
+    const cats=getAllCategories();
+    if(selectedLearnCategories.size===cats.size)selectedLearnCategories.clear();
+    else cats.forEach(c=>selectedLearnCategories.add(c));
+    renderCategoryChoices();
+    nextLearn();
+  });
+  $("learnToggleCategories")?.addEventListener("click",()=>{
+    learnCategoriesOpen=!learnCategoriesOpen;
+    applyCategoryPickerVisibility();
+  });
+  $("learnCategoryChoices")?.addEventListener("change",e=>{
+    const cb=e.target.closest("input[data-category]");
+    if(cb){
+      if(cb.checked)selectedLearnCategories.add(cb.dataset.category);
+      else selectedLearnCategories.delete(cb.dataset.category);
+      renderCategoryChoices();
+      nextLearn();
+    }
+  });
+
+  $("examSelectAll")?.addEventListener("click",()=>{
+    const cats=getAllCategories();
+    if(selectedExamCategories.size===cats.size)selectedExamCategories.clear();
+    else cats.forEach(c=>selectedExamCategories.add(c));
+    renderCategoryChoices();
+    updateExamAvailable();
+  });
+  $("examToggleCategories")?.addEventListener("click",()=>{
+    examCategoriesOpen=!examCategoriesOpen;
+    applyCategoryPickerVisibility();
+  });
+  $("examCategoryChoices")?.addEventListener("change",e=>{
+    const cb=e.target.closest("input[data-category]");
+    if(cb){
+      if(cb.checked)selectedExamCategories.add(cb.dataset.category);
+      else selectedExamCategories.delete(cb.dataset.category);
+      renderCategoryChoices();
+      updateExamAvailable();
+    }
+  });
+
+  document.addEventListener("click", async e=>{
+    const accept=e.target.closest(".btn-accept-trainer");
+    const del=e.target.closest(".btn-del");
+    const edit=e.target.closest(".btn-edit");
+    const share=e.target.closest(".btn-share");
+    const acceptFr=e.target.closest(".btn-accept-friend");
+    const acceptSh=e.target.closest(".btn-accept-shared");
+
+    if(accept){
+      await _supabase.from("user_profiles").update({is_trainer:true, trainer_requested:false}).eq("id",accept.dataset.id);
+      notify("Trainer bestätigt!");
+      loadAdminTrainerRequests();
+    }
+    if(del){
+      if(!confirm("Signal löschen?"))return;
+      await _supabase.from("signals").delete().eq("id",del.dataset.id);
+      selectedSignalIds.delete(String(del.dataset.id));
+      loadCloudSignals();
+      notify("Gelöscht.");
+    }
+    if(edit){
+      const s=signals.find(item=>String(item.id)===String(edit.dataset.id));
+      if(s){
+        $("editId").value=s.id;
+        $("shortName").value=s.short||"";
+        $("longName").value=s.long||"";
+        $("meaning").value=s.meaning||"";
+        $("category").value=s.category||"Lf";
+        $("imageUrl").value=s.image||"";
+        window.scrollTo({top:0,behavior:"smooth"});
+      }
+    }
+    if(share){
+      const s=signals.find(item=>String(item.id)===String(share.dataset.id));
+      const recipient=prompt("E-Mail des Empfängers:");
+      if(recipient&&s){
+        await _supabase.from("shared_signals").insert([{sender_email:currentUser.email, recipient_email:recipient.trim().toLowerCase(), signal_data:s}]);
+        notify("Signal geteilt!");
+      }
+    }
+    if(acceptFr){
+      await _supabase.from("friendships").update({status:"accepted"}).eq("id",acceptFr.dataset.id);
+      loadFriends();
+      notify("Angenommen!");
+    }
+    if(acceptSh){
+      await _supabase.from("shared_signals").update({status:"accepted"}).eq("id",acceptSh.dataset.id);
+      loadSharedSignals();
+      loadCloudSignals();
+      notify("Signal übernommen!");
+    }
+  });
+
+  $("sendSupportBtn")?.addEventListener("click", async()=>{
+    const message=$("supportMessage").value.trim();
+    if(!message)return notify("Bitte Nachricht eingeben.");
+    await _supabase.from("support_messages").insert([{user_id:currentUser.id, user_email:currentUser.email, message}]);
+    $("supportMessage").value="";
+    notify("Support-Anfrage gesendet!");
+  });
 }
 
 function init(){
