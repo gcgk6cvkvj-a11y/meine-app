@@ -33,7 +33,6 @@ p {line-height:1.5;margin:8px 0}
 small,.muted {color:var(--muted)}
 .brand {color:var(--accent)}
 
-/* Hamburger & Seitenleiste */
 #menuBtn {
   background:var(--panel2);border:1px solid var(--border);
   color:var(--text);font-size:20px;padding:8px 12px;
@@ -53,6 +52,7 @@ small,.muted {color:var(--muted)}
   z-index:2000;padding:18px;display:flex;flex-direction:column;
   gap:10px;transform:translateX(-105%);transition:transform .25s ease;
   box-shadow:6px 0 24px rgba(0,0,0,.6);
+  overflow-y:auto;
 }
 #sidebar.open {transform:translateX(0)}
 .sidebar-header {
@@ -69,7 +69,6 @@ small,.muted {color:var(--muted)}
   font-size:11px;padding:2px 7px;border-radius:99px;font-weight:700;
 }
 
-/* Pop-up Modal für Admin-Nachrichten */
 #broadcastPopup {
   position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
   width:90%;max-width:450px;background:#1b2735;border:1px solid var(--accent);
@@ -92,6 +91,7 @@ nav#mainNav button {
 }
 nav#mainNav button .icon {font-size:18px}
 nav#mainNav button.active {color:var(--accent);background:rgba(72,166,255,.1)}
+
 button,input,select,textarea {font:inherit;border-radius:10px;border:1px solid var(--border)}
 button {
   background:var(--panel2);color:var(--text);padding:12px 14px;
@@ -261,7 +261,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 
 <body>
 
-<!-- POP-UP MODAL FÜR WICHTIGE ADMIN-NACHRICHTEN -->
 <div id="popupBackdrop" hidden></div>
 <div id="broadcastPopup" hidden>
   <h2 id="popupTitle">Wichtige Information</h2>
@@ -277,6 +276,9 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <button type="button" id="closeSidebar" style="padding:6px 10px;">✕</button>
   </div>
   <button type="button" class="sidebar-link" data-page="tutorial">📖 Tutorial</button>
+  <button type="button" class="sidebar-link" data-page="friends">👥 Freunde</button>
+  <button type="button" class="sidebar-link" data-page="studyGroups">👥 Lerngruppen</button>
+  <button type="button" class="sidebar-link" data-page="courses">🎓 Kurse</button>
   <button type="button" class="sidebar-link" data-page="support">💬 Support</button>
   <button type="button" class="sidebar-link" data-page="inbox">
     📬 Postfach <span id="inboxUnreadBadge" class="pill-count" hidden>0</span>
@@ -286,6 +288,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   </button>
   <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);">
     <small id="sidebarUserEmail" class="muted" style="display:block;margin-bottom:8px;word-break:break-all;"></small>
+    <div id="trainerStatusContainer" style="margin-top:8px;"></div>
   </div>
 </aside>
 
@@ -321,7 +324,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 
   <div id="registerView" hidden>
     <h2>Konto registrieren</h2>
-    <p class="muted" style="font-size:13px;">Erstelle ein kostenloses Konto, um deine Signale in der Cloud zu speichern.</p>
     <label for="regEmail">E-Mail Adresse</label>
     <input type="email" id="regEmail" placeholder="deine@email.de" autocomplete="email">
     <label for="regPassword">Passwort (mind. 6 Zeichen)</label>
@@ -334,7 +336,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 
   <div id="forgotView" hidden>
     <h2>Passwort zurücksetzen</h2>
-    <p class="muted" style="font-size:13px;">Gib deine E-Mail-Adresse ein. Wir senden dir einen Link zum Zurücksetzen deines Passworts.</p>
     <label for="forgotEmail">E-Mail Adresse</label>
     <input type="email" id="forgotEmail" placeholder="deine@email.de" autocomplete="email">
     <button type="button" class="primary" id="sendResetBtn" style="width:100%;">Link anfordern</button>
@@ -343,7 +344,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 
   <div id="newPasswordView" hidden>
     <h2>Neues Passwort festlegen</h2>
-    <p class="muted" style="font-size:13px;">Bitte vergib jetzt dein neues Passwort.</p>
     <label for="newPasswordInput">Neues Passwort (mind. 6 Zeichen)</label>
     <input type="password" id="newPasswordInput" placeholder="••••••••" autocomplete="new-password">
     <button type="button" class="primary" id="saveNewPasswordBtn" style="width:100%;">Passwort speichern</button>
@@ -412,8 +412,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <section id="exam" class="page" hidden>
   <div class="panel">
     <h2>Prüfungsmodus</h2>
-    <p class="muted">Wähle die Signalgruppen aus, die in deiner Prüfung abgefragt werden sollen.</p>
-
     <div id="examConfig">
       <div class="category-picker">
         <div class="category-picker-header">
@@ -482,27 +480,122 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   </div>
 </section>
 
+<!-- FREUNDE -->
+<section id="friends" class="page" hidden>
+  <div class="panel">
+    <h2>👥 Freunde & Kontakte</h2>
+    <p class="muted">Füge Kollegen per E-Mail hinzu, um Lerngruppen zu gründen oder Signale zu teilen.</p>
+
+    <label for="friendEmail">E-Mail-Adresse des Kollegen</label>
+    <input type="email" id="friendEmail" list="userAutocompleteList" placeholder="kollege@email.de" autocomplete="off">
+    <button type="button" class="primary" id="sendFriendRequestBtn" style="width:100%;">Freundschaftsanfrage senden</button>
+
+    <hr>
+    <h3>Anfragen & Freunde</h3>
+    <div id="friendRequestsList"><p class="muted">Lade Freunde...</p></div>
+  </div>
+</section>
+
+<!-- LERNGRUPPEN -->
+<section id="studyGroups" class="page" hidden>
+  <div class="panel">
+    <h2>👥 Lerngruppen</h2>
+    <p class="muted">Lerne gemeinsam mit Kollegen abseits deines privaten Bereichs.</p>
+
+    <div class="actions">
+      <button type="button" class="primary" id="showCreateGroupBtn">+ Neue Lerngruppe erstellen</button>
+    </div>
+
+    <div id="createGroupForm" class="panel" style="margin-top:14px;" hidden>
+      <h3>Lerngruppe erstellen</h3>
+      <label for="newGroupName">Gruppenname</label>
+      <input id="newGroupName" placeholder="z. B. Azubi-Klasse 2026">
+      <button type="button" class="primary" id="createGroupSubmit">Gruppe anlegen</button>
+      <button type="button" id="cancelCreateGroup">Abbrechen</button>
+    </div>
+
+    <hr>
+    <div id="myStudyGroupsList"><p class="muted">Lade Lerngruppen...</p></div>
+  </div>
+</section>
+
+<!-- EINZELNE LERNGRUPPEN-ANSICHT -->
+<section id="groupDetail" class="page" hidden>
+  <div class="panel">
+    <button type="button" id="backToGroups" style="margin-bottom:12px;">← Zurück zu Lerngruppen</button>
+    <h2 id="groupDetailTitle">Lerngruppe</h2>
+    <p class="muted" id="groupDetailCreator"></p>
+
+    <div class="actions" style="margin-bottom:14px;">
+      <button type="button" class="primary" id="groupInviteBtn">＋ Mitglied einladen</button>
+      <button type="button" id="groupManageMembersBtn">⚙️ Mitglieder & Rechte</button>
+      <button type="button" class="primary good" id="groupLearnBtn">📚 Gruppe lernen</button>
+    </div>
+
+    <hr>
+    <h3>Signale der Lerngruppe (<span id="groupSignalCount">0</span>)</h3>
+    <div class="actions">
+      <button type="button" class="primary" id="groupAddSignalBtn" hidden>+ Signal zur Gruppe hinzufügen</button>
+    </div>
+    <div id="groupSignalsList" style="margin-top:12px;"><p class="muted">Keine Signale in der Gruppe.</p></div>
+  </div>
+</section>
+
+<!-- KURSE (TRAINER & SCHÜLER) -->
+<section id="courses" class="page" hidden>
+  <div class="panel">
+    <h2>🎓 Kurse & Schulungen</h2>
+    <p class="muted">Nimm an Kursen teil oder erstelle als Trainer Schulungen für deine Schüler.</p>
+
+    <div id="trainerActionBox" style="margin-bottom:14px;" hidden>
+      <button type="button" class="primary" id="createCourseBtn">+ Neuen Kurs erstellen</button>
+    </div>
+
+    <div id="createCourseForm" class="panel" hidden>
+      <h3>Kurs erstellen</h3>
+      <label for="courseNameInput">Kursname</label>
+      <input id="courseNameInput" placeholder="z. B. Signalbuch Ril 301 Intensiv">
+      <button type="button" class="primary" id="submitCreateCourse">Kurs anlegen</button>
+      <button type="button" id="cancelCreateCourse">Abbrechen</button>
+    </div>
+
+    <hr>
+    <h3>Deine Kurse</h3>
+    <div id="myCoursesList"><p class="muted">Lade Kurse...</p></div>
+  </div>
+</section>
+
+<!-- EINZELNER KURS ANSICHT -->
+<section id="courseDetail" class="page" hidden>
+  <div class="panel">
+    <button type="button" id="backToCourses" style="margin-bottom:12px;">← Zurück zu Kursen</button>
+    <h2 id="courseDetailTitle">Kurs</h2>
+    <p class="muted" id="courseDetailTrainer"></p>
+
+    <div id="trainerCourseControls" hidden style="margin-bottom:14px;">
+      <button type="button" class="primary" id="courseAddMemberBtn">＋ Schüler hinzufügen</button>
+      <button type="button" class="primary" id="courseAddMaterialBtn">📄 Aufgabe / Dokument hochladen</button>
+      <button type="button" class="primary" id="courseAddHomeworkBtn">📋 Hausaufgabe aufgeben</button>
+      <button type="button" class="primary" id="coursePopupBtn">📢 Popup an Kurs senden</button>
+    </div>
+
+    <hr>
+    <h3>📚 Lernmaterialien & Aufgaben</h3>
+    <div id="courseMaterialsList"><p class="muted">Keine Materialien vorhanden.</p></div>
+
+    <hr>
+    <h3>📋 Hausaufgaben</h3>
+    <div id="courseHomeworkList"><p class="muted">Keine Hausaufgaben aufgegeben.</p></div>
+  </div>
+</section>
+
 <!-- TUTORIAL -->
 <section id="tutorial" class="page" hidden>
   <div class="panel">
-    <h2>📖 Tutorial – So funktioniert die App</h2>
-    <p class="muted">Eine kurze Übersicht über alle Bereiche und Funktionen:</p>
-
+    <h2>📖 Tutorial – Alle Funktionen</h2>
     <div class="tutorial-step">
-      <h3>1. ⚙️ Verwaltung & Mehrfach-Sharing</h3>
-      <p>Füge Signale hinzu. Markiere mehrere Signale mit den Checkboxen und teile sie gebündelt per E-Mail über <b>📨 Ausgewählte teilen</b> mit Kollegen.</p>
-    </div>
-    <div class="tutorial-step">
-      <h3>2. 📚 Lernmodus & 🎯 Fehler-Training</h3>
-      <p>Trainiere gezielt nach Signalgruppen. Falsche Antworten merkt sich die App automatisch.</p>
-    </div>
-    <div class="tutorial-step">
-      <h3>3. 📝 Prüfungsmodus</h3>
-      <p>Stelle dir eine Prüfung zusammen. Bei falscher Bedeutung greift die Betriebsgefahr-Regel (0 Punkte). Ab 80 % ist die Prüfung bestanden.</p>
-    </div>
-    <div class="tutorial-step">
-      <h3>4. 💬 Support & 📬 Postfach</h3>
-      <p>Melde Probleme oder Vorschläge. Antworten vom Entwickler landen direkt in deinem Postfach.</p>
+      <h3>1. 👥 Freunde, Lerngruppen & Kurse</h3>
+      <p>Füge Freunde hinzu, gründe Lerngruppen mit individuellen Berechtigungen (wer darf löschen/bearbeiten) oder nimm an Kursen teil. Trainer können nach Freigabe Schulungen und Hausaufgaben erstellen.</p>
     </div>
   </div>
 </section>
@@ -511,7 +604,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <section id="support" class="page" hidden>
   <div class="panel">
     <h2>💬 Support & Feedback</h2>
-    <p class="muted">Hast du ein Problem entdeckt oder einen Verbesserungsvorschlag? Schreib mir direkt!</p>
     <label for="supportCategory">Grund deiner Nachricht</label>
     <select id="supportCategory">
       <option value="Problem">⚠️ Problem melden</option>
@@ -530,7 +622,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <div class="row" style="align-items:center;">
       <div>
         <h2 style="margin-bottom:4px;">📬 Dein Postfach</h2>
-        <p class="muted" style="margin:0;">Support-Antworten vom Entwickler</p>
+        <p class="muted" style="margin:0;">Support-Antworten & Direktnachrichten vom Trainer</p>
       </div>
       <button type="button" id="refreshInboxBtn" style="flex:0 0 auto;">↻ Aktualisieren</button>
     </div>
@@ -542,8 +634,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <!-- GETEILTE SIGNALE -->
 <section id="shared" class="page" hidden>
   <div class="panel">
-    <h2>📨 Von Kollegen geteilte Signale</h2>
-    <p class="muted">Hier siehst du Signale inklusive Bildern, die dir andere Nutzer per E-Mail geschickt haben.</p>
+    <h2>📨 Geteilte Signale</h2>
     <div id="sharedSignalsList"><p class="muted">Keine geteilten Signale vorhanden.</p></div>
   </div>
 </section>
@@ -551,88 +642,70 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <!-- VERWALTUNG -->
 <section id="manage" class="page" hidden>
 
-  <!-- ADMIN: BILDSCHIRM-NACHRICHT (BROADCAST) -->
+  <!-- ADMIN: TRAINER-ANFRAGEN & BROADCASTS -->
+  <div class="panel" id="adminTrainerPanel" hidden>
+    <h2 style="margin-bottom:4px;">🛡️ Trainer-Anträge verwalten</h2>
+    <div id="adminTrainerRequestsList"><p class="muted">Lade Anträge...</p></div>
+  </div>
+
   <div class="panel" id="adminBroadcastPanel" hidden>
     <h2 style="margin-bottom:4px;">📢 Bildschirm-Nachricht senden</h2>
-    <p class="muted" style="margin:0;">Sendet ein sofortiges Pop-up auf den Bildschirm der ausgewählten Nutzer.</p>
-    
-    <label for="bcTarget" style="margin-top:12px;">Empfänger</label>
+    <label for="bcTarget">Empfänger</label>
     <select id="bcTarget">
       <option value="all">An alle registrierten Nutzer</option>
       <option value="specific">An bestimmte E-Mail(s)</option>
     </select>
-
     <div id="bcEmailsContainer" hidden>
-      <label for="bcEmails">E-Mail-Adressen (durch Komma getrennt)</label>
-      <input id="bcEmails" placeholder="kollege1@email.de, kollege2@email.de">
+      <label for="bcEmails">E-Mail-Adressen (Komma-getrennt)</label>
+      <input id="bcEmails" placeholder="kollege1@email.de">
     </div>
-
     <label for="bcTitle">Titel</label>
-    <input id="bcTitle" placeholder="z. B. Wichtiges Update!">
-    
-    <label for="bcMessage">Nachrichtentext</label>
-    <textarea id="bcMessage" placeholder="Nachricht für den Bildschirm..."></textarea>
-
-    <button type="button" class="primary" id="sendBroadcastBtn" style="width:100%;">Bildschirm-Nachricht abschicken</button>
+    <input id="bcTitle" placeholder="Titel">
+    <label for="bcMessage">Nachricht</label>
+    <textarea id="bcMessage" placeholder="Nachricht..."></textarea>
+    <button type="button" class="primary" id="sendBroadcastBtn" style="width:100%;">Abschicken</button>
   </div>
 
-  <!-- NUTZERSTATISTIK -->
   <div class="panel" id="adminStatsPanel" hidden>
     <div class="row" style="align-items:center;">
       <div>
         <h2 style="margin-bottom:4px;">📈 Nutzerstatistik</h2>
-        <p class="muted" style="margin:0;">Nutzung in Echtzeit</p>
       </div>
-      <button type="button" id="refreshAdminStats" style="flex:0 0 auto;">↻ Aktualisieren</button>
+      <button type="button" id="refreshAdminStats" style="flex:0 0 auto;">↻</button>
     </div>
     <div class="stat-grid" style="margin-top:14px;">
       <div class="stat">Gerade online<strong id="adminOnline">–</strong></div>
       <div class="stat">Heute aktiv<strong id="adminToday">–</strong></div>
-      <div class="stat">Letzte 7 Tage<strong id="adminWeek">–</strong></div>
-      <div class="stat">Letzte 30 Tage<strong id="adminMonth">–</strong></div>
-      <div class="stat">Insgesamt registriert<strong id="adminTotal">–</strong></div>
+      <div class="stat">7 Tage<strong id="adminWeek">–</strong></div>
+      <div class="stat">30 Tage<strong id="adminMonth">–</strong></div>
+      <div class="stat">Registriert<strong id="adminTotal">–</strong></div>
     </div>
-    <p class="muted" id="adminStatsUpdated" style="font-size:12px;">Wird geladen …</p>
   </div>
 
-  <!-- ADMIN SUPPORT-EINGANG -->
   <div class="panel" id="adminSupportPanel" hidden>
-    <div class="row" style="align-items:center;">
-      <div>
-        <h2 style="margin-bottom:4px;">📨 Support-Anfragen der Nutzer</h2>
-        <p class="muted" style="margin:0;">Auf Probleme, Bewertungen & Vorschläge antworten</p>
-      </div>
-      <button type="button" id="refreshAdminSupport" style="flex:0 0 auto;">↻ Aktualisieren</button>
-    </div>
-    <div id="adminSupportList" style="margin-top:12px;"><p class="muted">Lade Anfragen...</p></div>
+    <h2>📨 Support-Anfragen</h2>
+    <div id="adminSupportList"><p class="muted">Lade Anfragen...</p></div>
   </div>
 
   <div class="panel">
     <h2 id="formTitle">Signal hinzufügen</h2>
     <input type="hidden" id="editId">
-
     <label for="shortName">Kurzbezeichnung</label>
     <input id="shortName" placeholder="z. B. Lf 1">
-
     <label for="longName">Langbezeichnung</label>
     <input id="longName" placeholder="z. B. Trapeztafel">
-
-    <label for="meaning">Bedeutung / Musterlösung</label>
+    <label for="meaning">Bedeutung</label>
     <textarea id="meaning" placeholder="Vollständige Bedeutung..."></textarea>
-
     <label for="category">Kategorie</label>
     <select id="category"></select>
-
     <label for="imageUrl">Bild-URL (optional)</label>
     <input id="imageUrl" placeholder="https://...">
-
     <div class="actions">
       <button type="button" id="pickGallery">🖼️ Galerie</button>
       <button type="button" id="pickCamera">📸 Kamera</button>
     </div>
     <input type="file" id="imageFile" accept="image/*" hidden>
     <input type="file" id="cameraFile" accept="image/*" capture="environment" hidden>
-
     <div class="actions" style="margin-top:12px;">
       <button type="button" class="primary" id="saveSignal">Signal speichern</button>
       <button type="button" id="clearForm">Formular leeren</button>
@@ -641,43 +714,34 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 
   <div class="panel">
     <h3>Gespeicherte Signale: <span id="signalCount" class="brand">0</span></h3>
-    <input id="searchSignals" placeholder="Signal suchen (Kurz, Lang, Kategorie)...">
-
+    <input id="searchSignals" placeholder="Signal suchen...">
     <div class="bulk-toolbar">
       <div class="signal-select-row">
-        <label>
-          <input type="checkbox" id="selectAllSignals">
-          Alle angezeigten Signale auswählen
-        </label>
+        <label><input type="checkbox" id="selectAllSignals"> Alle auswählen</label>
       </div>
       <div class="actions">
-        <button type="button" id="clearSelection">Auswahl aufheben</button>
-        <button type="button" class="primary" id="shareSelected" disabled>📨 Ausgewählte teilen</button>
-        <button type="button" class="danger" id="deleteSelected" disabled>🗑 Ausgewählte löschen</button>
+        <button type="button" id="clearSelection">Aufheben</button>
+        <button type="button" class="primary" id="shareSelected" disabled>📨 Teilen</button>
+        <button type="button" class="danger" id="deleteSelected" disabled>🗑 Löschen</button>
       </div>
-      <div id="selectionCount" class="selection-count">0 Signale ausgewählt</div>
+      <div id="selectionCount" class="selection-count">0 ausgewählt</div>
     </div>
     <div id="signalList"></div>
   </div>
 
   <div class="panel">
     <h2>Datensicherung</h2>
-    <p class="muted">Signale sichern oder wiederherstellen.</p>
     <div class="actions">
       <button type="button" id="exportData">Daten exportieren</button>
       <button type="button" id="importButton">Daten importieren</button>
-    </div>
-    <div id="exportProgressContainer" style="margin-top:12px;" hidden>
-      <div class="row" style="margin-bottom:4px;font-size:12px;">
-        <span id="exportProgressText" class="muted">Export läuft...</span>
-        <span id="exportProgressPercent" style="text-align:right;" class="muted">0%</span>
-      </div>
-      <div class="progress"><span id="exportProgressBar" style="width:0%;"></span></div>
     </div>
     <input type="file" id="importFile" accept=".json,application/json" hidden>
   </div>
 </section>
 </main>
+
+<!-- DATALIST FÜR E-MAIL AUTO-VERVOLLSTÄNDIGUNG -->
+<datalist id="userAutocompleteList"></datalist>
 
 <nav id="mainNav" hidden>
   <button type="button" class="active" data-page="learn"><span class="icon">📚</span><span>Lernen</span></button>
@@ -696,25 +760,8 @@ const _supabase=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 const $=id=>document.getElementById(id);
 
 const ADMIN_EMAIL="Dominique.aghabozorgi@yahoo.com";
-let activityInterval=null;
-let adminStatsInterval=null;
-let currentPopupId=null;
-
-const BASE_CATEGORIES=[
-  "Lf","Bü","Ne","Hp","Vr","Ks","Hl","Sh","Ra","Zs","El","So",
-  "Wn","Zp","Zg","Ts","Mastschilder","Sonstige"
-];
-
-const CATEGORY_LABELS={
-  "Lf":"Lf – Langsamfahrsignale","Bü":"Bü – Bahnübergangssignale","Ne":"Ne – Nebensignale",
-  "Hp":"Hp – Hauptsignale","Vr":"Vr – Vorsignale","Ks":"Ks – Kombinationssignale",
-  "Hl":"Hl – Hl-Signale","Sh":"Sh – Schutzsignale","Ra":"Ra – Rangiersignale",
-  "Zs":"Zs – Zusatzsignale","El":"El – Fahrleitungssignale","So":"So – Sonstige Signale",
-  "Wn":"Wn – Weichensignale","Zp":"Zp – Zugpersonalsignale","Zg":"Zg – Zugbegleitersignale",
-  "Ts":"Ts – Türen- und sonstige Betriebssignale","Mastschilder":"Mastschilder","Sonstige":"Sonstige"
-};
-
 let currentUser=null;
+let allRegisteredUsers=[];
 let signals=[];
 let stats=JSON.parse(localStorage.getItem("armando_signal_stats")||'{"answered":0,"points":0,"exams":0,"lastExam":null}');
 let wrongSignalIds=new Set(JSON.parse(localStorage.getItem("armando_wrong_signals")||"[]"));
@@ -727,20 +774,17 @@ let selectedSignalIds=new Set();
 let bulkDeleteRunning=false;
 let exportRunning=false;
 
+let activeGroupId=null;
+let activeCourseId=null;
+
+const BASE_CATEGORIES=["Lf","Bü","Ne","Hp","Vr","Ks","Hl","Sh","Ra","Zs","El","So","Wn","Zp","Zg","Ts","Mastschilder","Sonstige"];
+const CATEGORY_LABELS={"Lf":"Lf – Langsamfahrsignale","Bü":"Bü – Bahnübergangssignale","Ne":"Ne – Nebensignale","Hp":"Hp – Hauptsignale","Vr":"Vr – Vorsignale","Ks":"Ks – Kombinationssignale","Hl":"Hl – Hl-Signale","Sh":"Sh – Schutzsignale","Ra":"Ra – Rangiersignale","Zs":"Zs – Zusatzsignale","El":"El – Fahrleitungssignale","So":"So – Sonstige Signale","Wn":"Wn – Weichensignale","Zp":"Zp – Zugpersonalsignale","Zg":"Zg – Zugbegleitersignale","Ts":"Ts – Türen- und sonstige Betriebssignale","Mastschilder":"Mastschilder","Sonstige":"Sonstige"};
+
 let selectedLearnCategories=new Set(BASE_CATEGORIES);
 let selectedExamCategories=new Set(BASE_CATEGORIES);
 let knownCategories=new Set(BASE_CATEGORIES);
-
 let learnCategoriesOpen=false;
 let examCategoriesOpen=false;
-
-let examList=[];
-let examIndex=0;
-let examPoints=0;
-let examStarted=0;
-let examTimerInterval=null;
-let examAnswered=false;
-let examQuestionResults=[];
 
 function saveLocalProgress(){
   localStorage.setItem("armando_signal_stats",JSON.stringify(stats));
@@ -756,223 +800,23 @@ function notify(message){
 }
 
 function esc(value){
-  return String(value??"").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[c]);
+  return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
 }
 
-function shuffle(array){
-  const result=[...array];
-  for(let i=result.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [result[i],result[j]]=[result[j],result[i]];
-  }
-  return result;
-}
-
-function extractSignals(data){
-  if(Array.isArray(data))return data;
-  if(!data||typeof data!=="object")return [];
-  for(const key of ["signals","items","data","signale","database","entries"]){
-    if(Array.isArray(data[key]))return data[key];
-    if(data[key]&&typeof data[key]==="object"){
-      const values=Object.values(data[key]);
-      if(values.length&&values.some(v=>v&&typeof v==="object"))return values;
-    }
-  }
-  const values=Object.values(data);
-  if(values.length&&values.every(v=>v&&typeof v==="object"))return values;
-  return [];
-}
-
-function getAllCategories(){
-  return [...new Set([...BASE_CATEGORIES,...signals.map(s=>s.category||"Sonstige")])];
-}
-
-function syncCategories(){
-  const categories=getAllCategories();
-  categories.forEach(cat=>{
-    if(!knownCategories.has(cat)){
-      selectedLearnCategories.add(cat);
-      selectedExamCategories.add(cat);
-      knownCategories.add(cat);
-    }
-  });
-  renderCategoryChoices();
-  renderCategorySelect();
-}
-
-function renderCategorySelect(){
-  const select=$("category");
-  if(!select)return;
-  const old=select.value;
-  select.innerHTML="";
-  getAllCategories().forEach(cat=>{
-    const option=document.createElement("option");
-    option.value=cat;
-    option.textContent=CATEGORY_LABELS[cat]||cat;
-    select.appendChild(option);
-  });
-  select.value=getAllCategories().includes(old)?old:"Lf";
-}
-
-function renderOneCategoryPicker(containerId,selectedSet,prefix,summaryId){
-  const container=$(containerId);
-  if(!container)return;
-  const categories=getAllCategories();
-  container.innerHTML=categories.map((cat,index)=>{
-    const id=prefix+"_"+index;
-    return `
-      <label class="category-option" for="${id}">
-        <input type="checkbox" id="${id}" data-category="${esc(cat)}"
-          ${selectedSet.has(cat)?"checked":""}>
-        <span>${esc(CATEGORY_LABELS[cat]||cat)}</span>
-      </label>`;
-  }).join("");
-  const summary=$(summaryId);
-  if(summary){
-    summary.textContent=selectedSet.size===categories.length
-      ?"Alle "+categories.length+" Gruppen ausgewählt"
-      :selectedSet.size+" von "+categories.length+" Gruppen ausgewählt";
-  }
-}
-
-function renderCategoryChoices(){
-  renderOneCategoryPicker("learnCategoryChoices",selectedLearnCategories,"learnCat","learnCategorySummary");
-  renderOneCategoryPicker("examCategoryChoices",selectedExamCategories,"examCat","examCategorySummary");
-  applyCategoryPickerVisibility();
-  updateLearnAvailable();
-  updateExamAvailable();
-}
-
-function applyCategoryPickerVisibility(){
-  const learnGrid=$("learnCategoryChoices");
-  const examGrid=$("examCategoryChoices");
-  const learnButton=$("learnToggleCategories");
-  const examButton=$("examToggleCategories");
-  if(learnGrid)learnGrid.classList.toggle("collapsed",!learnCategoriesOpen);
-  if(examGrid)examGrid.classList.toggle("collapsed",!examCategoriesOpen);
-  if(learnButton){
-    learnButton.textContent=learnCategoriesOpen?"Auswahl schließen ▲":"Signalgruppen auswählen ▼";
-    learnButton.setAttribute("aria-expanded",String(learnCategoriesOpen));
-  }
-  if(examButton){
-    examButton.textContent=examCategoriesOpen?"Auswahl schließen ▲":"Signalgruppen auswählen ▼";
-    examButton.setAttribute("aria-expanded",String(examCategoriesOpen));
-  }
-}
-
-function toggleCategoryPicker(type){
-  if(type==="learn")learnCategoriesOpen=!learnCategoriesOpen;
-  else examCategoriesOpen=!examCategoriesOpen;
-  applyCategoryPickerVisibility();
-}
-
-function handleCategoryChange(e,type){
-  const checkbox=e.target.closest('input[type="checkbox"][data-category]');
-  if(!checkbox)return;
-  const category=checkbox.dataset.category;
-  const set=type==="learn"?selectedLearnCategories:selectedExamCategories;
-  if(checkbox.checked)set.add(category);
-  else set.delete(category);
-  renderCategoryChoices();
-  if(type==="learn")nextLearn();
-}
-
-function toggleAllCategories(type){
-  const set=type==="learn"?selectedLearnCategories:selectedExamCategories;
-  const categories=getAllCategories();
-  const allSelected=categories.every(cat=>set.has(cat));
-  if(allSelected)set.clear();
-  else categories.forEach(cat=>set.add(cat));
-  renderCategoryChoices();
-  if(type==="learn")nextLearn();
-}
-
-function updateLearnAvailable(){
-  const count=getLearnSignals().length;
-  $("learnAvailable").textContent=count;
-}
-
-function updateExamAvailable(){
-  const count=signals.filter(s=>selectedExamCategories.has(s.category||"Sonstige")).length;
-  const el=$("examAvailable");
-  if(el)el.textContent=count+" Signale stehen für die Prüfung zur Verfügung.";
-}
-
-function openSidebar(){
-  $("sidebar").classList.add("open");
-  $("sidebarBackdrop").hidden=false;
-}
-
-function closeSidebar(){
-  $("sidebar").classList.remove("open");
-  $("sidebarBackdrop").hidden=true;
-}
-
-function isAdmin(){
-  return String(currentUser?.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();
-}
-
-async function recordAppActivity(){
-  if(!currentUser)return;
+async function loadRegisteredUsersList(){
   try{
-    await _supabase.rpc("record_app_activity");
+    const {data}=await _supabase.from("user_profiles").select("email");
+    if(data){
+      allRegisteredUsers=data.map(u=>u.email);
+      const list=$("userAutocompleteList");
+      if(list){
+        list.innerHTML=allRegisteredUsers.map(email=>`<option value="${esc(email)}">`).join("");
+      }
+    }
   }catch(err){}
 }
 
-function startActivityTracking(){
-  stopActivityTracking();
-  if(!currentUser)return;
-  recordAppActivity();
-  activityInterval=setInterval(recordAppActivity,60000);
-}
-
-function stopActivityTracking(){
-  if(activityInterval){
-    clearInterval(activityInterval);
-    activityInterval=null;
-  }
-  stopAdminStatsRefresh();
-}
-
-async function loadAdminStats(){
-  if(!currentUser||!isAdmin())return;
-  const button=$("refreshAdminStats");
-  if(button)button.disabled=true;
-
-  try{
-    const {data,error}=await _supabase.rpc("get_app_user_stats");
-    if(error)throw error;
-    $("adminOnline").textContent=data?.online_now??0;
-    $("adminToday").textContent=data?.active_today??0;
-    $("adminWeek").textContent=data?.active_7_days??0;
-    $("adminMonth").textContent=data?.active_30_days??0;
-    $("adminTotal").textContent=data?.registered_users??0;
-    $("adminStatsUpdated").textContent="Zuletzt aktualisiert: "+new Date().toLocaleTimeString("de-DE");
-  }catch(err){
-    $("adminStatsUpdated").textContent="Fehler beim Laden.";
-  }finally{
-    if(button)button.disabled=false;
-  }
-}
-
-function startAdminStatsRefresh(){
-  stopAdminStatsRefresh();
-  if(!isAdmin())return;
-  loadAdminStats();
-  adminStatsInterval=setInterval(loadAdminStats,30000);
-}
-
-function stopAdminStatsRefresh(){
-  if(adminStatsInterval){
-    clearInterval(adminStatsInterval);
-    adminStatsInterval=null;
-  }
-}
-
-/* AUTHENTIFIZIERUNG */
-
+/* AUTHENTIFIZIERUNG & TRAINER-STATUS */
 function switchAuthView(viewName){
   ["loginView","registerView","forgotView","newPasswordView"].forEach(id=>{
     $(id).hidden=(id!==viewName);
@@ -983,10 +827,8 @@ async function handleLogin(){
   const email=$("loginEmail").value.trim();
   const password=$("loginPassword").value.trim();
   if(!email||!password)return notify("Bitte E-Mail und Passwort eingeben.");
-
   const {data,error}=await _supabase.auth.signInWithPassword({email,password});
   if(error)return notify("Login fehlgeschlagen: "+error.message);
-
   currentUser=data.user;
   initUserSession();
   notify("Erfolgreich angemeldet!");
@@ -996,80 +838,38 @@ async function handleRegister(){
   const email=$("regEmail").value.trim();
   const password=$("regPassword").value.trim();
   const confirmPw=$("regPasswordConfirm").value.trim();
-
   if(!email||!password)return notify("Bitte E-Mail und Passwort ausfüllen.");
-  if(password.length<6)return notify("Das Passwort muss mindestens 6 Zeichen lang sein.");
-  if(password!==confirmPw)return notify("Die Passwörter stimmen nicht überein.");
+  if(password.length<6)return notify("Mindestens 6 Zeichen.");
+  if(password!==confirmPw)return notify("Passwörter stimmen nicht überein.");
 
   const {data,error}=await _supabase.auth.signUp({email,password});
   if(error)return notify("Registrierung fehlgeschlagen: "+error.message);
-
   notify("Konto erstellt! Bitte einloggen.");
-  $("loginEmail").value=email;
   switchAuthView("loginView");
-}
-
-async function handleForgotPassword(){
-  const email=$("forgotEmail").value.trim();
-  if(!email)return notify("Bitte gib deine E-Mail-Adresse ein.");
-
-  const {error}=await _supabase.auth.resetPasswordForEmail(email,{
-    redirectTo:window.location.origin+window.location.pathname
-  });
-  if(error)return notify("Fehler beim Senden: "+error.message);
-
-  notify("Link zum Zurücksetzen wurde gesendet!");
-  switchAuthView("loginView");
-}
-
-async function handleUpdateNewPassword(){
-  const newPassword=$("newPasswordInput").value.trim();
-  if(newPassword.length<6)return notify("Bitte mindestens 6 Zeichen eingeben.");
-
-  const {error}=await _supabase.auth.updateUser({password:newPassword});
-  if(error)return notify("Passwort konnte nicht geändert werden: "+error.message);
-
-  notify("Passwort erfolgreich geändert!");
-  $("newPasswordInput").value="";
-  checkSession();
 }
 
 async function handleLogout(){
-  stopActivityTracking();
-  closeSidebar();
   await _supabase.auth.signOut();
-
   currentUser=null;
   signals=[];
-  current=null;
-  selectedSignalIds.clear();
-
   $("appMain").hidden=true;
   $("mainNav").hidden=true;
   $("menuBtn").hidden=true;
   $("logoutBtn").style.display="none";
   $("authPanel").hidden=false;
   switchAuthView("loginView");
-
-  if($("adminStatsPanel"))$("adminStatsPanel").hidden=true;
-  if($("adminSupportPanel"))$("adminSupportPanel").hidden=true;
-  if($("adminBroadcastPanel"))$("adminBroadcastPanel").hidden=true;
-
-  stopExamTimer();
   notify("Erfolgreich abgemeldet.");
 }
 
 async function checkSession(){
-  const {data,error}=await _supabase.auth.getSession();
-  if(error)return notify("Sitzungsfehler: "+error.message);
-
+  const {data}=await _supabase.auth.getSession();
   if(data.session){
     currentUser=data.session.user;
     initUserSession();
   }
 }
 
-function initUserSession(){
+async function initUserSession(){
   $("authPanel").hidden=true;
   $("appMain").hidden=false;
   $("mainNav").hidden=false;
@@ -1077,43 +877,107 @@ function initUserSession(){
   $("logoutBtn").style.display="block";
   $("sidebarUserEmail").textContent="Angemeldet als: "+(currentUser?.email||"");
 
-  const admin=isAdmin();
+  const admin=String(currentUser?.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();
   if($("adminStatsPanel"))$("adminStatsPanel").hidden=!admin;
   if($("adminSupportPanel"))$("adminSupportPanel").hidden=!admin;
   if($("adminBroadcastPanel"))$("adminBroadcastPanel").hidden=!admin;
+  if($("adminTrainerPanel"))$("adminTrainerPanel").hidden=!admin;
 
-  startActivityTracking();
+  await loadRegisteredUsersList();
+  checkTrainerStatus();
 
   if(admin){
-    startAdminStatsRefresh();
     loadAdminSupport();
+    loadAdminTrainerRequests();
   }
 
-  saveLocalProgress();
   loadCloudSignals();
   loadUserInbox();
   loadSharedSignals();
   checkForBroadcasts();
 }
 
-/* WICHTIGE ADMIN-BILDSCHIRMNACHRICHTEN (POP-UP) */
+async function checkTrainerStatus(){
+  if(!currentUser)return;
+  const container=$("trainerStatusContainer");
+  const trainerBox=$("trainerActionBox");
+  const admin=String(currentUser?.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();
+
+  try{
+    const {data}=await _supabase.from("user_profiles").select("is_trainer, trainer_requested").eq("id",currentUser.id).maybeSingle();
+    if(admin){
+      container.innerHTML=`<span class="ticket-tag" style="background:var(--accent);color:#000;">Administrator</span>`;
+      if(trainerBox)trainerBox.hidden=false;
+      return;
+    }
+    if(data?.is_trainer){
+      container.innerHTML=`<span class="ticket-tag" style="background:var(--green);color:#fff;">✓ Aktivierter Trainer</span>`;
+      if(trainerBox)trainerBox.hidden=false;
+    }else if(data?.trainer_requested){
+      container.innerHTML=`<span class="ticket-tag">⏳ Trainer-Antrag ausstehend</span>`;
+      if(trainerBox)trainerBox.hidden=true;
+    }else{
+      container.innerHTML=`<button type="button" class="link-btn" id="requestTrainerBtn" style="font-size:12px;">Als Trainer bewerben</button>`;
+      if(trainerBox)trainerBox.hidden=true;
+      $("requestTrainerBtn")?.addEventListener("click", requestTrainerRole);
+    }
+  }catch(err){}
+}
+
+async function requestTrainerRole(){
+  try{
+    await _supabase.from("user_profiles").update({trainer_requested:true}).eq("id",currentUser.id);
+    notify("Trainer-Antrag wurde an den Administrator gesendet!");
+    checkTrainerStatus();
+  }catch(err){
+    notify("Fehler: "+err.message);
+  }
+}
+
+async function loadAdminTrainerRequests(){
+  if(String(currentUser?.email||"").toLowerCase()!==ADMIN_EMAIL.toLowerCase())return;
+  const container=$("adminTrainerRequestsList");
+  if(!container)return;
+  try{
+    const {data}=await _supabase.from("user_profiles").select("*").eq("trainer_requested",true).eq("is_trainer",false);
+    if(!data||!data.length){
+      container.innerHTML="<p class='muted'>Keine ausstehenden Trainer-Anträge.</p>";
+      return;
+    }
+    container.innerHTML=data.map(u=>`
+      <div class="signal-card">
+        <p><b>${esc(u.email)}</b> möchte Trainer werden.</p>
+        <div class="actions">
+          <button type="button" class="good btn-accept-trainer" data-id="${esc(u.id)}">Bestätigen</button>
+          <button type="button" class="danger btn-deny-trainer" data-id="${esc(u.id)}">Ablehnen</button>
+        </div>
+      </div>`).join("");
+  }catch(err){container.innerHTML="<p class='muted'>Fehler beim Laden.</p>";}
+}
+
+document.addEventListener("click", async e=>{
+  const accept=e.target.closest(".btn-accept-trainer");
+  const deny=e.target.closest(".btn-deny-trainer");
+  if(accept){
+    await _supabase.from("user_profiles").update({is_trainer:true, trainer_requested:false}).eq("id",accept.dataset.id);
+    notify("Trainer bestätigt!");
+    loadAdminTrainerRequests();
+  }
+  if(deny){
+    await _supabase.from("user_profiles").update({trainer_requested:false}).eq("id",deny.dataset.id);
+    notify("Antrag abgelehnt.");
+    loadAdminTrainerRequests();
+  }
+});
+
+/* POP-UPS & BROADCASTS */
 async function checkForBroadcasts(){
   if(!currentUser)return;
   try{
-    const {data: broadcasts, error}=await _supabase
-      .from("broadcast_messages")
-      .select("*")
-      .order("created_at",{ascending:false});
-
-    if(error||!broadcasts||!broadcasts.length)return;
-
-    const {data: reads}=await _supabase
-      .from("broadcast_reads")
-      .select("broadcast_id")
-      .eq("user_id",currentUser.id);
-
+    const {data: broadcasts}=await _supabase.from("broadcast_messages").select("*").order("created_at",{ascending:false});
+    if(!broadcasts||!broadcasts.length)return;
+    const {data: reads}=await _supabase.from("broadcast_reads").select("broadcast_id").eq("user_id",currentUser.id);
     const readIds=new Set((reads||[]).map(r=>r.broadcast_id));
-
     const unread=broadcasts.find(b=>{
       if(readIds.has(b.id))return false;
       if(b.target_type==="all")return true;
@@ -1122,9 +986,8 @@ async function checkForBroadcasts(){
       }
       return false;
     });
-
     if(unread){
-      currentPopupId=unread.id;
+      window.currentPopupId=unread.id;
       $("popupTitle").textContent=unread.title;
       $("popupMessage").textContent=unread.message;
       $("popupBackdrop").hidden=false;
@@ -1134,903 +997,366 @@ async function checkForBroadcasts(){
 }
 
 async function markBroadcastAsRead(){
-  if(!currentUser||!currentPopupId)return;
+  if(!currentUser||!window.currentPopupId)return;
   try{
-    await _supabase.from("broadcast_reads").insert([{
-      broadcast_id:currentPopupId,
-      user_id:currentUser.id
-    }]);
+    await _supabase.from("broadcast_reads").insert([{broadcast_id:window.currentPopupId, user_id:currentUser.id}]);
   }catch(err){}
   $("popupBackdrop").hidden=true;
   $("broadcastPopup").hidden=true;
-  currentPopupId=null;
-  checkForBroadcasts();
+  window.currentPopupId=null;
 }
 
-async function sendBroadcastMessage(){
-  if(!isAdmin())return;
-  const target=$("bcTarget").value;
-  const emailsRaw=$("bcEmails").value.trim();
-  const title=$("bcTitle").value.trim();
-  const message=$("bcMessage").value.trim();
-
-  if(!title||!message)return notify("Bitte Titel und Nachricht eingeben.");
-
-  let emailsArr=[];
-  if(target==="specific"){
-    if(!emailsRaw)return notify("Bitte mindestens eine E-Mail-Adresse eingeben.");
-    emailsArr=emailsRaw.split(",").map(e=>e.trim()).filter(Boolean);
-  }
+/* FREUNDE */
+async function sendFriendRequest(){
+  const recipient=$("friendEmail").value.trim().toLowerCase();
+  if(!recipient)return notify("Bitte E-Mail eingeben.");
+  if(recipient===currentUser.email.toLowerCase())return notify("Du kannst dich nicht selbst hinzufügen.");
 
   try{
-    const {error}=await _supabase.from("broadcast_messages").insert([{
-      target_type:target,
-      target_emails:emailsArr.length?emailsArr:null,
-      title:title,
-      message:message
+    const {error}=await _supabase.from("friendships").insert([{
+      sender_email:currentUser.email.toLowerCase(),
+      recipient_email:recipient,
+      status:"pending"
     }]);
     if(error)throw error;
-
-    notify("Bildschirm-Nachricht erfolgreich abgeschickt!");
-    $("bcTitle").value="";
-    $("bcMessage").value="";
-    $("bcEmails").value="";
-  }catch(err){
-    notify("Fehler beim Senden: "+err.message);
-  }
-}
-
-/* SIGNAL SHARING ZWISCHEN NUTZERN (EINZELN & MEHRFACH) */
-async function shareSignalPrompt(signalId){
-  const signal=signals.find(s=>String(s.id)===String(signalId));
-  if(!signal)return signal;
-  const recipient=prompt("Gib die E-Mail-Adresse des Kollegen ein, an den du dieses Signal senden möchtest:");
-  if(!recipient||!recipient.trim())return;
-
-  let imgData=signal.image||"";
-  if(!imgData && signal.id){
-    const {data}=await _supabase.from("signals").select("image").eq("id",signal.id).maybeSingle();
-    if(data)imgData=data.image||"";
-  }
-
-  try{
-    const {error}=await _supabase.from("shared_signals").insert([{
-      sender_email:currentUser.email,
-      recipient_email:recipient.trim().toLowerCase(),
-      signal_data:{
-        short:signal.short,
-        long:signal.long,
-        meaning:signal.meaning,
-        category:signal.category,
-        image:imgData
-      }
-    }]);
-    if(error)throw error;
-    notify("Signal erfolgreich gesendet!");
-  }catch(err){
-    notify("Fehler beim Teilen: "+err.message);
-  }
-}
-
-async function shareSelectedSignals(){
-  if(!currentUser||selectedSignalIds.size===0)return;
-  const recipient=prompt("Gib die E-Mail-Adresse des Kollegen ein, an den du die ausgewählten Signale senden möchtest:");
-  if(!recipient||!recipient.trim())return;
-
-  notify("Sende ausgewählte Signale...");
-  const ids=[...selectedSignalIds];
-  let successCount=0;
-
-  for(let i=0;i<ids.length;i++){
-    const signal=signals.find(s=>String(s.id)===String(ids[i]));
-    if(!signal)continue;
-
-    let imgData=signal.image||"";
-    if(!imgData && signal.id){
-      const {data}=await _supabase.from("signals").select("image").eq("id",signal.id).maybeSingle();
-      if(data)imgData=data.image||"";
-    }
-
-    try{
-      const {error}=await _supabase.from("shared_signals").insert([{
-        sender_email:currentUser.email,
-        recipient_email:recipient.trim().toLowerCase(),
-        signal_data:{
-          short:signal.short,
-          long:signal.long,
-          meaning:signal.meaning,
-          category:signal.category,
-          image:imgData
-        }
-      }]);
-      if(!error)successCount++;
-    }catch(err){}
-  }
-
-  notify(successCount+" von "+ids.length+" Signalen erfolgreich an "+recipient.trim()+" gesendet!");
-  selectedSignalIds.clear();
-  renderList();
-}
-
-async function loadSharedSignals(){
-  if(!currentUser)return;
-  const container=$("sharedSignalsList");
-  if(!container)return;
-
-  try{
-    const {data,error}=await _supabase
-      .from("shared_signals")
-      .select("*")
-      .eq("recipient_email",currentUser.email.toLowerCase())
-      .eq("status","pending")
-      .order("created_at",{ascending:false});
-
-    if(error)throw error;
-    const list=data||[];
-
-    $("sharedBadge").hidden=(list.length===0);
-    $("sharedBadge").textContent=list.length;
-    updateMenuBadge();
-
-    if(!list.length){
-      container.innerHTML="<p class='muted'>Keine neuen geteilten Signale vorhanden.</p>";
-      return;
-    }
-
-    container.innerHTML=list.map(item=>{
-      const s=item.signal_data;
-      const date=new Date(item.created_at).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"});
-      return `
-        <div class="signal-card">
-          <div class="row" style="justify-content:space-between;margin-bottom:6px;">
-            <span class="ticket-tag">Von: ${esc(item.sender_email)}</span>
-            <small class="muted">${esc(date)}</small>
-          </div>
-          <h3>${esc(s.short)} – ${esc(s.long)}</h3>
-          <small class="muted">Kategorie: <b>${esc(s.category||"Sonstige")}</b></small>
-          <p>${esc(s.meaning)}</p>
-          <button type="button" class="good btn-accept-signal" data-id="${esc(item.id)}" style="width:100%;margin-top:10px;">
-            📥 In meine Signale übernehmen
-          </button>
-        </div>`;
-    }).join("");
-  }catch(err){
-    container.innerHTML="<p class='muted'>Fehler beim Laden der geteilten Signale.</p>";
-  }
-}
-
-async function acceptSharedSignal(shareId){
-  if(!currentUser)return;
-  try{
-    const {data,error}=await _supabase
-      .from("shared_signals")
-      .select("*")
-      .eq("id",shareId)
-      .single();
-
-    if(error||!data)throw new Error("Signal nicht gefunden.");
-
-    const s=data.signal_data;
-    const {error: insertErr}=await _supabase.from("signals").insert([{
-      short:s.short,
-      long:s.long,
-      meaning:s.meaning,
-      category:s.category||"Sonstige",
-      image:s.image||"",
-      user_id:currentUser.id
-    }]);
-
-    if(insertErr)throw insertErr;
-
-    await _supabase.from("shared_signals").update({status:"accepted"}).eq("id",shareId);
-
-    notify("Signal erfolgreich in deine Sammlung übernommen!");
-    await loadSharedSignals();
-    await loadCloudSignals();
-  }catch(err){
-    notify("Fehler beim Übernehmen: "+err.message);
-  }
-}
-
-function updateMenuBadge(){
-  const inboxUnread=!$("inboxUnreadBadge").hidden;
-  const sharedUnread=!$("sharedBadge").hidden;
-  $("menuBadgeDot").hidden=!(inboxUnread||sharedUnread);
-}
-
-/* SUPPORT & POSTFACH */
-
-async function sendSupportMessage(){
-  if(!currentUser)return;
-  const category=$("supportCategory").value;
-  const message=$("supportMessage").value.trim();
-  if(!message)return notify("Bitte gib eine Nachricht ein.");
-
-  try{
-    const {error}=await _supabase.from("support_messages").insert([{
-      user_id:currentUser.id,
-      user_email:currentUser.email,
-      category:category,
-      message:message
-    }]);
-    if(error)throw error;
-
-    $("supportMessage").value="";
-    notify("Deine Nachricht wurde gesendet!");
-    await loadUserInbox();
-    showPage("inbox");
-  }catch(err){
-    notify("Fehler beim Senden: "+err.message);
-  }
-}
-
-async function loadUserInbox(markAsRead=false){
-  if(!currentUser)return;
-  const container=$("userInboxList");
-
-  try{
-    const {data,error}=await _supabase
-      .from("support_messages")
-      .select("*")
-      .eq("user_id",currentUser.id)
-      .order("created_at",{ascending:false});
-
-    if(error)throw error;
-    const messages=data||[];
-    const unread=messages.filter(m=>m.admin_reply&&!m.is_read).length;
-
-    $("inboxUnreadBadge").hidden=(unread===0);
-    $("inboxUnreadBadge").textContent=unread;
-    updateMenuBadge();
-
-    if(markAsRead&&unread>0){
-      await _supabase.from("support_messages").update({is_read:true}).eq("user_id",currentUser.id).not("admin_reply","is",null);
-      $("inboxUnreadBadge").hidden=true;
-      updateMenuBadge();
-    }
-
-    if(!container)return;
-    if(!messages.length){
-      container.innerHTML="<p class='muted'>Du hast noch keine Support-Anfragen gesendet.</p>";
-      return;
-    }
-
-    container.innerHTML=messages.map(m=>{
-      const date=new Date(m.created_at).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"});
-      return `
-        <div class="signal-card">
-          <div class="row" style="justify-content:space-between;margin-bottom:6px;">
-            <span class="ticket-tag">${esc(m.category)}</span>
-            <small class="muted">${esc(date)}</small>
-          </div>
-          <p style="white-space:pre-wrap;">${esc(m.message)}</p>
-          ${m.admin_reply?`<div class="admin-reply-box"><strong style="color:#d9fff0;display:block;margin-bottom:4px;">✓ Antwort vom Entwickler:</strong><div style="white-space:pre-wrap;color:#fff;">${esc(m.admin_reply)}</div></div>`:`<small class="muted">⏳ Warte auf Antwort...</small>`}
-        </div>`;
-    }).join("");
-  }catch(err){
-    if(container)container.innerHTML="<p class='muted'>Postfach konnte nicht geladen werden.</p>";
-  }
-}
-
-async function loadAdminSupport(){
-  if(!currentUser||!isAdmin())return;
-  const container=$("adminSupportList");
-  if(!container)return;
-
-  try{
-    const {data,error}=await _supabase.from("support_messages").select("*").order("created_at",{ascending:false});
-    if(error)throw error;
-    const list=data||[];
-    if(!list.length){
-      container.innerHTML="<p class='muted'>Keine Support-Anfragen vorhanden.</p>";
-      return;
-    }
-
-    container.innerHTML=list.map(m=>{
-      const date=new Date(m.created_at).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"});
-      return `
-        <div class="signal-card">
-          <div class="row" style="justify-content:space-between;margin-bottom:6px;">
-            <span class="ticket-tag">${esc(m.category)}</span>
-            <small class="muted">${esc(m.user_email)} · ${esc(date)}</small>
-          </div>
-          <p style="white-space:pre-wrap;">${esc(m.message)}</p>
-          <label for="reply_${esc(m.id)}" style="margin-top:10px;">Deine Antwort:</label>
-          <textarea id="reply_${esc(m.id)}" style="min-height:70px;" placeholder="Antwort eingeben...">${esc(m.admin_reply||"")}</textarea>
-          <button type="button" class="good btn-admin-reply" data-id="${esc(m.id)}">${m.admin_reply?"Antwort aktualisieren":"Antwort senden"}</button>
-        </div>`;
-    }).join("");
-  }catch(err){
-    container.innerHTML="<p class='muted'>Fehler beim Laden der Anfragen.</p>";
-  }
-}
-
-async function sendAdminReply(ticketId){
-  if(!isAdmin())return;
-  const textarea=$("reply_"+ticketId);
-  if(!textarea)return;
-  const replyText=textarea.value.trim();
-  if(!replyText)return notify("Bitte eine Antwort eingeben.");
-
-  try{
-    const {error}=await _supabase.from("support_messages").update({admin_reply:replyText,replied_at:new Date().toISOString(),is_read:false}).eq("id",ticketId);
-    if(error)throw error;
-    notify("Antwort gesendet!");
-    await loadAdminSupport();
+    $("friendEmail").value="";
+    notify("Freundschaftsanfrage gesendet!");
+    loadFriends();
   }catch(err){
     notify("Fehler: "+err.message);
   }
 }
 
-/* DATEN LADEN & BILDER */
+async function loadFriends(){
+  const container=$("friendRequestsList");
+  if(!container)return;
+  try{
+    const {data}=await _supabase.from("friendships").select("*").or(`sender_email.eq.${currentUser.email.toLowerCase()},recipient_email.eq.${currentUser.email.toLowerCase()}`);
+    if(!data||!data.length){
+      container.innerHTML="<p class='muted'>Noch keine Freunde oder Anfragen.</p>";
+      return;
+    }
+    container.innerHTML=data.map(f=>{
+      const isSender=f.sender_email===currentUser.email.toLowerCase();
+      if(f.status==="pending"&&!isSender){
+        return `<div class="signal-card"><p>Anfrage von <b>${esc(f.sender_email)}</b></p><button type="button" class="good btn-accept-friend" data-id="${esc(f.id)}">Annehmen</button></div>`;
+      }
+      return `<div class="signal-card"><p>${esc(isSender?f.recipient_email:f.sender_email)} (${f.status==="accepted"?"Verbunden":"Ausstehend"})</p></div>`;
+    }).join("");
+  }catch(err){container.innerHTML="<p class='muted'>Fehler beim Laden.</p>";}
+}
 
+document.addEventListener("click", async e=>{
+  const btn=e.target.closest(".btn-accept-friend");
+  if(btn){
+    await _supabase.from("friendships").update({status:"accepted"}).eq("id",btn.dataset.id);
+    notify("Freundschaft angenommen!");
+    loadFriends();
+  }
+});
+
+/* LERNGRUPPEN */
+async function createStudyGroup(){
+  const name=$("newGroupName").value.trim();
+  if(!name)return notify("Bitte Gruppenname eingeben.");
+  try{
+    const {data,error}=await _supabase.from("study_groups").insert([{name, creator_email:currentUser.email.toLowerCase()}]).select().single();
+    if(error)throw error;
+    await _supabase.from("study_group_members").insert([{group_id:data.id, user_email:currentUser.email.toLowerCase(), role:"owner", can_add:true, can_edit:true, can_delete:true}]);
+    $("newGroupName").value="";
+    $("createGroupForm").hidden=true;
+    notify("Lerngruppe erstellt!");
+    loadStudyGroups();
+  }catch(err){notify("Fehler: "+err.message);}
+}
+
+async function loadStudyGroups(){
+  const container=$("myStudyGroupsList");
+  if(!container)return;
+  try{
+    const {data: memberships}=await _supabase.from("study_group_members").select("group_id").eq("user_email",currentUser.email.toLowerCase());
+    if(!memberships||!memberships.length){
+    container.innerHTML="<p class='muted'>Du bist in keiner Lerngruppe.</p>";return;}
+    const groupIds=memberships.map(m=>m.group_id);
+    const {data: groups}=await _supabase.from("study_groups").select("*").in("id",groupIds);
+    container.innerHTML=(groups||[]).map(g=>`
+      <div class="signal-card">
+        <h3>${esc(g.name)}</h3>
+        <small class="muted">Erstellt von: ${esc(g.creator_email)}</small>
+        <button type="button" class="primary btn-open-group" data-id="${esc(g.id)}" style="width:100%;margin-top:10px;">Öffnen</button>
+      </div>`).join("");
+  }catch(err){container.innerHTML="<p class='muted'>Fehler beim Laden.</p>";}
+}
+
+document.addEventListener("click", e=>{
+  const btn=e.target.closest(".btn-open-group");
+  if(btn){
+    activeGroupId=btn.dataset.id;
+    openStudyGroup(activeGroupId);
+  }
+});
+
+async function openStudyGroup(groupId){
+  showPage("groupDetail");
+  try{
+    const {data: group}=await _supabase.from("study_groups").select("*").eq("id",groupId).single();
+    $("groupDetailTitle").textContent=group.name;
+    $("groupDetailCreator").textContent="Erstellt von: "+group.creator_email;
+    loadGroupSignals(groupId);
+  }catch(err){}
+}
+
+async function loadGroupSignals(groupId){
+  const container=$("groupSignalsList");
+  try{
+    const {data}=await _supabase.from("study_group_signals").select("*").eq("group_id",groupId);
+    $("groupSignalCount").textContent=(data||[]).length;
+    if(!data||!data.length){container.innerHTML="<p class='muted'>Keine Signale in der Gruppe.</p>";return;}
+    container.innerHTML=data.map(s=>`
+      <div class="signal-card">
+        <h3>${esc(s.short)} – ${esc(s.long)}</h3>
+        <p>${esc(s.meaning)}</p>
+      </div>`).join("");
+  }catch(err){}
+}
+
+/* KURSE */
+async function createCourse(){
+  const name=$("courseNameInput").value.trim();
+  if(!name)return notify("Bitte Kursnamen eingeben.");
+  try{
+    const {error}=await _supabase.from("courses").insert([{name, trainer_email:currentUser.email.toLowerCase()}]);
+    if(error)throw error;
+    $("courseNameInput").value="";
+    $("createCourseForm").hidden=true;
+    notify("Kurs erstellt!");
+    loadCourses();
+  }catch(err){notify("Fehler: "+err.message);}
+}
+
+async function loadCourses(){
+  const container=$("myCoursesList");
+  if(!container)return;
+  try{
+    const {data: memberCourses}=await _supabase.from("course_members").select("course_id").eq("user_email",currentUser.email.toLowerCase());
+    const memberIds=(memberCourses||[]).map(m=>m.course_id);
+    const {data: myCourses}=await _supabase.from("courses").select("*").or(`trainer_email.eq.${currentUser.email.toLowerCase()},id.in.(${memberIds.length?memberIds.join(','):'null'})`);
+    if(!myCourses||!myCourses.length){container.innerHTML="<p class='muted'>Keine Kurse vorhanden.</p>";return;}
+    container.innerHTML=myCourses.map(c=>`
+      <div class="signal-card">
+        <h3>${esc(c.name)}</h3>
+        <small class="muted">Trainer: ${esc(c.trainer_email)}</small>
+        <button type="button" class="primary btn-open-course" data-id="${esc(c.id)}" style="width:100%;margin-top:10px;">Kurs öffnen</button>
+      </div>`).join("");
+  }catch(err){container.innerHTML="<p class='muted'>Fehler beim Laden.</p>";}
+}
+
+document.addEventListener("click", e=>{
+  const btn=e.target.closest(".btn-open-course");
+  if(btn){
+    activeCourseId=btn.dataset.id;
+    openCourse(activeCourseId);
+  }
+});
+
+async function openCourse(courseId){
+  showPage("courseDetail");
+  try{
+    const {data: course}=await _supabase.from("courses").select("*").eq("id",courseId).single();
+    $("courseDetailTitle").textContent=course.name;
+    $("courseDetailTrainer").textContent="Trainer: "+course.trainer_email;
+    const isTrainer=course.trainer_email.toLowerCase()===currentUser.email.toLowerCase();
+    $("trainerCourseControls").hidden=!isTrainer;
+    loadCourseMaterials(courseId, isTrainer);
+  }catch(err){}
+}
+
+async function loadCourseMaterials(courseId, isTrainer){
+  const matContainer=$("courseMaterialsList");
+  const hwContainer=$("courseHomeworkList");
+  try{
+    const {data}=await _supabase.from("course_materials").select("*").eq("course_id",courseId);
+    const materials=(data||[]).filter(m=>!m.is_homework);
+    const homework=(data||[]).filter(m=>m.is_homework);
+
+    matContainer.innerHTML=materials.length?materials.map(m=>`<div class="signal-card"><h3>${esc(m.title)}</h3><p>${esc(m.description||"")}</p></div>`).join(""):"<p class='muted'>Keine Materialien.</p>";
+    hwContainer.innerHTML=homework.length?homework.map(h=>`<div class="signal-card"><h3>${esc(h.title)}</h3><p>Frist: ${h.due_date?new Date(h.due_date).toLocaleString("de-DE"):"Keine"}</p>${!isTrainer?`<button type="button" class="primary btn-submit-hw" data-id="${esc(h.id)}">Hausaufgabe abgeben</button>`:""}</div>`).join(""):"<p class='muted'>Keine Hausaufgaben.</p>";
+  }catch(err){}
+}
+
+/* SUPPORT & POSTFACH */
+async function sendSupportMessage(){
+  const category=$("supportCategory").value;
+  const message=$("supportMessage").value.trim();
+  if(!message)return notify("Bitte Nachricht eingeben.");
+  try{
+    await _supabase.from("support_messages").insert([{user_id:currentUser.id, user_email:currentUser.email, category, message}]);
+    $("supportMessage").value="";
+    notify("Gesendet!");
+    loadUserInbox();
+    showPage("inbox");
+  }catch(err){notify("Fehler: "+err.message);}
+}
+
+async function loadUserInbox(markAsRead=false){
+  if(!currentUser)return;
+  const container=$("userInboxList");
+  try{
+    const {data}=await _supabase.from("support_messages").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false});
+    const unread=(data||[]).filter(m=>m.admin_reply&&!m.is_read).length;
+    $("inboxUnreadBadge").hidden=(unread===0);
+    $("inboxUnreadBadge").textContent=unread;
+    if(markAsRead&&unread>0){
+      await _supabase.from("support_messages").update({is_read:true}).eq("user_id",currentUser.id).not("admin_reply","is",null);
+      $("inboxUnreadBadge").hidden=true;
+    }
+    container.innerHTML=(data||[]).map(m=>`<div class="signal-card"><span class="ticket-tag">${esc(m.category)}</span><p>${esc(m.message)}</p>${m.admin_reply?`<div class="admin-reply-box"><strong>Antwort:</strong> ${esc(m.admin_reply)}</div>`:""}</div>`).join("");
+  }catch(err){}
+}
+
+async function loadAdminSupport(){
+  const container=$("adminSupportList");
+  if(!container)return;
+  try{
+    const {data}=await _supabase.from("support_messages").select("*").order("created_at",{ascending:false});
+    container.innerHTML=(data||[]).map(m=>`<div class="signal-card"><p><b>${esc(m.user_email)}</b>: ${esc(m.message)}</p><textarea id="reply_${esc(m.id)}" placeholder="Antwort...">${esc(m.admin_reply||"")}</textarea><button type="button" class="good btn-admin-reply" data-id="${esc(m.id)}">Senden</button></div>`).join("");
+  }catch(err){}
+}
+
+document.addEventListener("click", async e=>{
+  const btn=e.target.closest(".btn-admin-reply");
+  if(btn){
+    const text=$("reply_"+btn.dataset.id).value.trim();
+    if(text)await _supabase.from("support_messages").update({admin_reply:text, is_read:false}).eq("id",btn.dataset.id);
+    notify("Antwort gesendet!");
+    loadAdminSupport();
+  }
+});
+
+/* GRUNDLEGENDE SIGNAL-VERWALTUNG */
 async function loadCloudSignals(){
   if(!currentUser)return;
-  notify("Lade deine Signale...");
   try{
-    let allData=[];
-    let page=0;
-    const pageSize=20;
-    while(true){
-      const {data,error}=await _supabase.from("signals").select("id, short, long, meaning, category, user_id").eq("user_id",currentUser.id).range(page*pageSize,(page+1)*pageSize-1);
-      if(error)throw error;
-      if(!data||data.length===0)break;
-      allData=allData.concat(data);
-      page++;
-      if(data.length<pageSize)break;
-    }
-    signals=allData;
-    const existingIds=new Set(signals.map(s=>String(s.id)));
-    selectedSignalIds=new Set([...selectedSignalIds].filter(id=>existingIds.has(String(id))));
-    syncCategories();
+    const {data}=await _supabase.from("signals").select("*").eq("user_id",currentUser.id);
+    signals=data||[];
     renderList();
     nextLearn();
-    updateExamAvailable();
-    notify("Erfolgreich "+signals.length+" Signale geladen!");
-  }catch(err){
-    notify("Fehler beim Laden: "+err.message);
-  }
-}
-
-function setImage(img,placeholder,src){
-  if(!img||!placeholder)return;
-  img.onerror=null;
-  if(src&&String(src).trim()!==""){
-    img.onload=()=>{img.hidden=false;placeholder.hidden=true;};
-    img.onerror=()=>{img.hidden=true;placeholder.hidden=false;placeholder.textContent="Bild konnte nicht angezeigt werden.";};
-    img.src=src;
-  }else{
-    img.removeAttribute("src");
-    img.hidden=true;
-    placeholder.hidden=false;
-    placeholder.textContent="Kein Signalbild hinterlegt";
-  }
-}
-
-async function loadSignalImage(signal,img,placeholder){
-  if(!signal||!signal.id||!img||!placeholder||!currentUser)return;
-  const token=++imageLoadToken;
-  img.hidden=true;
-  placeholder.hidden=false;
-  placeholder.textContent="Signalbild wird geladen...";
-  try{
-    const {data,error}=await _supabase.from("signals").select("image").eq("id",signal.id).eq("user_id",currentUser.id).maybeSingle();
-    if(error)throw error;
-    if(token!==imageLoadToken)return;
-    signal.image=data?.image||"";
-    setImage(img,placeholder,signal.image);
-  }catch(err){
-    if(token===imageLoadToken){placeholder.textContent="Bild konnte nicht geladen werden.";img.hidden=true;placeholder.hidden=false;}
-  }
-}
-
-function resizeImage(file, maxWidth = 800, maxHeight = 800, quality = 0.75) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const img = new Image();
-      img.onload = function() {
-        let width = img.width;
-        let height = img.height;
-        if (width > height) {
-          if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; }
-        } else {
-          if (height > maxHeight) { width = Math.round((width * maxHeight) / height); height = maxHeight; }
-        }
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL('image/jpeg', quality));
-      };
-      img.onerror = reject;
-      img.src = e.target.result;
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-async function handleImageInput(file){
-  if(!file)return;
-  notify("Komprimiere Bild...");
-  try {
-    tempImageBase64 = await resizeImage(file, 800, 800, 0.75);
-    notify("Bild erfolgreich komprimiert und ausgewählt!");
-  } catch(err) {
-    notify("Fehler beim Komprimieren.");
-  }
+  }catch(err){}
 }
 
 async function saveSignal(){
-  if(!currentUser)return;
   const id=$("editId").value;
   const short=$("shortName").value.trim();
   const long=$("longName").value.trim();
   const meaning=$("meaning").value.trim();
   const category=$("category").value||"Sonstige";
-
   if(!short||!long||!meaning)return notify("Bitte alle Felder ausfüllen.");
-
-  const existing=id?signals.find(s=>String(s.id)===String(id)):null;
-  let imageValue=tempImageBase64||$("imageUrl").value.trim();
-  if(id&&!imageValue&&existing)imageValue=existing.image||"";
-
-  if(id&&!imageValue&&existing&&existing.image===undefined){
-    const {data}=await _supabase.from("signals").select("image").eq("id",id).eq("user_id",currentUser.id).maybeSingle();
-    imageValue=data?.image||"";
-  }
-
+  const imageValue=tempImageBase64||$("imageUrl").value.trim();
   const payload={short,long,meaning,category,image:imageValue,user_id:currentUser.id};
-
-  if(id){
-    const {error}=await _supabase.from("signals").update(payload).eq("id",id).eq("user_id",currentUser.id);
-    if(error)return notify("Fehler: "+error.message);
-    notify("Signal aktualisiert!");
-  }else{
-    const {error}=await _supabase.from("signals").insert([payload]);
-    if(error)return notify("Fehler: "+error.message);
-    notify("Signal gespeichert!");
-  }
+  if(id)await _supabase.from("signals").update(payload).eq("id",id);
+  else await _supabase.from("signals").insert([payload]);
   clearForm();
-  await loadCloudSignals();
+  loadCloudSignals();
+  notify("Signal gespeichert!");
 }
 
 async function deleteSignal(id){
-  if(!confirm("Signal wirklich löschen?"))return;
-  const {error}=await _supabase.from("signals").delete().eq("id",id).eq("user_id",currentUser.id);
-  if(error)return notify("Fehler: "+error.message);
-  selectedSignalIds.delete(String(id));
-  wrongSignalIds.delete(String(id));
-  saveLocalProgress();
-  notify("Signal gelöscht.");
-  await loadCloudSignals();
-}
-
-function getVisibleSignals(){
-  const query=$("searchSignals").value.toLowerCase().trim();
-  return signals.filter(s=>{
-    const text=[s.short,s.long,s.meaning,s.category].map(v=>String(v||"")).join(" ").toLowerCase();
-    return text.includes(query);
-  });
-}
-
-function updateSelectionUI(){
-  const count=selectedSignalIds.size;
-  $("selectionCount").textContent=count+" Signale ausgewählt";
-  $("deleteSelected").disabled=count===0||bulkDeleteRunning;
-  $("shareSelected").disabled=count===0;
-}
-
-function toggleSignalSelection(id,checked){
-  const key=String(id);
-  if(checked)selectedSignalIds.add(key); else selectedSignalIds.delete(key);
-  updateSelectionUI();
-  const card=[...document.querySelectorAll(".signal-card[data-id]")].find(el=>el.dataset.id===key);
-  if(card)card.classList.toggle("selected",checked);
-}
-
-function selectAllVisibleSignals(checked){
-  getVisibleSignals().forEach(signal=>{
-    const id=String(signal.id);
-    if(checked)selectedSignalIds.add(id); else selectedSignalIds.delete(id);
-  });
-  renderList();
-}
-
-function clearSelection(){
-  if(bulkDeleteRunning)return;
-  selectedSignalIds.clear();
-  renderList();
-}
-
-async function deleteSelectedSignals(){
-  if(!currentUser||bulkDeleteRunning)return;
-  const ids=[...selectedSignalIds];
-  if(!ids.length)return;
-  if(!confirm(ids.length+" Signale wirklich löschen?"))return;
-
-  bulkDeleteRunning=true;
-  for(let i=0;i<ids.length;i++){
-    await _supabase.from("signals").delete().eq("id",ids[i]).eq("user_id",currentUser.id);
-    wrongSignalIds.delete(String(ids[i]));
-  }
-  bulkDeleteRunning=false;
-  selectedSignalIds.clear();
-  saveLocalProgress();
-  await loadCloudSignals();
-  notify("Ausgewählte Signale gelöscht.");
+  if(!confirm("Wirklich löschen?"))return;
+  await _supabase.from("signals").delete().eq("id",id);
+  loadCloudSignals();
 }
 
 function renderList(){
   const container=$("signalList");
   if(!container)return;
-  const list=getVisibleSignals();
-  $("signalCount").textContent=signals.length;
-
-  if(!list.length){
-    container.innerHTML="<p class='muted'>Keine Signale vorhanden.</p>";
-    updateSelectionUI();
-    return;
-  }
-
-  container.innerHTML=list.map(s=>{
-    const id=String(s.id);
-    const selected=selectedSignalIds.has(id);
-    return `
-      <div class="signal-card ${selected?"selected":""}" data-id="${esc(id)}">
-        <div class="signal-select-row">
-          <label>
-            <input type="checkbox" class="signal-checkbox" data-id="${esc(id)}" ${selected?"checked":""}>
-            Auswählen
-          </label>
-        </div>
-        <h3>${esc(s.short)} – ${esc(s.long)}</h3>
-        <small class="muted">Kategorie: <b>${esc(s.category||"Sonstige")}</b></small>
-        <p>${esc(s.meaning||"")}</p>
-        <div class="actions">
-          <button type="button" class="btn-edit" data-id="${esc(id)}">✏️ Bearbeiten</button>
-          <button type="button" class="primary btn-share" data-id="${esc(id)}">📨 Teilen</button>
-          <button type="button" class="danger btn-delete" data-id="${esc(id)}">🗑 Löschen</button>
-        </div>
-      </div>`;
-  }).join("");
-  updateSelectionUI();
+  container.innerHTML=signals.map(s=>`
+    <div class="signal-card">
+      <h3>${esc(s.short)} – ${esc(s.long)}</h3>
+      <p>${esc(s.meaning)}</p>
+      <button type="button" class="primary btn-share" data-id="${esc(s.id)}">Teilen</button>
+      <button type="button" class="danger btn-delete-sig" data-id="${esc(s.id)}">Löschen</button>
+    </div>`).join("");
 }
 
-function handleListClick(e){
-  const edit=e.target.closest(".btn-edit");
-  const del=e.target.closest(".btn-delete");
+document.addEventListener("click", e=>{
+  const del=e.target.closest(".btn-delete-sig");
   const share=e.target.closest(".btn-share");
-  if(edit)editSignal(edit.dataset.id);
-  else if(del)deleteSignal(del.dataset.id);
-  else if(share)shareSignalPrompt(share.dataset.id);
+  if(del)deleteSignal(del.dataset.id);
+  if(share)shareSignalPrompt(share.dataset.id);
+});
+
+async function shareSignalPrompt(signalId){
+  const signal=signals.find(s=>String(s.id)===String(signalId));
+  const recipient=prompt("E-Mail des Kollegen:");
+  if(!recipient)return;
+  await _supabase.from("shared_signals").insert([{sender_email:currentUser.email, recipient_email:recipient.trim().toLowerCase(), signal_data:signal}]);
+  notify("Signal geteilt!");
 }
 
-function editSignal(id){
-  const signal=signals.find(s=>String(s.id)===String(id));
-  if(!signal)return;
-  $("editId").value=signal.id;
-  $("shortName").value=signal.short||"";
-  $("longName").value=signal.long||"";
-  $("meaning").value=signal.meaning||"";
-  $("category").value=signal.category||"Lf";
-  $("imageUrl").value="";
-  tempImageBase64="";
-  $("formTitle").textContent="Signal bearbeiten";
-  $("saveSignal").textContent="Änderungen speichern";
-  showPage("manage");
-  window.scrollTo({top:0,behavior:"smooth"});
+async function loadSharedSignals(){
+  try{
+    const {data}=await _supabase.from("shared_signals").select("*").eq("recipient_email",currentUser.email.toLowerCase()).eq("status","pending");
+    $("sharedBadge").hidden=!(data||[]).length;
+    $("sharedSignalsList").innerHTML=(data||[]).map(item=>`
+      <div class="signal-card">
+        <p>Von: ${esc(item.sender_email)}</p>
+        <h3>${esc(item.signal_data.short)}</h3>
+        <button type="button" class="good btn-accept-shared" data-id="${esc(item.id)}">Übernehmen</button>
+      </div>`).join("")||"<p class='muted'>Keine.</p>";
+  }catch(err){}
 }
 
-function clearForm(){
-  $("editId").value="";
-  $("shortName").value="";
-  $("longName").value="";
-  $("meaning").value="";
-  $("imageUrl").value="";
-  $("category").value="Lf";
-  $("imageFile").value="";
-  $("cameraFile").value="";
-  tempImageBase64="";
-  $("formTitle").textContent="Signal hinzufügen";
-  $("saveSignal").textContent="Signal speichern";
-}
-
-/* BEWERTUNG */
-function clean(value){
-  return String(value??"").toLocaleLowerCase("de").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[\u2010-\u2015-]/g,"").replace(/[.,;:!?()[\]{}"'`„“”]/g," ").replace(/\s+/g," ").trim();
-}
-function editDistance(a,b){
-  a=String(a); b=String(b);
-  const dp=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
-  for(let i=0;i<=a.length;i++)dp[i][0]=i;
-  for(let j=0;j<=b.length;j++)dp[0][j]=j;
-  for(let i=1;i<=a.length;i++){
-    for(let j=1;j<=b.length;j++){
-      const cost=a[i-1]===b[j-1]?0:1;
-      dp[i][j]=Math.min(dp[i-1][j]+1,dp[i][j-1]+1,dp[i-1][j-1]+cost);
-    }
+document.addEventListener("click", async e=>{
+  const btn=e.target.closest(".btn-accept-shared");
+  if(btn){
+    const {data}=await _supabase.from("shared_signals").select("*").eq("id",btn.dataset.id).single();
+    await _supabase.from("signals").insert([{...data.signal_data, id:undefined, user_id:currentUser.id}]);
+    await _supabase.from("shared_signals").update({status:"accepted"}).eq("id",btn.dataset.id);
+    loadSharedSignals();
+    loadCloudSignals();
+    notify("Übernommen!");
   }
-  return dp[a.length][b.length];
-}
-function tokenizeAnswer(value){
-  return String(value??"").trim().replace(/[\u2010-\u2015-]/g,"").split(/\s+/).filter(Boolean).map(w=>({original:w,normalized:clean(w)})).filter(t=>t.normalized);
-}
-const OPTIONAL_WORDS=new Set(["der","die","das","den","dem","des","ein","eine","einer","einem","einen","eines","ist","sind","wird","werden","am","im","zum","zur"]);
+});
 
-function compareAnswer(user,correct){
-  const userText=String(user??""); const correctText=String(correct??"");
-  const userTokens=tokenizeAnswer(userText); const correctTokens=tokenizeAnswer(correctText);
-  const res={correct:false,spelling:false,language:false,user:userText,corrected:correctText,mistakes:[],adjustments:[]};
-  if(clean(userText)===clean(correctText)){res.correct=true;return res;}
-  if(!userTokens.length||!correctTokens.length)return res;
-  let i=0; let j=0; let typos=0;
-  while(i<userTokens.length||j<correctTokens.length){
-    if(i>=userTokens.length){if(OPTIONAL_WORDS.has(correctTokens[j].normalized)){j++;continue;}return res;}
-    if(j>=correctTokens.length){if(OPTIONAL_WORDS.has(userTokens[i].normalized)){i++;continue;}return res;}
-    const uW=userTokens[i].normalized; const cW=correctTokens[j].normalized;
-    if(uW===cW){i++;j++;continue;}
-    if(OPTIONAL_WORDS.has(cW)){j++;continue;}
-    if(OPTIONAL_WORDS.has(uW)){i++;continue;}
-    if(uW.length>=4&&cW.length>=4&&editDistance(uW,cW)<=1&&typos<1){typos++;i++;j++;continue;}
-    return res;
-  }
-  res.correct=true; res.spelling=typos>0; return res;
-}
-
-function evaluate(signal,short,long,meaning){
-  return {short:compareAnswer(short,signal.short),long:compareAnswer(long,signal.long),meaning:compareAnswer(meaning,signal.meaning)};
-}
-function calculatePoints(result){
-  if(!result.meaning.correct)return 0;
-  return Number(result.short.correct)+Number(result.long.correct)+1;
-}
-
-function feedbackHTML(signal,result){
-  const points=calculatePoints(result);
-  const allCorrect=points===3;
-  return `
-    <h3 class="${allCorrect?"correct":"incorrect"}">${allCorrect?"✓ Alles richtig!":"✗ Nicht vollständig richtig"}</h3>
-    <p>Kurz: <b>${result.short.correct?"✓ Richtig":"✗ Falsch"}</b></p>
-    <p>Lang: <b>${result.long.correct?"✓ Richtig":"✗ Falsch"}</b></p>
-    <p>Bedeutung: <b>${result.meaning.correct?"✓ Richtig":"✗ Falsch"}</b></p>
-    ${!result.meaning.correct?`<div class="warning"><h3>⚠ BETRIEBSGEFAHR</h3><p>Die Signalbedeutung ist falsch (0 Punkte).</p></div>`:""}
-    ${!allCorrect?`<div class="solution"><h3>✓ Musterlösung</h3><p><b>${esc(signal.short)} – ${esc(signal.long)}</b></p><p>${esc(signal.meaning)}</p></div>`:""}
-    <hr><h3>Ergebnis: ${points} von 3 Punkten</h3>`;
-}
-
-/* LERNMODUS */
-function getLearnSignals(){
-  const onlyWrong=$("onlyWrongFilter")?.checked;
-  return signals.filter(s=>{
-    const inCat=selectedLearnCategories.has(s.category||"Sonstige");
-    if(!inCat)return false;
-    if(onlyWrong)return wrongSignalIds.has(String(s.id));
-    return true;
-  });
-}
-
+/* LERNMODUS & EXAM */
+function getLearnSignals(){return signals;}
 function nextLearn(){
   const list=getLearnSignals();
-  updateLearnAvailable();
-  if(!list.length){
-    current=null;
-    imageLoadToken++;
-    $("learnImage").hidden=true;
-    $("learnNoImage").hidden=false;
-    $("learnNoImage").textContent=$("onlyWrongFilter")?.checked
-      ?"Keine falsch beantworteten Signale in den gewählten Gruppen vorhanden!"
-      :"Keine Signale in dieser Gruppe vorhanden.";
-    $("learnCounter").textContent="Keine Frage";
-    $("learnFeedback").hidden=true;
-    $("nextLearn").hidden=true;
-    $("checkLearn").disabled=true;
-    $("skipLearn").disabled=true;
-    return;
-  }
+  if(!list.length){$("learnNoImage").textContent="Keine Signale.";return;}
   current=list[Math.floor(Math.random()*list.length)];
-  learnNumber++;
-  learnDone=false;
-  $("learnCounter").textContent="Frage "+learnNumber;
-  $("learnProgress").style.width=((learnNumber%10)*10||10)+"%";
-  loadSignalImage(current,$("learnImage"),$("learnNoImage"));
   $("learnShort").value=""; $("learnLong").value=""; $("learnMeaning").value="";
   $("learnFeedback").hidden=true; $("nextLearn").hidden=true;
-  $("checkLearn").disabled=false; $("skipLearn").disabled=false;
+  $("checkLearn").disabled=false;
+  setImage($("learnImage"),$("learnNoImage"),current.image);
 }
-
 function checkLearn(){
-  if(!current||learnDone)return;
-  const res=evaluate(current,$("learnShort").value,$("learnLong").value,$("learnMeaning").value);
-  const pts=calculatePoints(res);
-  learnDone=true;
-
-  if(pts<3)wrongSignalIds.add(String(current.id));
-  else wrongSignalIds.delete(String(current.id));
-
-  $("learnFeedback").innerHTML=feedbackHTML(current,res);
+  if(!current)return;
+  const ok=($("learnMeaning").value.trim().toLowerCase()===current.meaning.toLowerCase());
+  $("learnFeedback").textContent=ok?"Richtig!":"Falsch!";
   $("learnFeedback").hidden=false;
-  $("checkLearn").disabled=true; $("skipLearn").disabled=true; $("nextLearn").hidden=false;
-  stats.answered++; stats.points+=pts;
-  saveLocalProgress();
-  renderStats();
-}
-function skipLearn(){if(!learnDone)nextLearn();}
-
-/* PRÜFUNGSMODUS */
-function stopExamTimer(){
-  if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null;}
-}
-function updateExamTimer(){
-  if(!examStarted)return;
-  const s=Math.floor((Date.now()-examStarted)/1000);
-  $("examTimer").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
-}
-function startExam(){
-  const available=signals.filter(s=>selectedExamCategories.has(s.category||"Sonstige"));
-  if(!available.length)return notify("Keine Signale in den ausgewählten Gruppen vorhanden.");
-  const req=Number($("examLength").value)||10;
-  examList=shuffle(available).slice(0,Math.min(req,available.length));
-  examIndex=0; examPoints=0; examAnswered=false; examQuestionResults=[]; examStarted=Date.now();
-  $("examConfig").hidden=true; $("examArea").hidden=false; $("examResult").hidden=true;
-  stopExamTimer(); updateExamTimer();
-  examTimerInterval=setInterval(updateExamTimer,1000);
-  showExamQuestion();
-}
-function showExamQuestion(){
-  if(examIndex>=examList.length)return finishExam();
-  const signal=examList[examIndex];
-  examAnswered=false;
-  $("examCounter").textContent="Frage "+(examIndex+1)+" von "+examList.length;
-  $("examProgress").style.width=((examIndex)/examList.length*100)+"%";
-  loadSignalImage(signal,$("examImage"),$("examNoImage"));
-  $("examShort").value=""; $("examLong").value=""; $("examMeaning").value="";
-  $("examFeedback").hidden=true; $("examNext").hidden=true;
-  $("submitExam").hidden=false; $("submitExam").disabled=false;
-}
-function submitExamAnswer(){
-  if(examAnswered)return;
-  const signal=examList[examIndex];
-  const res=evaluate(signal,$("examShort").value,$("examLong").value,$("examMeaning").value);
-  const pts=calculatePoints(res);
-  if(pts<3)wrongSignalIds.add(String(signal.id));
-  else wrongSignalIds.delete(String(signal.id));
-  examPoints+=pts; examAnswered=true;
-  examQuestionResults.push({signal,points:pts});
-  stats.answered++; stats.points+=pts;
-  saveLocalProgress();
-  $("examFeedback").innerHTML=feedbackHTML(signal,res);
-  $("examFeedback").hidden=false;
-  $("submitExam").disabled=true; $("submitExam").hidden=true;
-  $("examNext").hidden=false;
-  $("examNext").textContent=examIndex===examList.length-1?"Prüfung auswerten":"Nächste Frage ➔";
-  renderStats();
-}
-function nextExamQuestion(){if(examAnswered){examIndex++;showExamQuestion();}}
-function finishExam(){
-  stopExamTimer();
-  const maxPoints=examList.length*3;
-  const percent=maxPoints?Math.round(examPoints/maxPoints*100):0;
-  const s=Math.floor((Date.now()-examStarted)/1000);
-  const duration=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
-  stats.exams++;
-  stats.lastExam={points:examPoints,maxPoints,percent,duration};
-  saveLocalProgress();
-  $("examArea").hidden=true; $("examResult").hidden=false; $("examProgress").style.width="100%";
-  $("examResult").innerHTML=`
-    <h2>Prüfung abgeschlossen!</h2>
-    <h1 class="${percent>=80?"correct":"incorrect"}" style="font-size:32px;">${percent} %</h1>
-    <h3>${examPoints} von ${maxPoints} Punkten</h3>
-    <p>Benötigte Zeit: ${duration}</p>
-    <button type="button" class="primary" id="restartExam" style="width:100%;margin-top:12px;">Neue Prüfung starten</button>`;
-  $("restartExam").addEventListener("click",()=>{
-    $("examConfig").hidden=false; $("examArea").hidden=true; $("examResult").hidden=true; updateExamAvailable();
-  });
-  renderStats();
+  $("checkLearn").disabled=true; $("nextLearn").hidden=false;
 }
 
-/* EXPORT / IMPORT */
-async function exportData(){
-  if(exportRunning)return;
-  if(!signals.length)return notify("Keine Signale vorhanden.");
-  exportRunning=true;
-  const btn=$("exportData"); btn.disabled=true; btn.textContent="Export läuft...";
-  $("exportProgressContainer").hidden=false;
-
-  try{
-    const exportSignals=[];
-    const total=signals.length;
-    for(let i=0;i<total;i++){
-      const s=signals[i]; let image=s.image||"";
-      if(!image&&s.id){
-        const {data}=await _supabase.from("signals").select("image").eq("id",s.id).maybeSingle();
-        if(data)image=data.image||"";
-      }
-      exportSignals.push({short:s.short,long:s.long,meaning:s.meaning,category:s.category,image:image});
-      const pct=Math.round(((i+1)/total)*100);
-      $("exportProgressBar").style.width=pct+"%";
-      $("exportProgressPercent").textContent=pct+"%";
-      $("exportProgressText").textContent=`Vorbereitet: ${i+1} von ${total}`;
-      if(i%5===0)await new Promise(r=>setTimeout(r,10));
-    }
-    const blob=new Blob([JSON.stringify({version:8,signals:exportSignals},null,2)],{type:"application/json"});
-    const url=URL.createObjectURL(blob);
-    const anchor=document.createElement("a");
-    anchor.href=url; anchor.download="signale_backup_"+new Date().toISOString().slice(0,10)+".json";
-    document.body.appendChild(anchor); anchor.click(); anchor.remove();
-    notify("Export erfolgreich!");
-  }catch(err){
-    notify("Export fehlgeschlagen: "+err.message);
-  }finally{
-    exportRunning=false; btn.disabled=false; btn.textContent="Daten exportieren";
-    setTimeout(()=>{$("exportProgressContainer").hidden=true;},3000);
-  }
+function setImage(img,placeholder,src){
+  if(src){img.src=src; img.hidden=false; placeholder.hidden=true;}
+  else{img.hidden=true; placeholder.hidden=false;}
 }
 
-function handleImportFile(file){
-  if(!file||!currentUser)return;
-  const reader=new FileReader();
-  reader.onload=async e=>{
-    try{
-      const parsed=JSON.parse(e.target.result);
-      const raw=extractSignals(parsed);
-      if(!raw.length)throw new Error("Keine Daten.");
-      if(!confirm(raw.length+" Signale importieren?"))return;
-
-      for(let i=0;i<raw.length;i++){
-        const s=raw[i];
-        await _supabase.from("signals").insert([{
-          short:String(s.short||""), long:String(s.long||""), meaning:String(s.meaning||""),
-          category:String(s.category||"Sonstige"), image:s.image||"", user_id:currentUser.id
-        }]);
-      }
-      await loadCloudSignals();
-      notify("Import abgeschlossen!");
-    }catch(err){
-      notify("Fehler beim Import: "+err.message);
-    }
-  };
-  reader.readAsText(file);
-}
-
-function renderStats(){
-  $("statAnswered").textContent=stats.answered||0;
-  $("statPoints").textContent=stats.points||0;
-  $("statRate").textContent=stats.answered?Math.round((stats.points/(stats.answered*3))*100)+" %":"0 %";
-  $("statExams").textContent=stats.exams||0;
-  if(stats.lastExam){
-    $("lastExamResult").textContent=`${stats.lastExam.points} von ${stats.lastExam.maxPoints} Punkten (${stats.lastExam.percent} %) · ${stats.lastExam.duration} Min.`;
-  }else{
-    $("lastExamResult").textContent="Noch keine Prüfung absolviert.";
-  }
-}
-function resetStats(){
-  if(!confirm("Statistik & Fehlerliste wirklich zurücksetzen?"))return;
-  stats={answered:0,points:0,exams:0,lastExam:null};
-  wrongSignalIds.clear();
-  saveLocalProgress();
-  renderStats();
-  nextLearn();
-}
-
+/* NAVIGATION */
 function showPage(page){
-  ["learn","exam","stats","manage","tutorial","support","inbox","shared"].forEach(id=>{
-    const visible=id===page;
+  ["learn","exam","stats","manage","tutorial","support","inbox","shared","friends","studyGroups","groupDetail","courses","courseDetail"].forEach(id=>{
+    const v=(id===page);
     const el=$(id);
-    if(el){el.hidden=!visible; el.style.display=visible?"block":"none";}
+    if(el){el.hidden=!v; el.style.display=v?"block":"none";}
   });
   document.querySelectorAll("#mainNav button, .sidebar-link").forEach(btn=>{
     btn.classList.toggle("active",btn.dataset.page===page);
   });
-  if(page==="stats")renderStats();
+  if(page==="friends")loadFriends();
+  if(page==="studyGroups")loadStudyGroups();
+  if(page==="courses")loadCourses();
   if(page==="inbox")loadUserInbox(true);
   if(page==="shared")loadSharedSignals();
-  if(page==="manage"){
-    renderList();
-    if(isAdmin()){loadAdminStats(); loadAdminSupport();}
-  }
   window.scrollTo(0,0);
 }
 
@@ -2042,95 +1368,50 @@ function initEvents(){
 
   $("loginBtn").addEventListener("click",handleLogin);
   $("registerBtn").addEventListener("click",handleRegister);
-  $("sendResetBtn").addEventListener("click",handleForgotPassword);
-  $("saveNewPasswordBtn").addEventListener("click",handleUpdateNewPassword);
   $("logoutBtn").addEventListener("click",handleLogout);
 
-  _supabase.auth.onAuthStateChange((event)=>{
-    if(event==="PASSWORD_RECOVERY"){
-      $("appMain").hidden=true; $("mainNav").hidden=true; $("menuBtn").hidden=true;
-      $("authPanel").hidden=false; switchAuthView("newPasswordView");
-    }
-  });
+  $("menuBtn").addEventListener("click",()=>{$("sidebar").classList.add("open");$("sidebarBackdrop").hidden=false;});
+  $("closeSidebar").addEventListener("click",()=>{$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;});
+  $("sidebarBackdrop").addEventListener("click",()=>{$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;});
 
-  $("menuBtn").addEventListener("click",openSidebar);
-  $("closeSidebar").addEventListener("click",closeSidebar);
-  $("sidebarBackdrop").addEventListener("click",closeSidebar);
   $("sidebar").addEventListener("click",e=>{
     const btn=e.target.closest(".sidebar-link[data-page]");
-    if(btn){closeSidebar(); showPage(btn.dataset.page);}
+    if(btn){$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;showPage(btn.dataset.page);}
   });
 
   $("closePopupBtn").addEventListener("click",markBroadcastAsRead);
-  $("bcTarget").addEventListener("change",e=>{
-    $("bcEmailsContainer").hidden=(e.target.value!=="specific");
-  });
-  $("sendBroadcastBtn").addEventListener("click",sendBroadcastMessage);
+  $("sendFriendRequestBtn").addEventListener("click",sendFriendRequest);
+  $("showCreateGroupBtn").addEventListener("click",()=>{$("createGroupForm").hidden=false;});
+  $("cancelCreateGroup").addEventListener("click",()=>{$("createGroupForm").hidden=true;});
+  $("createGroupSubmit").addEventListener("click",createStudyGroup);
+
+  $("createCourseBtn").addEventListener("click",()=>{$("createCourseForm").hidden=false;});
+  $("cancelCreateCourse").addEventListener("click",()=>{$("createCourseForm").hidden=true;});
+  $("submitCreateCourse").addEventListener("click",createCourse);
+
+  $("backToGroups").addEventListener("click",()=>showPage("studyGroups"));
+  $("backToCourses").addEventListener("click",()=>showPage("courses"));
 
   $("sendSupportBtn").addEventListener("click",sendSupportMessage);
   $("refreshInboxBtn").addEventListener("click",()=>loadUserInbox(true));
-  $("refreshAdminSupport").addEventListener("click",loadAdminSupport);
-  $("adminSupportList").addEventListener("click",e=>{
-    const btn=e.target.closest(".btn-admin-reply");
-    if(btn)sendAdminReply(btn.dataset.id);
-  });
-  $("sharedSignalsList").addEventListener("click",e=>{
-    const btn=e.target.closest(".btn-accept-signal");
-    if(btn)acceptSharedSignal(btn.dataset.id);
-  });
 
   $("mainNav").addEventListener("click",e=>{
     const btn=e.target.closest("button[data-page]");
     if(btn)showPage(btn.dataset.page);
   });
 
-  $("learnCategoryChoices").addEventListener("change",e=>handleCategoryChange(e,"learn"));
-  $("examCategoryChoices").addEventListener("change",e=>handleCategoryChange(e,"exam"));
-  $("learnSelectAll").addEventListener("click",()=>toggleAllCategories("learn"));
-  $("examSelectAll").addEventListener("click",()=>toggleAllCategories("exam"));
-  $("learnToggleCategories").addEventListener("click",()=>toggleCategoryPicker("learn"));
-  $("examToggleCategories").addEventListener("click",()=>toggleCategoryPicker("exam"));
-  $("onlyWrongFilter").addEventListener("change",nextLearn);
-
   $("checkLearn").addEventListener("click",checkLearn);
   $("nextLearn").addEventListener("click",nextLearn);
-  $("skipLearn").addEventListener("click",skipLearn);
+  $("skipLearn").addEventListener("click",nextLearn);
 
-  $("startExam").addEventListener("click",startExam);
-  $("submitExam").addEventListener("click",submitExamAnswer);
-  $("examNext").addEventListener("click",nextExamQuestion);
-
-  $("resetStats").addEventListener("click",resetStats);
   $("saveSignal").addEventListener("click",saveSignal);
   $("clearForm").addEventListener("click",clearForm);
   $("searchSignals").addEventListener("input",renderList);
-  $("signalList").addEventListener("click",handleListClick);
-
-  $("signalList").addEventListener("change",e=>{
-    const checkbox=e.target.closest(".signal-checkbox");
-    if(checkbox)toggleSignalSelection(checkbox.dataset.id,checkbox.checked);
-  });
-  $("selectAllSignals").addEventListener("change",e=>selectAllVisibleSignals(e.target.checked));
-  $("clearSelection").addEventListener("click",clearSelection);
-  $("deleteSelected").addEventListener("click",deleteSelectedSignals);
-  $("shareSelected").addEventListener("click",shareSelectedSignals);
-
-  $("pickGallery").addEventListener("click",()=>$("imageFile").click());
-  $("pickCamera").addEventListener("click",()=>$("cameraFile").click());
-  $("imageFile").addEventListener("change",function(){handleImageInput(this.files[0]);this.value="";});
-  $("cameraFile").addEventListener("change",function(){handleImageInput(this.files[0]);this.value="";});
-
-  $("exportData").addEventListener("click",exportData);
-  $("importButton").addEventListener("click",()=>$("importFile").click());
-  $("importFile").addEventListener("change",function(){handleImportFile(this.files[0]);this.value="";});
-  $("refreshAdminStats").addEventListener("click",loadAdminStats);
+  $("refreshAdminStats").addEventListener("click",loadAdminSupport);
 }
 
 function init(){
   initEvents();
-  renderCategoryChoices();
-  renderCategorySelect();
-  applyCategoryPickerVisibility();
   checkSession();
 }
 
