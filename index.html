@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -589,7 +590,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   </div>
 </section>
 
-<!-- TUTORIAL (VOLLSTÄNDIG AKTUALISIERT) -->
+<!-- TUTORIAL -->
 <section id="tutorial" class="page" hidden>
   <div class="panel">
     <h2>📖 Vollständiges App-Tutorial</h2>
@@ -786,6 +787,9 @@ const $=id=>document.getElementById(id);
 
 const ADMIN_EMAIL="Dominique.aghabozorgi@yahoo.com";
 let currentUser=null;
+let activityInterval=null;
+let activityErrorShown=false;
+
 let allRegisteredUsers=[];
 let signals=[];
 let stats=JSON.parse(localStorage.getItem("armando_signal_stats")||'{"answered":0,"points":0,"exams":0,"lastExam":null}');
@@ -822,6 +826,97 @@ function notify(message){
   if(!el)return;
   el.textContent=message;
   setTimeout(()=>{if(el.textContent===message)el.textContent="";},5000);
+}
+
+/* =====================================================
+   NUTZERAKTIVITÄT
+   ===================================================== */
+
+async function updateLastSeen(){
+  if(!currentUser)return;
+
+  try{
+    const {error}=await _supabase
+      .from("user_profiles")
+      .update({last_seen:new Date().toISOString()})
+      .eq("id",currentUser.id);
+
+    if(error){
+      console.error("Aktivität konnte nicht gespeichert werden:",error);
+
+      if(!activityErrorShown){
+        activityErrorShown=true;
+        notify("Aktivität konnte nicht gespeichert werden. Bitte Datenbankrechte prüfen.");
+      }
+    }else{
+      activityErrorShown=false;
+    }
+  }catch(err){
+    console.error("Fehler bei der Aktivitätserfassung:",err);
+  }
+}
+
+function startActivityTracking(){
+  if(activityInterval){
+    clearInterval(activityInterval);
+    activityInterval=null;
+  }
+
+  updateLastSeen();
+
+  activityInterval=setInterval(()=>{
+    if(document.visibilityState==="visible"){
+      updateLastSeen();
+    }
+  },60000);
+}
+
+/* =====================================================
+   ADMIN-NUTZERSTATISTIK
+   ===================================================== */
+
+async function loadAdminStats(){
+  if(String(currentUser?.email||"").toLowerCase()
+    !==ADMIN_EMAIL.toLowerCase())return;
+
+  const ids=[
+    "adminOnline",
+    "adminToday",
+    "adminWeek",
+    "adminMonth",
+    "adminTotal"
+  ];
+
+  ids.forEach(id=>{
+    if($(id))$(id).textContent="…";
+  });
+
+  try{
+    const {data,error}=await _supabase.rpc(
+      "get_admin_user_activity_stats"
+    );
+
+    if(error)throw error;
+
+    const s=Array.isArray(data)?data[0]:data;
+
+    if(!s)throw new Error("Keine Statistikdaten erhalten.");
+
+    $("adminOnline").textContent=s.online_now??0;
+    $("adminToday").textContent=s.active_today??0;
+    $("adminWeek").textContent=s.active_7_days??0;
+    $("adminMonth").textContent=s.active_30_days??0;
+    $("adminTotal").textContent=s.total_registered??0;
+
+  }catch(err){
+    console.error("Statistikfehler:",err);
+
+    ids.forEach(id=>{
+      if($(id))$(id).textContent="–";
+    });
+
+    notify("Nutzerstatistik konnte nicht geladen werden: "+err.message);
+  }
 }
 
 function esc(value){
@@ -874,6 +969,11 @@ async function handleRegister(){
 }
 
 async function handleLogout(){
+  if(activityInterval){
+    clearInterval(activityInterval);
+    activityInterval=null;
+  }
+
   await _supabase.auth.signOut();
   currentUser=null;
   signals=[];
@@ -902,6 +1002,9 @@ async function initUserSession(){
   $("logoutBtn").style.display="block";
   $("sidebarUserEmail").textContent="Angemeldet als: "+(currentUser?.email||"");
 
+  // Aktivität des angemeldeten Nutzers erfassen
+  startActivityTracking();
+
   const admin=String(currentUser?.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();
   if($("adminStatsPanel"))$("adminStatsPanel").hidden=!admin;
   if($("adminSupportPanel"))$("adminSupportPanel").hidden=!admin;
@@ -912,6 +1015,7 @@ async function initUserSession(){
   checkTrainerStatus();
 
   if(admin){
+    loadAdminStats();
     loadAdminSupport();
     loadAdminTrainerRequests();
   }
@@ -1432,8 +1536,17 @@ function initEvents(){
   $("saveSignal").addEventListener("click",saveSignal);
   $("clearForm").addEventListener("click",clearForm);
   $("searchSignals").addEventListener("input",renderList);
-  $("refreshAdminStats").addEventListener("click",loadAdminSupport);
+
+  // Der Aktualisieren-Button lädt jetzt die Nutzerstatistik
+  $("refreshAdminStats").addEventListener("click",loadAdminStats);
 }
+
+/* Aktivität nach Rückkehr in die App aktualisieren */
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible"&&currentUser){
+    updateLastSeen();
+  }
+});
 
 function init(){
   initEvents();
