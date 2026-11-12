@@ -23,60 +23,14 @@ body {
 header,main {max-width:900px;margin:auto}
 header {
   padding:8px 3px 14px;display:flex;
-  justify-content:space-between;align-items:center;gap:10px;
+  justify-content:space-between;align-items:center;
 }
-.header-left {display:flex;align-items:center;gap:12px}
-h1 {font-size:22px;margin:4px 0;display:flex;align-items:center;gap:8px}
+h1 {font-size:24px;margin:4px 0;display:flex;align-items:center;gap:8px}
 h2 {font-size:20px;margin:0 0 12px}
 h3 {font-size:16px;margin:10px 0}
 p {line-height:1.5;margin:8px 0}
 small,.muted {color:var(--muted)}
 .brand {color:var(--accent)}
-
-#menuBtn {
-  background:var(--panel2);border:1px solid var(--border);
-  color:var(--text);font-size:20px;padding:8px 12px;
-  border-radius:10px;position:relative;cursor:pointer;
-}
-.badge-dot {
-  position:absolute;top:-4px;right:-4px;width:12px;height:12px;
-  background:var(--red);border-radius:50%;border:2px solid var(--bg);
-}
-#sidebarBackdrop, #popupBackdrop {
-  position:fixed;inset:0;background:rgba(0,0,0,.65);
-  z-index:1999;backdrop-filter:blur(3px);
-}
-#sidebar {
-  position:fixed;top:0;left:0;bottom:0;width:280px;max-width:82vw;
-  background:#0d131d;border-right:1px solid var(--border);
-  z-index:2000;padding:18px;display:flex;flex-direction:column;
-  gap:10px;transform:translateX(-105%);transition:transform .25s ease;
-  box-shadow:6px 0 24px rgba(0,0,0,.6);
-  overflow-y:auto;
-}
-#sidebar.open {transform:translateX(0)}
-.sidebar-header {
-  display:flex;justify-content:space-between;align-items:center;
-  padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:6px;
-}
-.sidebar-link {
-  width:100%;justify-content:flex-start;background:var(--panel);
-  padding:13px 14px;font-size:15px;position:relative;border:1px solid var(--border);border-radius:10px;color:var(--text);cursor:pointer;
-  display:flex;align-items:center;
-}
-.sidebar-link.active {border-color:var(--accent);color:var(--accent)}
-.pill-count {
-  margin-left:auto;background:var(--red);color:#fff;
-  font-size:11px;padding:2px 7px;border-radius:99px;font-weight:700;
-}
-
-#broadcastPopup {
-  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:90%;max-width:450px;background:#1b2735;border:1px solid var(--accent);
-  border-radius:16px;padding:22px;z-index:3000;box-shadow:0 10px 30px rgba(0,0,0,.7);
-}
-#broadcastPopup h2 {color:var(--accent);margin-top:0;}
-
 nav#mainNav {
   position:fixed;bottom:0;left:0;right:0;background:#0d131d;
   border-top:1px solid var(--border);display:grid;
@@ -88,11 +42,10 @@ nav#mainNav button {
   background:transparent;border:none;border-radius:8px;
   color:var(--muted);font-size:11px;font-weight:600;
   padding:6px 2px;display:flex;flex-direction:column;
-  align-items:center;gap:4px;cursor:pointer;
+  align-items:center;gap:4px;
 }
 nav#mainNav button .icon {font-size:18px}
 nav#mainNav button.active {color:var(--accent);background:rgba(72,166,255,.1)}
-
 button,input,select,textarea {font:inherit;border-radius:10px;border:1px solid var(--border)}
 button {
   background:var(--panel2);color:var(--text);padding:12px 14px;
@@ -103,10 +56,6 @@ button:active {transform:scale(.98)}
 button.primary {background:var(--accent);color:#071522;border-color:var(--accent)}
 button.good {background:#176e50;color:#fff;border-color:#26795b}
 button.danger {background:#853542;color:#fff;border-color:#a84353}
-button.link-btn {
-  background:transparent;border:none;color:var(--accent);
-  padding:6px;font-size:13px;text-decoration:underline;width:100%;margin-top:8px;cursor:pointer;
-}
 button:disabled {opacity:.45;cursor:not-allowed}
 input,select,textarea {
   width:100%;padding:12px;margin:6px 0 14px;
@@ -136,7 +85,6 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
   justify-content:center;color:var(--muted);text-align:center;
   padding:20px;margin:10px 0;
 }
-.placeholder[hidden], .signal-image[hidden] {display:none!important}
 .answer {
   background:#111c29;border-radius:12px;padding:14px;
   margin-top:14px;border:1px solid var(--border);
@@ -174,14 +122,6 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 }
 .signal-card h3 {margin:0 0 6px;color:#fff;font-size:17px}
 .signal-card p {margin:8px 0;color:#d0dbe7;font-size:14px}
-.ticket-tag {
-  display:inline-block;padding:3px 8px;border-radius:6px;
-  font-size:11px;font-weight:700;background:var(--panel2);color:var(--accent);
-}
-.admin-reply-box {
-  background:#103328;border-left:3px solid var(--green);
-  padding:10px 12px;border-radius:8px;margin-top:10px;font-size:14px;
-}
 .signal-select-row {
   display:flex;align-items:center;gap:10px;margin-bottom:12px;
   padding-bottom:10px;border-bottom:1px solid var(--border);
@@ -191,13 +131,8 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
   align-items:center;gap:9px;cursor:pointer;flex:1;
 }
 .signal-select-row input[type="checkbox"],
-.signal-card input[type="checkbox"],
-.filter-box input[type="checkbox"] {
-  width:20px;height:20px;margin:0;accent-color:var(--accent);flex-shrink:0;
-}
-.filter-box {
-  display:flex;align-items:center;gap:10px;background:#111c29;
-  border:1px solid var(--border);padding:10px 12px;border-radius:10px;margin-bottom:12px;
+.signal-card input[type="checkbox"] {
+  width:22px;height:22px;margin:0;accent-color:var(--accent);flex-shrink:0;
 }
 .signal-card.selected {border-color:var(--accent);background:#14283b}
 .bulk-toolbar {
@@ -240,96 +175,52 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 #notice {
   min-height:20px;color:var(--green);font-weight:600;
-  font-size:14px;margin-top:4px;text-align:center;
+  font-size:14px;margin-top:4px;
 }
-#authPanel {max-width:420px;margin:30px auto}
+.score-line {display:flex;justify-content:space-between;gap:8px}
+#authPanel {max-width:420px;margin:40px auto}
 @media(max-width:520px) {
   body {padding:8px 8px 85px}
   .panel {padding:12px}
-  h1 {font-size:19px}
+  .signal-image {height:200px}
   .stat-grid {grid-template-columns:1fr}
   .category-grid {grid-template-columns:1fr 1fr}
+  .category-picker-header button {font-size:11px!important}
 }
 </style>
 </head>
 
 <body>
 
-<div id="popupBackdrop" hidden></div>
-<div id="broadcastPopup" hidden>
-  <h2 id="popupTitle">Wichtige Information</h2>
-  <p id="popupMessage" style="white-space:pre-wrap;margin-bottom:20px;"></p>
-  <button type="button" class="primary" id="closePopupBtn" style="width:100%;">Verstanden</button>
-</div>
-
-<!-- SEITENLEISTE -->
-<div id="sidebarBackdrop" hidden></div>
-<aside id="sidebar" aria-label="Seitenmenü">
-  <div class="sidebar-header">
-    <strong>Menü</strong>
-    <button type="button" id="closeSidebar" style="padding:6px 10px;">✕</button>
-  </div>
-  <button type="button" class="sidebar-link" data-page="tutorial">📖 Tutorial</button>
-  <button type="button" class="sidebar-link" data-page="friends">👥 Freunde</button>
-  <button type="button" class="sidebar-link" data-page="studyGroups">👥 Lerngruppen</button>
-  <button type="button" class="sidebar-link" data-page="courses">🎓 Kurse</button>
-  <button type="button" class="sidebar-link" data-page="support">💬 Support</button>
-  <button type="button" class="sidebar-link" data-page="inbox">
-    📬 Postfach <span id="inboxUnreadBadge" class="pill-count" hidden>0</span>
-  </button>
-  <button type="button" class="sidebar-link" data-page="shared">
-    📨 Geteilte Signale <span id="sharedBadge" class="pill-count" hidden>0</span>
-  </button>
-  <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);">
-    <small id="sidebarUserEmail" class="muted" style="display:block;margin-bottom:8px;word-break:break-all;"></small>
-    <div id="trainerStatusContainer" style="margin-top:8px;"></div>
-  </div>
-</aside>
-
 <header>
-  <div class="header-left">
-    <button type="button" id="menuBtn" hidden aria-label="Menü öffnen">☰</button>
-    <div>
-      <h1>🚦 Signale lernen <span class="brand">ByArmando</span></h1>
-      <p class="muted" style="margin:0;font-size:13px;">Signale erkennen · Bedeutungen lernen · Prüfung bestehen</p>
-    </div>
+  <div>
+    <h1>🚦 Signale lernen <span class="brand">ByArmando</span></h1>
+    <p class="muted">Signale erkennen · Bedeutungen lernen · Prüfung bestehen</p>
   </div>
   <button id="logoutBtn" class="danger" style="display:none;padding:6px 12px;font-size:12px;">Abmelden</button>
 </header>
 
 <div id="notice" aria-live="polite" style="max-width:900px;margin:auto;"></div>
 
-<!-- AUTHENTIFIZIERUNG -->
 <section id="authPanel" class="panel">
-  <div id="loginView">
-    <h2>Anmelden</h2>
-    <label for="loginEmail">E-Mail Adresse</label>
-    <input type="email" id="loginEmail" placeholder="deine@email.de" autocomplete="email">
-    <label for="loginPassword">Passwort</label>
-    <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
-    <button type="button" class="primary" id="loginBtn" style="width:100%;">Einloggen</button>
-    <hr>
-    <button type="button" id="showRegisterBtn" style="width:100%;">Registrieren</button>
-  </div>
-
-  <div id="registerView" hidden>
-    <h2>Konto registrieren</h2>
-    <label for="regEmail">E-Mail Adresse</label>
-    <input type="email" id="regEmail" placeholder="deine@email.de" autocomplete="email">
-    <label for="regPassword">Passwort (mind. 6 Zeichen)</label>
-    <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password">
-    <button type="button" class="primary" id="registerBtn" style="width:100%;">Konto erstellen</button>
-    <button type="button" class="link-btn" id="backToLoginFromReg">← Zurück zum Login</button>
+  <h2>Anmelden</h2>
+  <label for="authEmail">E-Mail Adresse</label>
+  <input type="email" id="authEmail" placeholder="deine@email.de" autocomplete="email">
+  <label for="authPassword">Passwort</label>
+  <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
+  <div class="actions">
+    <button type="button" class="primary" id="loginBtn">Einloggen</button>
+    <button type="button" id="signUpBtn">Konto erstellen</button>
   </div>
 </section>
 
 <main id="appMain" hidden>
 
-<!-- LERNMODUS -->
 <section id="learn" class="page">
   <div class="panel">
     <h2>Lernmodus</h2>
     <p class="muted">Wähle aus, welche Signalgruppen du lernen möchtest.</p>
+
     <div class="category-picker">
       <div class="category-picker-header">
         <strong>Signalgruppen auswählen</strong>
@@ -337,25 +228,35 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
       </div>
       <div id="learnCategoryChoices" class="category-grid"></div>
       <div id="learnCategorySummary" class="category-summary"></div>
-      <button type="button" class="category-toggle" id="learnToggleCategories">Signalgruppen auswählen ▼</button>
+      <button type="button" class="category-toggle" id="learnToggleCategories">
+        Signalgruppen auswählen ▼
+      </button>
     </div>
-    <label class="filter-box" for="onlyWrongFilter">
-      <input type="checkbox" id="onlyWrongFilter">
-      <span>🎯 Nur falsch beantwortete Signale üben (<b id="wrongCount">0</b>)</span>
-    </label>
+
     <div class="row">
-      <div><label>Fortschritt</label><strong id="learnCounter" style="display:block;margin-top:12px;">Frage 1</strong></div>
-      <div><label>Verfügbar</label><strong id="learnAvailable" style="display:block;margin-top:12px;">0</strong></div>
+      <div>
+        <label>Fortschritt</label>
+        <strong id="learnCounter" style="display:block;margin-top:12px;">Frage 1</strong>
+      </div>
+      <div>
+        <label>Verfügbare Signale</label>
+        <strong id="learnAvailable" style="display:block;margin-top:12px;">0</strong>
+      </div>
     </div>
+
     <div class="progress"><span id="learnProgress"></span></div>
+
     <img id="learnImage" class="signal-image" alt="Signalbild" hidden>
     <div id="learnNoImage" class="placeholder">Kein Signalbild hinterlegt</div>
+
+    <p><b>Erkenne das Signal. Trage alle drei Angaben selbst ein:</b></p>
     <label for="learnShort">1. Kurzbezeichnung</label>
     <input id="learnShort" placeholder="z. B. Ne 1" autocomplete="off">
     <label for="learnLong">2. Langbezeichnung</label>
     <input id="learnLong" placeholder="z. B. Trapeztafel" autocomplete="off">
     <label for="learnMeaning">3. Bedeutung</label>
-    <textarea id="learnMeaning" placeholder="Vollständige Bedeutung..."></textarea>
+    <textarea id="learnMeaning" placeholder="Vollständige Bedeutung des Signals..."></textarea>
+
     <div class="actions">
       <button type="button" class="primary" id="checkLearn">Antwort prüfen</button>
       <button type="button" id="skipLearn">Überspringen</button>
@@ -365,10 +266,11 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   </div>
 </section>
 
-<!-- PRÜFUNGSMODUS -->
 <section id="exam" class="page" hidden>
   <div class="panel">
     <h2>Prüfungsmodus</h2>
+    <p class="muted">Wähle die Signalgruppen aus, die in deiner Prüfung abgefragt werden sollen.</p>
+
     <div id="examConfig">
       <div class="category-picker">
         <div class="category-picker-header">
@@ -377,8 +279,11 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
         </div>
         <div id="examCategoryChoices" class="category-grid"></div>
         <div id="examCategorySummary" class="category-summary"></div>
-        <button type="button" class="category-toggle" id="examToggleCategories">Signalgruppen auswählen ▼</button>
+        <button type="button" class="category-toggle" id="examToggleCategories">
+          Signalgruppen auswählen ▼
+        </button>
       </div>
+
       <label for="examLength">Anzahl der Fragen</label>
       <select id="examLength">
         <option value="10">10 Fragen</option>
@@ -389,6 +294,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
       <button type="button" class="primary" id="startExam" style="width:100%;margin-top:8px;">Prüfung starten</button>
       <div id="examAvailable" class="muted" style="margin-top:10px;"></div>
     </div>
+
     <div id="examArea" hidden>
       <hr>
       <div class="row">
@@ -396,23 +302,26 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
         <strong id="examTimer" style="text-align:right;">00:00</strong>
       </div>
       <div class="progress"><span id="examProgress"></span></div>
+
       <img id="examImage" class="signal-image" alt="Signalbild" hidden>
       <div id="examNoImage" class="placeholder" hidden>Kein Signalbild hinterlegt</div>
+
       <label for="examShort">1. Kurzbezeichnung</label>
       <input id="examShort" placeholder="Kurzbezeichnung" autocomplete="off">
       <label for="examLong">2. Langbezeichnung</label>
       <input id="examLong" placeholder="Langbezeichnung" autocomplete="off">
       <label for="examMeaning">3. Bedeutung</label>
-      <textarea id="examMeaning" placeholder="Bedeutung..."></textarea>
+      <textarea id="examMeaning" placeholder="Bedeutung des Signals"></textarea>
+
       <button type="button" class="primary" id="submitExam" style="width:100%;">Antwort abgeben</button>
       <div id="examFeedback" class="answer" hidden></div>
       <button type="button" id="examNext" hidden style="width:100%;margin-top:12px;">Weiter ➔</button>
     </div>
+
     <div id="examResult" class="answer" hidden></div>
   </div>
 </section>
 
-<!-- STATISTIK -->
 <section id="stats" class="page" hidden>
   <div class="panel">
     <h2>Deine Lernstatistik</h2>
@@ -425,223 +334,87 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <hr>
     <h3>Letztes Prüfungsergebnis</h3>
     <div id="lastExamResult" class="muted">Noch keine Prüfung absolviert.</div>
-    <button type="button" class="danger" id="resetStats" style="width:100%;margin-top:14px;">Statistik & Fehlerliste zurücksetzen</button>
+    <button type="button" class="danger" id="resetStats" style="width:100%;margin-top:14px;">Statistik zurücksetzen</button>
   </div>
 </section>
 
-<!-- FREUNDE -->
-<section id="friends" class="page" hidden>
-  <div class="panel">
-    <h2>👥 Freunde & Kontakte</h2>
-    <label for="friendEmail">E-Mail-Adresse des Kollegen</label>
-    <input type="email" id="friendEmail" list="userAutocompleteList" placeholder="kollege@email.de" autocomplete="off">
-    <button type="button" class="primary" id="sendFriendRequestBtn" style="width:100%;">Freundschaftsanfrage senden</button>
-    <hr>
-    <h3>Anfragen & Freunde</h3>
-    <div id="friendRequestsList"><p class="muted">Lade Freunde...</p></div>
-  </div>
-</section>
-
-<!-- LERNGRUPPEN -->
-<section id="studyGroups" class="page" hidden>
-  <div class="panel">
-    <h2>👥 Lerngruppen</h2>
-    <div class="actions">
-      <button type="button" class="primary" id="showCreateGroupBtn">+ Neue Lerngruppe erstellen</button>
-    </div>
-    <div id="createGroupForm" class="panel" style="margin-top:14px;" hidden>
-      <h3>Lerngruppe erstellen</h3>
-      <label for="newGroupName">Gruppenname</label>
-      <input id="newGroupName" placeholder="z. B. Azubi-Klasse">
-      <button type="button" class="primary" id="createGroupSubmit">Gruppe anlegen</button>
-      <button type="button" id="cancelCreateGroup">Abbrechen</button>
-    </div>
-    <hr>
-    <div id="myStudyGroupsList"><p class="muted">Lade Lerngruppen...</p></div>
-  </div>
-</section>
-
-<!-- EINZELNE LERNGRUPPE -->
-<section id="groupDetail" class="page" hidden>
-  <div class="panel">
-    <button type="button" id="backToGroups" style="margin-bottom:12px;">← Zurück</button>
-    <h2 id="groupDetailTitle">Lerngruppe</h2>
-    <p class="muted" id="groupDetailCreator"></p>
-    <div class="actions" style="margin-bottom:14px;">
-      <button type="button" class="primary" id="groupInviteBtn">＋ Mitglied einladen</button>
-      <button type="button" class="primary good" id="groupLearnBtn">📚 Gruppe lernen</button>
-    </div>
-    <hr>
-    <h3>Signale der Lerngruppe (<span id="groupSignalCount">0</span>)</h3>
-    <div id="groupSignalsList" style="margin-top:12px;"><p class="muted">Keine Signale.</p></div>
-  </div>
-</section>
-
-<!-- KURSE -->
-<section id="courses" class="page" hidden>
-  <div class="panel">
-    <h2>🎓 Kurse & Schulungen</h2>
-    <div id="trainerActionBox" style="margin-bottom:14px;" hidden>
-      <button type="button" class="primary" id="createCourseBtn">+ Neuen Kurs erstellen</button>
-    </div>
-    <div id="createCourseForm" class="panel" hidden>
-      <h3>Kurs erstellen</h3>
-      <label for="courseNameInput">Kursname</label>
-      <input id="courseNameInput" placeholder="z. B. Signalbuch Intensiv">
-      <button type="button" class="primary" id="submitCreateCourse">Kurs anlegen</button>
-      <button type="button" id="cancelCreateCourse">Abbrechen</button>
-    </div>
-    <hr>
-    <h3>Deine Kurse</h3>
-    <div id="myCoursesList"><p class="muted">Lade Kurse...</p></div>
-  </div>
-</section>
-
-<!-- EINZELNER KURS -->
-<section id="courseDetail" class="page" hidden>
-  <div class="panel">
-    <button type="button" id="backToCourses" style="margin-bottom:12px;">← Zurück</button>
-    <h2 id="courseDetailTitle">Kurs</h2>
-    <p class="muted" id="courseDetailTrainer"></p>
-    <div id="trainerCourseControls" hidden style="margin-bottom:14px;">
-      <button type="button" class="primary" id="courseAddMaterialBtn">📄 Material hochladen</button>
-      <button type="button" class="primary" id="courseAddHomeworkBtn">📋 Hausaufgabe aufgeben</button>
-    </div>
-    <hr>
-    <h3>📚 Lernmaterialien</h3>
-    <div id="courseMaterialsList"><p class="muted">Keine Materialien.</p></div>
-    <hr>
-    <h3>📋 Hausaufgaben</h3>
-    <div id="courseHomeworkList"><p class="muted">Keine Hausaufgaben.</p></div>
-  </div>
-</section>
-
-<!-- TUTORIAL -->
-<section id="tutorial" class="page" hidden>
-  <div class="panel">
-    <h2>📖 Tutorial</h2>
-    <p class="muted">Alle Funktionen der App im Überblick.</p>
-  </div>
-</section>
-
-<!-- SUPPORT -->
-<section id="support" class="page" hidden>
-  <div class="panel">
-    <h2>💬 Support & Feedback</h2>
-    <label for="supportCategory">Grund</label>
-    <select id="supportCategory">
-      <option value="Problem">⚠️ Problem</option>
-      <option value="Bewertung">⭐ Bewertung</option>
-      <option value="Verbesserungsvorschlag">💡 Vorschlag</option>
-    </select>
-    <label for="supportMessage">Nachricht</label>
-    <textarea id="supportMessage" placeholder="Nachricht..."></textarea>
-    <button type="button" class="primary" id="sendSupportBtn" style="width:100%;">Absenden</button>
-  </div>
-</section>
-
-<!-- POSTFACH -->
-<section id="inbox" class="page" hidden>
-  <div class="panel">
-    <div class="row">
-      <h2>📬 Postfach</h2>
-      <button type="button" id="refreshInboxBtn" style="flex:0 0 auto;">↻</button>
-    </div>
-    <hr>
-    <div id="userInboxList"><p class="muted">Lade...</p></div>
-  </div>
-</section>
-
-<!-- GETEILTE SIGNALE -->
-<section id="shared" class="page" hidden>
-  <div class="panel">
-    <h2>📨 Geteilte Signale</h2>
-    <div id="sharedSignalsList"><p class="muted">Keine.</p></div>
-  </div>
-</section>
-
-<!-- VERWALTUNG -->
 <section id="manage" class="page" hidden>
-  <div class="panel" id="adminTrainerPanel" hidden>
-    <h2>🛡️ Trainer-Anträge</h2>
-    <div id="adminTrainerRequestsList"><p class="muted">Lade...</p></div>
-  </div>
-  <div class="panel" id="adminBroadcastPanel" hidden>
-    <h2>📢 Broadcast</h2>
-    <label for="bcTarget">Empfänger</label>
-    <select id="bcTarget">
-      <option value="all">Alle</option>
-      <option value="specific">Bestimmte E-Mail</option>
-    </select>
-    <div id="bcEmailsContainer" hidden>
-      <label for="bcEmails">E-Mails</label>
-      <input id="bcEmails" list="userAutocompleteList" placeholder="email@de">
-    </div>
-    <label for="bcTitle">Titel</label>
-    <input id="bcTitle" placeholder="Titel">
-    <label for="bcMessage">Nachricht</label>
-    <textarea id="bcMessage" placeholder="Nachricht..."></textarea>
-    <button type="button" class="primary" id="sendBroadcastBtn" style="width:100%;">Senden</button>
-  </div>
+
   <div class="panel" id="adminStatsPanel" hidden>
-    <h2>📈 Statistik</h2>
-    <div class="stat-grid">
-      <div class="stat">Online<strong id="adminOnline">–</strong></div>
-      <div class="stat">Heute<strong id="adminToday">–</strong></div>
-      <div class="stat">7 Tage<strong id="adminWeek">–</strong></div>
-      <div class="stat">30 Tage<strong id="adminMonth">–</strong></div>
-      <div class="stat">Gesamt<strong id="adminTotal">–</strong></div>
+    <div class="row" style="align-items:center;">
+      <div>
+        <h2 style="margin-bottom:4px;">📈 Nutzerstatistik</h2>
+        <p class="muted" style="margin:0;">Nutzung deiner App in Echtzeit</p>
+      </div>
+      <button type="button" id="refreshAdminStats" style="flex:0 0 auto;">↻ Aktualisieren</button>
     </div>
-  </div>
-  <div class="panel" id="adminSupportPanel" hidden>
-    <h2>📨 Support-Anfragen</h2>
-    <div id="adminSupportList"><p class="muted">Lade...</p></div>
+
+    <div class="stat-grid" style="margin-top:14px;">
+      <div class="stat">Gerade online<strong id="adminOnline">–</strong></div>
+      <div class="stat">Heute aktiv<strong id="adminToday">–</strong></div>
+      <div class="stat">Letzte 7 Tage<strong id="adminWeek">–</strong></div>
+      <div class="stat">Letzte 30 Tage<strong id="adminMonth">–</strong></div>
+      <div class="stat">Insgesamt registriert<strong id="adminTotal">–</strong></div>
+    </div>
+
+    <p class="muted" id="adminStatsUpdated" style="font-size:12px;">Wird geladen …</p>
   </div>
 
   <div class="panel">
     <h2 id="formTitle">Signal hinzufügen</h2>
     <input type="hidden" id="editId">
+
     <label for="shortName">Kurzbezeichnung</label>
     <input id="shortName" placeholder="z. B. Lf 1">
+
     <label for="longName">Langbezeichnung</label>
     <input id="longName" placeholder="z. B. Trapeztafel">
-    <label for="meaning">Bedeutung</label>
-    <textarea id="meaning" placeholder="Bedeutung..."></textarea>
+
+    <label for="meaning">Bedeutung / Musterlösung</label>
+    <textarea id="meaning" placeholder="Vollständige Bedeutung..."></textarea>
+
     <label for="category">Kategorie</label>
     <select id="category"></select>
+
     <label for="imageUrl">Bild-URL (optional)</label>
     <input id="imageUrl" placeholder="https://...">
+
     <div class="actions">
       <button type="button" id="pickGallery">🖼️ Galerie</button>
       <button type="button" id="pickCamera">📸 Kamera</button>
     </div>
     <input type="file" id="imageFile" accept="image/*" hidden>
     <input type="file" id="cameraFile" accept="image/*" capture="environment" hidden>
+
     <div class="actions" style="margin-top:12px;">
       <button type="button" class="primary" id="saveSignal">Signal speichern</button>
-      <button type="button" id="clearForm">Leeren</button>
+      <button type="button" id="clearForm">Formular leeren</button>
     </div>
   </div>
 
   <div class="panel">
     <h3>Gespeicherte Signale: <span id="signalCount" class="brand">0</span></h3>
-    <input id="searchSignals" placeholder="Suchen...">
+    <input id="searchSignals" placeholder="Signal suchen (Kurz, Lang, Kategorie)...">
+
     <div class="bulk-toolbar">
       <div class="signal-select-row">
-        <label><input type="checkbox" id="selectAllSignals"> Alle auswählen</label>
+        <label>
+          <input type="checkbox" id="selectAllSignals">
+          Alle angezeigten Signale auswählen
+        </label>
       </div>
       <div class="actions">
-        <button type="button" id="clearSelection">Aufheben</button>
-        <button type="button" class="primary" id="shareSelected" disabled>📨 Teilen</button>
-        <button type="button" class="danger" id="deleteSelected" disabled>🗑 Löschen</button>
+        <button type="button" id="clearSelection">Auswahl aufheben</button>
+        <button type="button" class="danger" id="deleteSelected" disabled>🗑 Ausgewählte löschen</button>
       </div>
-      <div id="selectionCount" class="selection-count">0 ausgewählt</div>
+      <div id="selectionCount" class="selection-count">0 Signale ausgewählt</div>
     </div>
     <div id="signalList"></div>
   </div>
 
   <div class="panel">
     <h2>Datensicherung</h2>
+    <p class="muted">Signale sichern oder wiederherstellen.</p>
     <div class="actions">
       <button type="button" id="exportData">Daten exportieren</button>
       <button type="button" id="importButton">Daten importieren</button>
@@ -650,8 +423,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   </div>
 </section>
 </main>
-
-<datalist id="userAutocompleteList"></datalist>
 
 <nav id="mainNav" hidden>
   <button type="button" class="active" data-page="learn"><span class="icon">📚</span><span>Lernen</span></button>
@@ -670,55 +441,78 @@ const _supabase=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 const $=id=>document.getElementById(id);
 
 const ADMIN_EMAIL="Dominique.aghabozorgi@yahoo.com";
+let activityInterval=null;
+let adminStatsInterval=null;
+
+const BASE_CATEGORIES=[
+  "Lf","Bü","Ne","Hp","Vr","Ks","Hl","Sh","Ra","Zs","El","So",
+  "Wn","Zp","Zg","Ts","Mastschilder","Sonstige"
+];
+
+const CATEGORY_LABELS={
+  "Lf":"Lf – Langsamfahrsignale","Bü":"Bü – Bahnübergangssignale","Ne":"Ne – Nebensignale",
+  "Hp":"Hp – Hauptsignale","Vr":"Vr – Vorsignale","Ks":"Ks – Kombinationssignale",
+  "Hl":"Hl – Hl-Signale","Sh":"Sh – Schutzsignale","Ra":"Ra – Rangiersignale",
+  "Zs":"Zs – Zusatzsignale","El":"El – Fahrleitungssignale","So":"So – Sonstige Signale",
+  "Wn":"Wn – Weichensignale","Zp":"Zp – Zugpersonalsignale","Zg":"Zg – Zugbegleitersignale",
+  "Ts":"Ts – Türen- und sonstige Betriebssignale","Mastschilder":"Mastschilder","Sonstige":"Sonstige"
+};
+
 let currentUser=null;
 let signals=[];
-let stats=JSON.parse(localStorage.getItem("armando_signal_stats")||'{"answered":0,"points":0,"exams":0,"lastExam":null}');
-let wrongSignalIds=new Set(JSON.parse(localStorage.getItem("armando_wrong_signals")||"[]"));
+let stats={answered:0,points:0,exams:0,lastExam:null};
 let current=null;
 let learnNumber=0;
 let learnDone=false;
+let tempImageBase64="";
+let imageLoadToken=0;
 let selectedSignalIds=new Set();
-let exportRunning=false;
-
-const BASE_CATEGORIES=["Lf","Bü","Ne","Hp","Vr","Ks","Hl","Sh","Ra","Zs","El","So","Wn","Zp","Zg","Ts","Mastschilder","Sonstige"];
-const CATEGORY_LABELS={"Lf":"Lf – Langsamfahrsignale","Bü":"Bü – Bahnübergangssignale","Ne":"Ne – Nebensignale","Hp":"Hp – Hauptsignale","Vr":"Vr – Vorsignale","Ks":"Ks – Kombinationssignale","Hl":"Hl – Hl-Signale","Sh":"Sh – Schutzsignale","Ra":"Ra – Rangiersignale","Zs":"Zs – Zusatzsignale","El":"El – Fahrleitungssignale","So":"So – Sonstige Signale","Wn":"Wn – Weichensignale","Zp":"Zp – Zugpersonalsignale","Zg":"Zg – Zugbegleitersignale","Ts":"Ts – Türen- und sonstige Betriebssignale","Mastschilder":"Mastschilder","Sonstige":"Sonstige"};
+let bulkDeleteRunning=false;
 
 let selectedLearnCategories=new Set(BASE_CATEGORIES);
 let selectedExamCategories=new Set(BASE_CATEGORIES);
 let knownCategories=new Set(BASE_CATEGORIES);
+
 let learnCategoriesOpen=false;
 let examCategoriesOpen=false;
 
 let examList=[];
 let examIndex=0;
 let examPoints=0;
+let examStarted=0;
 let examTimerInterval=null;
 let examAnswered=false;
+let examQuestionResults=[];
 
-function saveLocalProgress(){
-  localStorage.setItem("armando_signal_stats",JSON.stringify(stats));
-  localStorage.setItem("armando_wrong_signals",JSON.stringify([...wrongSignalIds]));
-  if($("wrongCount"))$("wrongCount").textContent=wrongSignalIds.size;
-}
-
-function notify(msg){
+function notify(message){
   const el=$("notice");
   if(!el)return;
-  el.textContent=msg;
-  setTimeout(()=>{if(el.textContent===msg)el.textContent="";},4000);
+  el.textContent=message;
+  setTimeout(()=>{if(el.textContent===message)el.textContent="";},5000);
 }
 
-function esc(val){
-  return String(val??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+function esc(value){
+  return String(value??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
 }
 
 function shuffle(array){
-  const res=[...array];
-  for(let i=res.length-1;i>0;i--){
+  const result=[...array];
+  for(let i=result.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
-    [res[i],res[j]]=[res[j],res[i]];
+    [result[i],result[j]]=[result[j],result[i]];
   }
-  return res;
+  return result;
+}
+
+function extractSignals(data){
+  if(Array.isArray(data))return data;
+  if(!data||typeof data!=="object")return [];
+  for(const key of ["signals","items","data","signale","database","entries"]){
+    if(Array.isArray(data[key]))return data[key];
+  }
+  return Object.values(data);
 }
 
 function getAllCategories(){
@@ -726,7 +520,8 @@ function getAllCategories(){
 }
 
 function syncCategories(){
-  getAllCategories().forEach(cat=>{
+  const categories=getAllCategories();
+  categories.forEach(cat=>{
     if(!knownCategories.has(cat)){
       selectedLearnCategories.add(cat);
       selectedExamCategories.add(cat);
@@ -743,10 +538,10 @@ function renderCategorySelect(){
   const old=select.value;
   select.innerHTML="";
   getAllCategories().forEach(cat=>{
-    const opt=document.createElement("option");
-    opt.value=cat;
-    opt.textContent=CATEGORY_LABELS[cat]||cat;
-    select.appendChild(opt);
+    const option=document.createElement("option");
+    option.value=cat;
+    option.textContent=CATEGORY_LABELS[cat]||cat;
+    select.appendChild(option);
   });
   select.value=getAllCategories().includes(old)?old:"Lf";
 }
@@ -754,8 +549,8 @@ function renderCategorySelect(){
 function renderOneCategoryPicker(containerId,selectedSet,prefix,summaryId){
   const container=$(containerId);
   if(!container)return;
-  const cats=getAllCategories();
-  container.innerHTML=cats.map((cat,index)=>{
+  const categories=getAllCategories();
+  container.innerHTML=categories.map((cat,index)=>{
     const id=prefix+"_"+index;
     return `
       <label class="category-option" for="${id}">
@@ -765,7 +560,9 @@ function renderOneCategoryPicker(containerId,selectedSet,prefix,summaryId){
   }).join("");
   const summary=$(summaryId);
   if(summary){
-    summary.textContent=selectedSet.size===cats.size?"Alle "+cats.length+" Gruppen ausgewählt":selectedSet.size+" von "+cats.length+" Gruppen ausgewählt";
+    summary.textContent=selectedSet.size===categories.length
+      ?"Alle "+categories.length+" Gruppen ausgewählt"
+      :selectedSet.size+" von "+categories.length+" Gruppen ausgewählt";
   }
 }
 
@@ -780,212 +577,296 @@ function renderCategoryChoices(){
 function applyCategoryPickerVisibility(){
   const learnGrid=$("learnCategoryChoices");
   const examGrid=$("examCategoryChoices");
+  const learnButton=$("learnToggleCategories");
+  const examButton=$("examToggleCategories");
   if(learnGrid)learnGrid.classList.toggle("collapsed",!learnCategoriesOpen);
   if(examGrid)examGrid.classList.toggle("collapsed",!examCategoriesOpen);
-  if($("learnToggleCategories"))$("learnToggleCategories").textContent=learnCategoriesOpen?"Auswahl schließen ▲":"Signalgruppen auswählen ▼";
-  if($("examToggleCategories"))$("examToggleCategories").textContent=examCategoriesOpen?"Auswahl schließen ▲":"Signalgruppen auswählen ▼";
+  if(learnButton)learnButton.textContent=learnCategoriesOpen?"Auswahl schließen ▲":"Signalgruppen auswählen ▼";
+  if(examButton)examButton.textContent=examCategoriesOpen?"Auswahl schließen ▲":"Signalgruppen auswählen ▼";
+}
+
+function toggleCategoryPicker(type){
+  if(type==="learn")learnCategoriesOpen=!learnCategoriesOpen;
+  else examCategoriesOpen=!examCategoriesOpen;
+  applyCategoryPickerVisibility();
+}
+
+function handleCategoryChange(e,type){
+  const checkbox=e.target.closest('input[type="checkbox"][data-category]');
+  if(!checkbox)return;
+  const category=checkbox.dataset.category;
+  const set=type==="learn"?selectedLearnCategories:selectedExamCategories;
+  if(checkbox.checked)set.add(category);
+  else set.delete(category);
+  renderCategoryChoices();
+  if(type==="learn")nextLearn();
+}
+
+function toggleAllCategories(type){
+  const set=type==="learn"?selectedLearnCategories:selectedExamCategories;
+  const categories=getAllCategories();
+  const allSelected=categories.every(cat=>set.has(cat));
+  if(allSelected)set.clear();
+  else categories.forEach(cat=>set.add(cat));
+  renderCategoryChoices();
+  if(type==="learn")nextLearn();
 }
 
 function updateLearnAvailable(){
-  if($("learnAvailable"))$("learnAvailable").textContent=getLearnSignals().length;
+  const count=signals.filter(s=>selectedLearnCategories.has(s.category||"Sonstige")).length;
+  $("learnAvailable").textContent=count;
 }
 
 function updateExamAvailable(){
   const count=signals.filter(s=>selectedExamCategories.has(s.category||"Sonstige")).length;
-  if($("examAvailable"))$("examAvailable").textContent=count+" Signale stehen für die Prüfung zur Verfügung.";
+  const el=$("examAvailable");
+  if(el)el.textContent=count+" Signale stehen für die Prüfung zur Verfügung.";
+}
+
+function isAdmin(){
+  return String(currentUser?.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();
+}
+
+async function recordAppActivity(){
+  if(!currentUser)return;
+  try{ await _supabase.rpc("record_app_activity"); }catch(err){}
+}
+
+function startActivityTracking(){
+  if(activityInterval)clearInterval(activityInterval);
+  if(!currentUser)return;
+  recordAppActivity();
+  activityInterval=setInterval(recordAppActivity,60000);
+}
+
+async function loadAdminStats(){
+  if(!currentUser||!isAdmin())return;
+  try{
+    const {data,error}=await _supabase.rpc("get_app_user_stats");
+    if(error)throw error;
+    $("adminOnline").textContent=data?.online_now??0;
+    $("adminToday").textContent=data?.active_today??0;
+    $("adminWeek").textContent=data?.active_7_days??0;
+    $("adminMonth").textContent=data?.active_30_days??0;
+    $("adminTotal").textContent=data?.registered_users??0;
+  }catch(err){}
+}
+
+async function handleLogin(){
+  const email=$("authEmail").value.trim();
+  const password=$("authPassword").value.trim();
+  if(!email||!password)return notify("Bitte E-Mail und Passwort eingeben.");
+  const {data,error}=await _supabase.auth.signInWithPassword({email,password});
+  if(error)return notify("Login fehlgeschlagen: "+error.message);
+  currentUser=data.user;
+  initUserSession();
+  notify("Erfolgreich angemeldet!");
+}
+
+async function handleSignUp(){
+  const email=$("authEmail").value.trim();
+  const password=$("authPassword").value.trim();
+  if(!email||!password)return notify("Bitte E-Mail und Passwort eingeben.");
+  const {error}=await _supabase.auth.signUp({email,password});
+  if(error)return notify("Registrierung fehlgeschlagen: "+error.message);
+  notify("Konto erstellt!");
+}
+
+async function handleLogout(){
+  if(activityInterval)clearInterval(activityInterval);
+  await _supabase.auth.signOut();
+  currentUser=null; signals=[]; current=null;
+  $("appMain").hidden=true; $("mainNav").hidden=true;
+  $("logoutBtn").style.display="none"; $("authPanel").hidden=false;
+  if($("adminStatsPanel"))$("adminStatsPanel").hidden=true;
+  notify("Abgemeldet.");
 }
 
 async function checkSession(){
   const {data}=await _supabase.auth.getSession();
-  if(data?.session?.user){
+  if(data?.session){
     currentUser=data.session.user;
     initUserSession();
   }
 }
 
-async function initUserSession(){
+function initUserSession(){
   $("authPanel").hidden=true;
   $("appMain").hidden=false;
   $("mainNav").hidden=false;
-  $("menuBtn").hidden=false;
   $("logoutBtn").style.display="block";
-  $("sidebarUserEmail").textContent="Angemeldet: "+(currentUser?.email||"");
-
-  const admin=String(currentUser?.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();
-  if($("adminStatsPanel"))$("adminStatsPanel").hidden=!admin;
-  if($("adminSupportPanel"))$("adminSupportPanel").hidden=!admin;
-  if($("adminBroadcastPanel"))$("adminBroadcastPanel").hidden=!admin;
-  if($("adminTrainerPanel"))$("adminTrainerPanel").hidden=!admin;
-
-  checkTrainerStatus();
+  if($("adminStatsPanel"))$("adminStatsPanel").hidden=!isAdmin();
+  startActivityTracking();
+  if(isAdmin())loadAdminStats();
   loadCloudSignals();
-  loadFriends();
-  loadStudyGroups();
-  loadCourses();
-  loadUserInbox();
-  loadSharedSignals();
-  if(admin){
-    loadAdminSupport();
-    loadAdminTrainerRequests();
-    loadAdminStats();
-  }
 }
 
-async function checkTrainerStatus(){
-  if(!currentUser)return;
-  const container=$("trainerStatusContainer");
-  const admin=String(currentUser?.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();
-  try{
-    const {data}=await _supabase.from("user_profiles").select("is_trainer, trainer_requested").eq("id",currentUser.id).maybeSingle();
-    if(admin){
-      container.innerHTML=`<span class="ticket-tag" style="background:var(--accent);color:#000;">Administrator</span>`;
-      return;
-    }
-    if(data?.is_trainer){
-      container.innerHTML=`<span class="ticket-tag" style="background:var(--green);color:#fff;">✓ Aktiver Trainer</span>`;
-      $("trainerActionBox")&&( $("trainerActionBox").hidden=false );
-    }else if(data?.trainer_requested){
-      container.innerHTML=`<span class="ticket-tag">⏳ Antrag ausstehend</span>`;
-    }else{
-      container.innerHTML=`<button type="button" class="link-btn" id="requestTrainerBtn" style="font-size:12px;">Als Trainer bewerben</button>`;
-      $("requestTrainerBtn")?.addEventListener("click", requestTrainerRole);
-    }
-  }catch(err){container.innerHTML="";}
-}
-
-async function requestTrainerRole(){
-  try{
-    await _supabase.from("user_profiles").update({trainer_requested:true}).eq("id",currentUser.id);
-    notify("Trainer-Antrag gesendet!");
-    checkTrainerStatus();
-  }catch(err){notify("Fehler beim Senden.");}
-}
-
-async function loadAdminTrainerRequests(){
-  const container=$("adminTrainerRequestsList");
-  if(!container)return;
-  try{
-    const {data}=await _supabase.from("user_profiles").select("*").eq("trainer_requested",true).eq("is_trainer",false);
-    container.innerHTML=(data||[]).map(u=>`
-      <div class="signal-card">
-        <p><b>${esc(u.email)}</b> möchte Trainer werden.</p>
-        <button type="button" class="good btn-accept-trainer" data-id="${esc(u.id)}">Bestätigen</button>
-      </div>`).join("")||"<p class='muted'>Keine Anträge.</p>";
-  }catch(err){container.innerHTML="<p class='muted'>Fehler.</p>";}
-}
-
-async function loadAdminStats(){
-  try{
-    const {data}=await _supabase.rpc("get_app_user_stats");
-    if(data){
-      if($("adminTotal"))$("adminTotal").textContent=data.registered_users||0;
-      if($("adminOnline"))$("adminOnline").textContent=data.online_now||0;
-      if($("adminToday"))$("adminToday").textContent=data.active_today||0;
-      if($("adminWeek"))$("adminWeek").textContent=data.active_7_days||0;
-      if($("adminMonth"))$("adminMonth").textContent=data.active_30_days||0;
-    }
-  }catch(err){}
-}
-
-async function loadAdminSupport(){
-  const container=$("adminSupportList");
-  if(!container)return;
-  try{
-    const {data}=await _supabase.from("support_messages").select("*").order("created_at",{ascending:false});
-    container.innerHTML=(data||[]).map(m=>`<div class="signal-card"><p><b>${esc(m.user_email||'Unbekannt')}</b>: ${esc(m.message)}</p></div>`).join("")||"<p class='muted'>Keine Anfragen.</p>";
-  }catch(err){container.innerHTML="<p class='muted'>Fehler.</p>";}
-}
-
+/* WIEDER STABIL: Läd alle Signale direkt ohne fehleranfällige Paginierung */
 async function loadCloudSignals(){
   if(!currentUser)return;
+  notify("Lade deine Signale...");
   try{
-    const {data,error}=await _supabase.from("signals").select("*").eq("user_id",currentUser.id);
+    const {data,error}=await _supabase
+      .from("signals")
+      .select("*")
+      .eq("user_id",currentUser.id);
+
     if(error)throw error;
     signals=data||[];
+
     syncCategories();
     renderList();
     nextLearn();
     updateExamAvailable();
-  }catch(err){notify("Fehler beim Laden der Signale.");}
+    notify("Erfolgreich "+signals.length+" Signale geladen!");
+  }catch(err){
+    notify("Fehler beim Laden der Signale.");
+  }
 }
 
-async function loadFriends(){
-  const container=$("friendRequestsList");
-  if(!container)return;
+function setImage(img,placeholder,src){
+  if(!img||!placeholder)return;
+  img.onerror=null;
+  if(src&&String(src).trim()!==""){
+    img.onload=()=>{ img.hidden=false; placeholder.hidden=true; };
+    img.onerror=()=>{ img.hidden=true; placeholder.hidden=false; placeholder.textContent="Bild nicht ladbar."; };
+    img.src=src;
+  }else{
+    img.removeAttribute("src");
+    img.hidden=true; placeholder.hidden=false;
+    placeholder.textContent="Kein Signalbild hinterlegt";
+  }
+}
+
+async function loadSignalImage(signal,img,placeholder){
+  if(!signal||!signal.id||!img||!placeholder||!currentUser)return;
+  const token=++imageLoadToken;
+  img.hidden=true; placeholder.hidden=false;
+  placeholder.textContent="Lade Bild...";
   try{
-    const {data}=await _supabase.from("friendships").select("*").or(`sender_email.eq.${currentUser.email.toLowerCase()},recipient_email.eq.${currentUser.email.toLowerCase()}`);
-    container.innerHTML=(data||[]).map(f=>{
-      const isSender=f.sender_email===currentUser.email.toLowerCase();
-      if(f.status==="pending"&&!isSender){
-        return `<div class="signal-card"><p>Anfrage von <b>${esc(f.sender_email)}</b></p><button type="button" class="good btn-accept-friend" data-id="${esc(f.id)}">Annehmen</button></div>`;
-      }
-      return `<div class="signal-card"><p>${esc(isSender?f.recipient_email:f.sender_email)} (${f.status==="accepted"?"Verbunden":"Ausstehend"})</p></div>`;
-    }).join("")||"<p class='muted'>Keine Freunde.</p>";
-  }catch(err){}
+    const {data,error}=await _supabase.from("signals").select("image").eq("id",signal.id).maybeSingle();
+    if(error)throw error;
+    if(token!==imageLoadToken)return;
+    signal.image=data?.image||"";
+    setImage(img,placeholder,signal.image);
+  }catch(err){
+    if(token===imageLoadToken){ placeholder.textContent="Bildfehler."; img.hidden=true; placeholder.hidden=false; }
+  }
 }
 
-async function loadStudyGroups(){
-  const container=$("myStudyGroupsList");
-  if(!container)return;
-  try{
-    const {data: mem}=await _supabase.from("study_group_members").select("group_id").eq("user_email",currentUser.email.toLowerCase());
-    const gIds=(mem||[]).map(m=>m.group_id);
-    const {data: groups}=await _supabase.from("study_groups").select("*").in("id",gIds.length?gIds:['null']);
-    container.innerHTML=(groups||[]).map(g=>`
-      <div class="signal-card">
-        <h3>${esc(g.name)}</h3>
-        <button type="button" class="primary btn-open-group" data-id="${esc(g.id)}" style="width:100%;margin-top:10px;">Öffnen</button>
-      </div>`).join("")||"<p class='muted'>Keine Lerngruppen.</p>";
-  }catch(err){}
-}
-
-async function loadCourses(){
-  const container=$("myCoursesList");
-  if(!container)return;
-  try{
-    const {data: mem}=await _supabase.from("course_members").select("course_id").eq("user_email",currentUser.email.toLowerCase());
-    const cIds=(mem||[]).map(m=>m.course_id);
-    const {data: courses}=await _supabase.from("courses").select("*").or(`trainer_email.eq.${currentUser.email.toLowerCase()},id.in.(${cIds.length?cIds.join(','):'null'})`);
-    container.innerHTML=(courses||[]).map(c=>`
-      <div class="signal-card">
-        <h3>${esc(c.name)}</h3>
-        <small class="muted">Trainer: ${esc(c.trainer_email)}</small>
-        <button type="button" class="primary btn-open-course" data-id="${esc(c.id)}" style="width:100%;margin-top:10px;">Öffnen</button>
-      </div>`).join("")||"<p class='muted'>Keine Kurse.</p>";
-  }catch(err){}
-}
-
-async function loadUserInbox(){
+async function saveSignal(){
   if(!currentUser)return;
-  const container=$("userInboxList");
-  try{
-    const {data}=await _supabase.from("support_messages").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false});
-    const unread=(data||[]).filter(m=>m.admin_reply&&!m.is_read).length;
-    $("inboxUnreadBadge").hidden=(unread===0);
-    $("inboxUnreadBadge").textContent=unread;
-    container.innerHTML=(data||[]).map(m=>`<div class="signal-card"><p>${esc(m.message)}</p>${m.admin_reply?`<div class="admin-reply-box">Antwort: ${esc(m.admin_reply)}</div>`:""}</div>`).join("")||"<p class='muted'>Keine Nachrichten.</p>";
-  }catch(err){}
+  const id=$("editId").value;
+  const short=$("shortName").value.trim();
+  const long=$("longName").value.trim();
+  const meaning=$("meaning").value.trim();
+  const category=$("category").value||"Sonstige";
+
+  if(!short||!long||!meaning)return notify("Bitte alle Felder ausfüllen.");
+  let imageValue=tempImageBase64||$("imageUrl").value.trim();
+  if(id&&!imageValue){
+    const existing=signals.find(s=>String(s.id)===String(id));
+    if(existing)imageValue=existing.image||"";
+  }
+
+  const payload={short,long,meaning,category,image:imageValue,user_id:currentUser.id};
+  if(id){
+    await _supabase.from("signals").update(payload).eq("id",id);
+    notify("Aktualisiert!");
+  }else{
+    await _supabase.from("signals").insert([payload]);
+    notify("Gespeichert!");
+  }
+  clearForm();
+  loadCloudSignals();
 }
 
-async function loadSharedSignals(){
-  try{
-    const {data}=await _supabase.from("shared_signals").select("*").eq("recipient_email",currentUser.email.toLowerCase()).eq("status","pending");
-    $("sharedBadge").hidden=!(data||[]).length;
-    $("sharedSignalsList").innerHTML=(data||[]).map(item=>`
-      <div class="signal-card">
-        <h3>${esc(item.signal_data.short)}</h3>
-        <button type="button" class="good btn-accept-shared" data-id="${esc(item.id)}">Übernehmen</button>
-      </div>`).join("")||"<p class='muted'>Keine geteilten Signale.</p>";
-  }catch(err){}
+async function deleteSignal(id){
+  if(!confirm("Signal löschen?"))return;
+  await _supabase.from("signals").delete().eq("id",id);
+  selectedSignalIds.delete(String(id));
+  loadCloudSignals();
+  notify("Gelöscht.");
 }
 
-/* LERN- & PRÜFUNGSLOGIK */
+function getVisibleSignals(){
+  const query=$("searchSignals").value.toLowerCase().trim();
+  return signals.filter(s=>{
+    return [s.short,s.long,s.meaning,s.category].join(" ").toLowerCase().includes(query);
+  });
+}
+
+function updateSelectionUI(){
+  const count=selectedSignalIds.size;
+  $("selectionCount").textContent=count+" Signale ausgewählt";
+  $("deleteSelected").disabled=count===0||bulkDeleteRunning;
+}
+
+function renderList(){
+  const container=$("signalList");
+  if(!container)return;
+  const list=getVisibleSignals();
+  $("signalCount").textContent=signals.length;
+  if(!list.length){
+    container.innerHTML="<p class='muted'>Keine Signale vorhanden.</p>";
+    updateSelectionUI();
+    return;
+  }
+  container.innerHTML=list.map(s=>{
+    const id=String(s.id);
+    const sel=selectedSignalIds.has(id);
+    return `
+      <div class="signal-card ${sel?"selected":""}" data-id="${esc(id)}">
+        <div class="signal-select-row">
+          <label><input type="checkbox" class="signal-checkbox" data-id="${esc(id)}" ${sel?"checked":""}> Auswählen</label>
+        </div>
+        <h3>${esc(s.short)} – ${esc(s.long)}</h3>
+        <small class="muted">Kategorie: <b>${esc(s.category||"Sonstige")}</b></small>
+        <p>${esc(s.meaning)}</p>
+        <div class="actions">
+          <button type="button" class="btn-edit" data-id="${esc(id)}">✏️ Bearbeiten</button>
+          <button type="button" class="danger btn-delete" data-id="${esc(id)}">🗑 Löschen</button>
+        </div>
+      </div>`;
+  }).join("");
+  updateSelectionUI();
+}
+
+function editSignal(id){
+  const s=signals.find(item=>String(item.id)===String(id));
+  if(!s)return;
+  $("editId").value=s.id;
+  $("shortName").value=s.short||"";
+  $("longName").value=s.long||"";
+  $("meaning").value=s.meaning||"";
+  $("category").value=s.category||"Lf";
+  $("imageUrl").value="";
+  tempImageBase64="";
+  $("formTitle").textContent="Signal bearbeiten";
+  $("saveSignal").textContent="Änderungen speichern";
+  showPage("manage");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function clearForm(){
+  $("editId").value=""; $("shortName").value=""; $("longName").value="";
+  $("meaning").value=""; $("imageUrl").value=""; $("category").value="Lf";
+  tempImageBase64="";
+  $("formTitle").textContent="Signal hinzufügen";
+  $("saveSignal").textContent="Signal speichern";
+}
+
 function clean(val){
-  return String(val??"").toLocaleLowerCase("de").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[\u2010-\u2015-]/g,"").replace(/[.,;:!?()[\]{}"'`„“”]/g," ").replace(/\s+/g," ").trim();
+  return String(val??"").toLocaleLowerCase("de")
+    .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss")
+    .replace(/[\u2010-\u2015-]/g,"").replace(/[.,;:!?()[\]{}"'`„“”]/g," ")
+    .replace(/\s+/g," ").trim();
 }
+
 function compareAnswer(user,correct){
   return clean(user)===clean(correct);
 }
+
 function evaluate(signal,short,long,meaning){
   return {
     short:{correct:compareAnswer(short,signal.short)},
@@ -993,10 +874,12 @@ function evaluate(signal,short,long,meaning){
     meaning:{correct:compareAnswer(meaning,signal.meaning)}
   };
 }
+
 function calculatePoints(res){
   if(!res.meaning.correct)return 0;
   return Number(res.short.correct)+Number(res.long.correct)+1;
 }
+
 function feedbackHTML(signal,res){
   const pts=calculatePoints(res);
   const all=(pts===3);
@@ -1011,12 +894,7 @@ function feedbackHTML(signal,res){
 }
 
 function getLearnSignals(){
-  const onlyWrong=$("onlyWrongFilter")?.checked;
-  return signals.filter(s=>{
-    if(!selectedLearnCategories.has(s.category||"Sonstige"))return false;
-    if(onlyWrong)return wrongSignalIds.has(String(s.id));
-    return true;
-  });
+  return signals.filter(s=>selectedLearnCategories.has(s.category||"Sonstige"));
 }
 
 function nextLearn(){
@@ -1024,13 +902,12 @@ function nextLearn(){
   updateLearnAvailable();
   if(!list.length){
     current=null;
-    $("learnImage").hidden=true;
-    $("learnNoImage").hidden=false;
-    $("learnNoImage").textContent=$("onlyWrongFilter")?.checked?"Keine falschen Signale vorhanden!":"Keine Signale.";
+    imageLoadToken++;
+    $("learnImage").hidden=true; $("learnNoImage").hidden=false;
+    $("learnNoImage").textContent="Keine Signale in den gewählten Gruppen.";
     $("learnCounter").textContent="Keine Frage";
-    $("learnFeedback").hidden=true;
-    $("nextLearn").hidden=true;
-    $("checkLearn").disabled=true;
+    $("learnFeedback").hidden=true; $("nextLearn").hidden=true;
+    $("checkLearn").disabled=true; $("skipLearn").disabled=true;
     return;
   }
   current=list[Math.floor(Math.random()*list.length)];
@@ -1038,25 +915,21 @@ function nextLearn(){
   learnDone=false;
   $("learnCounter").textContent="Frage "+learnNumber;
   $("learnProgress").style.width=((learnNumber%10)*10||10)+"%";
-  setImage($("learnImage"),$("learnNoImage"),current.image);
+  loadSignalImage(current,$("learnImage"),$("learnNoImage"));
   $("learnShort").value=""; $("learnLong").value=""; $("learnMeaning").value="";
   $("learnFeedback").hidden=true; $("nextLearn").hidden=true;
-  $("checkLearn").disabled=false;
+  $("checkLearn").disabled=false; $("skipLearn").disabled=false;
 }
 
 function checkLearn(){
   if(!current||learnDone)return;
   const res=evaluate(current,$("learnShort").value,$("learnLong").value,$("learnMeaning").value);
-  const pts=calculatePoints(res);
   learnDone=true;
-  if(pts<3)wrongSignalIds.add(String(current.id));
-  else wrongSignalIds.delete(String(current.id));
-  saveLocalProgress();
   $("learnFeedback").innerHTML=feedbackHTML(current,res);
   $("learnFeedback").hidden=false;
-  $("checkLearn").disabled=true;
+  $("checkLearn").disabled=true; $("skipLearn").disabled=true;
   $("nextLearn").hidden=false;
-  stats.answered++; stats.points+=pts;
+  stats.answered++; stats.points+=calculatePoints(res);
   renderStats();
 }
 
@@ -1066,7 +939,7 @@ function startExam(){
   const req=Number($("examLength").value)||10;
   examList=shuffle(available).slice(0,Math.min(req,available.length));
   examIndex=0; examPoints=0; examAnswered=false;
-  $("examConfig").hidden=true; $("examArea").hidden=false;
+  $("examConfig").hidden=true; $("examArea").hidden=false; $("examResult").hidden=true;
   showExamQuestion();
 }
 
@@ -1076,7 +949,7 @@ function showExamQuestion(){
   examAnswered=false;
   $("examCounter").textContent="Frage "+(examIndex+1)+" von "+examList.length;
   $("examProgress").style.width=((examIndex)/examList.length*100)+"%";
-  setImage($("examImage"),$("examNoImage"),signal.image);
+  loadSignalImage(signal,$("examImage"),$("examNoImage"));
   $("examShort").value=""; $("examLong").value=""; $("examMeaning").value="";
   $("examFeedback").hidden=true; $("examNext").hidden=true;
   $("submitExam").hidden=false; $("submitExam").disabled=false;
@@ -1087,11 +960,8 @@ function submitExamAnswer(){
   const signal=examList[examIndex];
   const res=evaluate(signal,$("examShort").value,$("examLong").value,$("examMeaning").value);
   const pts=calculatePoints(res);
-  if(pts<3)wrongSignalIds.add(String(signal.id));
-  else wrongSignalIds.delete(String(signal.id));
   examPoints+=pts; examAnswered=true;
   stats.answered++; stats.points+=pts;
-  saveLocalProgress();
   $("examFeedback").innerHTML=feedbackHTML(signal,res);
   $("examFeedback").hidden=false;
   $("submitExam").disabled=true; $("submitExam").hidden=true;
@@ -1105,27 +975,14 @@ function finishExam(){
   const pct=maxPts?Math.round(examPoints/maxPts*100):0;
   stats.exams++;
   stats.lastExam={points:examPoints,maxPoints:maxPts,percent:pct};
-  saveLocalProgress();
-  $("examArea").hidden=true;
-  $("examResult").hidden=false;
+  $("examArea").hidden=true; $("examConfig").hidden=true; $("examResult").hidden=false;
   $("examResult").innerHTML=`
-    <h2>Prüfung beendet!</h2>
+    <h2>Prüfung abgeschlossen!</h2>
     <h1 class="${pct>=80?"correct":"incorrect"}" style="font-size:32px;">${pct} %</h1>
     <h3>${examPoints} von ${maxPts} Punkten</h3>
     <button type="button" class="primary" id="restartExam" style="width:100%;margin-top:12px;">Neue Prüfung</button>`;
-  $("restartExam").addEventListener("click",()=>{
-    $("examResult").hidden=true; $("examConfig").hidden=false; updateExamAvailable();
-  });
+  $("restartExam").addEventListener("click",()=>{$("examResult").hidden=true; $("examConfig").hidden=false;});
   renderStats();
-}
-
-function setImage(img,placeholder,src){
-  if(!img||!placeholder)return;
-  if(src&&String(src).trim()!==""){
-    img.src=src; img.hidden=false; placeholder.hidden=true;
-  }else{
-    img.hidden=true; placeholder.hidden=false;
-  }
 }
 
 function renderStats(){
@@ -1133,310 +990,100 @@ function renderStats(){
   $("statPoints").textContent=stats.points||0;
   $("statRate").textContent=stats.answered?Math.round((stats.points/(stats.answered*3))*100)+" %":"0 %";
   $("statExams").textContent=stats.exams||0;
-  if($("wrongCount"))$("wrongCount").textContent=wrongSignalIds.size;
   if(stats.lastExam){
-    $("lastExamResult").innerHTML=`Punkte: ${stats.lastExam.points}/${stats.lastExam.maxPoints} (${stats.lastExam.percent} %)`;
+    $("lastExamResult").textContent=stats.lastExam.points+" von "+stats.lastExam.maxPoints+" ("+stats.lastExam.percent+" %)";
   }
 }
 
-/* EXPORT & SICHERER IMPORT */
 async function exportData(){
-  if(exportRunning||!signals.length)return notify("Keine Signale zum Exportieren.");
-  exportRunning=true;
-  try{
-    const blob=new Blob([JSON.stringify({version:12,signals},null,2)],{type:"application/json"});
-    const url=URL.createObjectURL(blob);
-    const anchor=document.createElement("a");
-    anchor.href=url; anchor.download="signale_backup_"+new Date().toISOString().slice(0,10)+".json";
-    document.body.appendChild(anchor); anchor.click(); anchor.remove();
-    notify("Export erfolgreich!");
-  }catch(err){notify("Export fehlgeschlagen.");}
-  finally{exportRunning=false;}
+  if(!signals.length)return notify("Keine Signale zum Exportieren.");
+  const blob=new Blob([JSON.stringify({version:6,signals},null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download="signale_backup.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  notify("Export erfolgreich!");
 }
 
-async function handleImportFile(file){
+function handleImportFile(file){
   if(!file||!currentUser)return;
   const reader=new FileReader();
   reader.onload=async e=>{
     try{
       const parsed=JSON.parse(e.target.result);
-      const raw=Array.isArray(parsed)?parsed:(parsed.signals||[]);
-      if(!raw.length){
-        alert("Die Datei enthält keine Signale.");
-        return;
-      }
-      if(!confirm(raw.length+" Signale gefunden. Jetzt importieren?"))return;
-
+      const raw=extractSignals(parsed);
+      if(!raw.length)return notify("Keine Signale in Datei gefunden.");
       let count=0;
       for(let s of raw){
-        const {error}=await _supabase.from("signals").insert([{
-          short:String(s.short||""), 
-          long:String(s.long||""), 
-          meaning:String(s.meaning||""),
-          category:String(s.category||"Sonstige"), 
-          image:String(s.image||""), 
-          user_id:currentUser.id
-        }]);
+        const payload={
+          short:String(s.short||""), long:String(s.long||""),
+          meaning:String(s.meaning||""), category:String(s.category||"Sonstige"),
+          image:s.image||"", user_id:currentUser.id
+        };
+        const {error}=await _supabase.from("signals").insert([payload]);
         if(!error)count++;
       }
       loadCloudSignals();
-      alert(count+" von "+raw.length+" Signalen erfolgreich importiert!");
-    }catch(err){
-      alert("Fehler beim Verarbeiten der JSON-Datei.");
-    }
+      alert(count+" Signale importiert!");
+    }catch(err){ alert("Import-Fehler."); }
   };
   reader.readAsText(file);
 }
 
-function renderList(){
-  const container=$("signalList");
-  if(!container)return;
-  const query=$("searchSignals")?.value.toLowerCase().trim()||"";
-  const list=signals.filter(s=>[s.short,s.long,s.meaning,s.category].join(" ").toLowerCase().includes(query));
-  $("signalCount").textContent=signals.length;
-
-  container.innerHTML=list.map(s=>{
-    const id=String(s.id);
-    const sel=selectedSignalIds.has(id);
-    return `
-      <div class="signal-card ${sel?"selected":""}" data-id="${esc(id)}">
-        <div class="signal-select-row">
-          <label><input type="checkbox" class="signal-checkbox" data-id="${esc(id)}" ${sel?"checked":""}> Auswählen</label>
-        </div>
-        <h3>${esc(s.short)} – ${esc(s.long)}</h3>
-        <small class="muted">Kategorie: ${esc(s.category||"Sonstige")}</small>
-        <p>${esc(s.meaning)}</p>
-        <div class="actions">
-          <button type="button" class="btn-edit" data-id="${esc(id)}">Bearbeiten</button>
-          <button type="button" class="primary btn-share" data-id="${esc(id)}">Teilen</button>
-          <button type="button" class="danger btn-del" data-id="${esc(id)}">Löschen</button>
-        </div>
-      </div>`;
-  }).join("")||"<p class='muted'>Keine Signale gefunden.</p>";
-  updateSelectionUI();
-}
-
-function updateSelectionUI(){
-  const count=selectedSignalIds.size;
-  $("selectionCount").textContent=count+" ausgewählt";
-  $("deleteSelected").disabled=count===0;
-  $("shareSelected").disabled=count===0;
-}
-
 function showPage(page){
-  ["learn","exam","stats","manage","tutorial","support","inbox","shared","friends","studyGroups","groupDetail","courses","courseDetail"].forEach(id=>{
-    const v=(id===page);
+  ["learn","exam","stats","manage"].forEach(id=>{
+    const v=id===page;
     const el=$(id);
     if(el){el.hidden=!v; el.style.display=v?"block":"none";}
   });
-  document.querySelectorAll("#mainNav button, .sidebar-link").forEach(btn=>{
+  document.querySelectorAll("#mainNav button").forEach(btn=>{
     btn.classList.toggle("active",btn.dataset.page===page);
   });
   if(page==="stats")renderStats();
-  if(page==="friends")loadFriends();
-  if(page==="studyGroups")loadStudyGroups();
-  if(page==="courses")loadCourses();
+  if(page==="manage")renderList();
   window.scrollTo(0,0);
 }
 
 function initEvents(){
-  $("showRegisterBtn")?.addEventListener("click",()=>{$("loginView").hidden=true; $("registerView").hidden=false;});
-  $("backToLoginFromReg")?.addEventListener("click",()=>{$("registerView").hidden=true; $("loginView").hidden=false;});
-
-  $("loginBtn")?.addEventListener("click", async()=>{
-    const email=$("loginEmail").value.trim();
-    const password=$("loginPassword").value.trim();
-    if(!email||!password)return notify("Bitte E-Mail und Passwort eingeben.");
-    const {data,error}=await _supabase.auth.signInWithPassword({email,password});
-    if(error)return notify("Login fehlgeschlagen.");
-    currentUser=data.user;
-    initUserSession();
-    notify("Angemeldet!");
-  });
-
-  $("registerBtn")?.addEventListener("click", async()=>{
-    const email=$("regEmail").value.trim();
-    const password=$("regPassword").value.trim();
-    if(!email||!password)return notify("Bitte E-Mail und Passwort ausfüllen.");
-    const {error}=await _supabase.auth.signUp({email,password});
-    if(error)return notify("Registrierung fehlgeschlagen.");
-    notify("Konto erstellt! Bitte einloggen.");
-    $("registerView").hidden=true; $("loginView").hidden=false;
-  });
-
-  $("logoutBtn")?.addEventListener("click", async()=>{
-    await _supabase.auth.signOut();
-    currentUser=null; signals=[];
-    $("appMain").hidden=true; $("mainNav").hidden=true; $("menuBtn").hidden=true;
-    $("logoutBtn").style.display="none"; $("authPanel").hidden=false;
-    notify("Abgemeldet.");
-  });
-
-  $("menuBtn")?.addEventListener("click",()=>{$("sidebar").classList.add("open");$("sidebarBackdrop").hidden=false;});
-  $("closeSidebar")?.addEventListener("click",()=>{$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;});
-  $("sidebarBackdrop")?.addEventListener("click",()=>{$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;});
-
-  $("sidebar")?.addEventListener("click",e=>{
-    const btn=e.target.closest(".sidebar-link[data-page]");
-    if(btn){$("sidebar").classList.remove("open");$("sidebarBackdrop").hidden=true;showPage(btn.dataset.page);}
-  });
-
-  $("mainNav")?.addEventListener("click",e=>{
+  $("loginBtn").addEventListener("click",handleLogin);
+  $("signUpBtn").addEventListener("click",handleSignUp);
+  $("logoutBtn").addEventListener("click",handleLogout);
+  $("mainNav").addEventListener("click",e=>{
     const btn=e.target.closest("button[data-page]");
     if(btn)showPage(btn.dataset.page);
   });
-
-  $("checkLearn")?.addEventListener("click",checkLearn);
-  $("nextLearn")?.addEventListener("click",nextLearn);
-  $("skipLearn")?.addEventListener("click",nextLearn);
-  $("onlyWrongFilter")?.addEventListener("change",nextLearn);
-
-  $("startExam")?.addEventListener("click",startExam);
-  $("submitExam")?.addEventListener("click",submitExamAnswer);
-  $("examNext")?.addEventListener("click",showExamQuestion);
-
-  $("saveSignal")?.addEventListener("click", async()=>{
-    const id=$("editId").value;
-    const short=$("shortName").value.trim();
-    const long=$("longName").value.trim();
-    const meaning=$("meaning").value.trim();
-    const category=$("category").value||"Lf";
-    const image=$("imageUrl").value.trim();
-    if(!short||!long||!meaning)return notify("Bitte alle Felder ausfüllen.");
-    const payload={short,long,meaning,category,image,user_id:currentUser.id};
-    if(id)await _supabase.from("signals").update(payload).eq("id",id);
-    else await _supabase.from("signals").insert([payload]);
-    $("editId").value=""; $("shortName").value=""; $("longName").value=""; $("meaning").value=""; $("imageUrl").value="";
-    loadCloudSignals();
-    notify("Signal gespeichert!");
-  });
-
-  $("clearForm")?.addEventListener("click",()=>{
-    $("editId").value=""; $("shortName").value=""; $("longName").value=""; $("meaning").value=""; $("imageUrl").value="";
-  });
-
-  $("searchSignals")?.addEventListener("input",renderList);
-  $("exportData")?.addEventListener("click",exportData);
-  $("importButton")?.addEventListener("click",()=>$("importFile").click());
-  $("importFile")?.addEventListener("change",function(){handleImportFile(this.files[0]);this.value="";});
-
-  $("resetStats")?.addEventListener("click",()=>{
-    if(!confirm("Statistik zurücksetzen?"))return;
-    stats={answered:0,points:0,exams:0,lastExam:null};
-    wrongSignalIds.clear();
-    saveLocalProgress();
-    renderStats();
-    notify("Zurückgesetzt.");
-  });
-
-  $("learnSelectAll")?.addEventListener("click",()=>{
-    const cats=getAllCategories();
-    if(selectedLearnCategories.size===cats.size)selectedLearnCategories.clear();
-    else cats.forEach(c=>selectedLearnCategories.add(c));
-    renderCategoryChoices();
-    nextLearn();
-  });
-  $("learnToggleCategories")?.addEventListener("click",()=>{
-    learnCategoriesOpen=!learnCategoriesOpen;
-    applyCategoryPickerVisibility();
-  });
-  $("learnCategoryChoices")?.addEventListener("change",e=>{
-    const cb=e.target.closest("input[data-category]");
-    if(cb){
-      if(cb.checked)selectedLearnCategories.add(cb.dataset.category);
-      else selectedLearnCategories.delete(cb.dataset.category);
-      renderCategoryChoices();
-      nextLearn();
-    }
-  });
-
-  $("examSelectAll")?.addEventListener("click",()=>{
-    const cats=getAllCategories();
-    if(selectedExamCategories.size===cats.size)selectedExamCategories.clear();
-    else cats.forEach(c=>selectedExamCategories.add(c));
-    renderCategoryChoices();
-    updateExamAvailable();
-  });
-  $("examToggleCategories")?.addEventListener("click",()=>{
-    examCategoriesOpen=!examCategoriesOpen;
-    applyCategoryPickerVisibility();
-  });
-  $("examCategoryChoices")?.addEventListener("change",e=>{
-    const cb=e.target.closest("input[data-category]");
-    if(cb){
-      if(cb.checked)selectedExamCategories.add(cb.dataset.category);
-      else selectedExamCategories.delete(cb.dataset.category);
-      renderCategoryChoices();
-      updateExamAvailable();
-    }
-  });
-
-  document.addEventListener("click", async e=>{
-    const accept=e.target.closest(".btn-accept-trainer");
-    const del=e.target.closest(".btn-del");
+  $("learnCategoryChoices").addEventListener("change",e=>handleCategoryChange(e,"learn"));
+  $("examCategoryChoices").addEventListener("change",e=>handleCategoryChange(e,"exam"));
+  $("learnSelectAll").addEventListener("click",()=>toggleAllCategories("learn"));
+  $("examSelectAll").addEventListener("click",()=>toggleAllCategories("exam"));
+  $("learnToggleCategories").addEventListener("click",()=>toggleCategoryPicker("learn"));
+  $("examToggleCategories").addEventListener("click",()=>toggleCategoryPicker("exam"));
+  $("checkLearn").addEventListener("click",checkLearn);
+  $("nextLearn").addEventListener("click",nextLearn);
+  $("skipLearn").addEventListener("click",skipLearn);
+  $("startExam").addEventListener("click",startExam);
+  $("submitExam").addEventListener("click",submitExamAnswer);
+  $("examNext").addEventListener("click",()=>nextExamQuestion());
+  $("resetStats").addEventListener("click",()=>{stats={answered:0,points:0,exams:0,lastExam:null};renderStats();notify("Zurückgesetzt.");});
+  $("saveSignal").addEventListener("click",saveSignal);
+  $("clearForm").addEventListener("click",clearForm);
+  $("searchSignals").addEventListener("input",renderList);
+  $("signalList").addEventListener("click",e=>{
     const edit=e.target.closest(".btn-edit");
-    const share=e.target.closest(".btn-share");
-    const acceptFr=e.target.closest(".btn-accept-friend");
-    const acceptSh=e.target.closest(".btn-accept-shared");
-
-    if(accept){
-      await _supabase.from("user_profiles").update({is_trainer:true, trainer_requested:false}).eq("id",accept.dataset.id);
-      notify("Trainer bestätigt!");
-      loadAdminTrainerRequests();
-    }
-    if(del){
-      if(!confirm("Signal löschen?"))return;
-      await _supabase.from("signals").delete().eq("id",del.dataset.id);
-      selectedSignalIds.delete(String(del.dataset.id));
-      loadCloudSignals();
-      notify("Gelöscht.");
-    }
-    if(edit){
-      const s=signals.find(item=>String(item.id)===String(edit.dataset.id));
-      if(s){
-        $("editId").value=s.id;
-        $("shortName").value=s.short||"";
-        $("longName").value=s.long||"";
-        $("meaning").value=s.meaning||"";
-        $("category").value=s.category||"Lf";
-        $("imageUrl").value=s.image||"";
-        window.scrollTo({top:0,behavior:"smooth"});
-      }
-    }
-    if(share){
-      const s=signals.find(item=>String(item.id)===String(share.dataset.id));
-      const recipient=prompt("E-Mail des Empfängers:");
-      if(recipient&&s){
-        await _supabase.from("shared_signals").insert([{sender_email:currentUser.email, recipient_email:recipient.trim().toLowerCase(), signal_data:s}]);
-        notify("Signal geteilt!");
-      }
-    }
-    if(acceptFr){
-      await _supabase.from("friendships").update({status:"accepted"}).eq("id",acceptFr.dataset.id);
-      loadFriends();
-      notify("Angenommen!");
-    }
-    if(acceptSh){
-      await _supabase.from("shared_signals").update({status:"accepted"}).eq("id",acceptSh.dataset.id);
-      loadSharedSignals();
-      loadCloudSignals();
-      notify("Signal übernommen!");
-    }
+    const del=e.target.closest(".btn-delete");
+    if(edit)editSignal(edit.dataset.id);
+    if(del)deleteSignal(del.dataset.id);
   });
-
-  $("sendSupportBtn")?.addEventListener("click", async()=>{
-    const message=$("supportMessage").value.trim();
-    if(!message)return notify("Bitte Nachricht eingeben.");
-    await _supabase.from("support_messages").insert([{user_id:currentUser.id, user_email:currentUser.email, message}]);
-    $("supportMessage").value="";
-    notify("Support-Anfrage gesendet!");
-  });
+  $("exportData").addEventListener("click",exportData);
+  $("importButton").addEventListener("click",()=>$("importFile").click());
+  $("importFile").addEventListener("change",function(){handleImportFile(this.files[0]);this.value="";});
 }
 
 function init(){
   initEvents();
   renderCategoryChoices();
   renderCategorySelect();
+  applyCategoryPickerVisibility();
   checkSession();
 }
 
