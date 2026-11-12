@@ -102,6 +102,25 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 }
 .solution h3 {color:#d9fff0;margin-top:0}
 .solution p {margin:8px 0}
+.solution-value {white-space:pre-wrap;word-break:break-word;color:#fff;font-weight:600}
+.missing {color:#ffbd70;font-weight:700}
+.spelling-note {
+  background:#29202a;border:1px solid #75404a;
+  border-radius:10px;padding:11px;margin:10px 0;
+  font-size:13px;line-height:1.6;
+}
+.spelling-note strong {display:block;margin-bottom:5px}
+.spelling-error {
+  color:#fff;background:#853542;border:1px solid #ff6474;
+  border-radius:4px;padding:1px 4px;font-weight:700;
+}
+.spelling-correction {color:#38c98b;font-weight:700}
+.spelling-arrow {color:#aab8c8;padding:0 5px}
+.language-note {
+  background:#202b38;border:1px solid #52657a;
+  border-radius:10px;padding:11px;margin:10px 0;
+  font-size:13px;line-height:1.6;
+}
 .progress {
   height:8px;background:#101722;border-radius:10px;
   overflow:hidden;margin:10px 0;
@@ -488,7 +507,7 @@ function notify(message){
   const el=$("notice");
   if(!el)return;
   el.textContent=message;
-  setTimeout(()=>{if(el.textContent===message)el.textContent="";},5000);
+  setTimeout(()=>{if(el.textContent===message)el.textContent="";},6000);
 }
 
 function esc(value){
@@ -701,7 +720,7 @@ function initUserSession(){
   loadCloudSignals();
 }
 
-/* WIEDER STABIL: Läd alle Signale direkt ohne fehleranfällige Paginierung */
+/* ROBUUSTES LADEN MIT DETAILLIERTER FEHLERMELDUNG */
 async function loadCloudSignals(){
   if(!currentUser)return;
   notify("Lade deine Signale...");
@@ -720,7 +739,8 @@ async function loadCloudSignals(){
     updateExamAvailable();
     notify("Erfolgreich "+signals.length+" Signale geladen!");
   }catch(err){
-    notify("Fehler beim Laden der Signale.");
+    console.error("Ladefehler:", err);
+    notify("Fehler beim Laden: " + (err.message || JSON.stringify(err)));
   }
 }
 
@@ -856,22 +876,87 @@ function clearForm(){
   $("saveSignal").textContent="Signal speichern";
 }
 
-function clean(val){
-  return String(val??"").toLocaleLowerCase("de")
-    .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss")
-    .replace(/[\u2010-\u2015-]/g,"").replace(/[.,;:!?()[\]{}"'`„“”]/g," ")
+/* INTELLIGENTE SCHREIBFEHLER-TOLERANZ */
+function clean(value){
+  return String(value??"").toLocaleLowerCase("de")
+    .replace(/ä/g,"ae").replace(/ö/g,"oe")
+    .replace(/ü/g,"ue").replace(/ß/g,"ss")
+    .replace(/[\u2010-\u2015-]/g,"")
+    .replace(/[.,;:!?()[\]{}"'`„“”]/g," ")
     .replace(/\s+/g," ").trim();
 }
 
+function editDistance(a,b){
+  a=String(a); b=String(b);
+  const dp=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
+  for(let i=0;i<=a.length;i++)dp[i][0]=i;
+  for(let j=0;j<=b.length;j++)dp[0][j]=j;
+  for(let i=1;i<=a.length;i++){
+    for(let j=1;j<=b.length;j++){
+      const cost=a[i-1]===b[j-1]?0:1;
+      dp[i][j]=Math.min(dp[i-1][j]+1,dp[i][j-1]+1,dp[i-1][j-1]+cost);
+    }
+  }
+  return dp[a.length][b.length];
+}
+
+function tokenizeAnswer(value){
+  const original=String(value??"").trim().replace(/[\u2010-\u2015-]/g,"").split(/\s+/).filter(Boolean);
+  return original.map(word=>({original:word,normalized:clean(word)})).filter(token=>token.normalized);
+}
+
+const OPTIONAL_WORDS=new Set(["der","die","das","den","dem","des","ein","eine","einer","einem","einen","eines","ist","sind","wird","werden","am","im","zum","zur"]);
+
 function compareAnswer(user,correct){
-  return clean(user)===clean(correct);
+  const userText=String(user??"");
+  const correctText=String(correct??"");
+  const userTokens=tokenizeAnswer(userText);
+  const correctTokens=tokenizeAnswer(correctText);
+  const result={correct:false,spelling:false,language:false,user:userText,corrected:correctText,mistakes:[],adjustments:[]};
+  if(clean(userText)===clean(correctText)){
+    result.correct=true;
+    return result;
+  }
+  if(!userTokens.length||!correctTokens.length)return result;
+  let i=0, j=0, typoCount=0;
+  const maxTypos=Math.max(1,Math.floor(correctTokens.length/8));
+  const mistakes=[], adjustments=[];
+  while(i<userTokens.length||j<correctTokens.length){
+    if(i>=userTokens.length){
+      if(OPTIONAL_WORDS.has(correctTokens[j].normalized)){ adjustments.push({type:"missing",word:correctTokens[j].original}); j++; continue; }
+      return result;
+    }
+    if(j>=correctTokens.length){
+      if(OPTIONAL_WORDS.has(userTokens[i].normalized)){ adjustments.push({type:"extra",word:userTokens[i].original}); i++; continue; }
+      return result;
+    }
+    const userWord=userTokens[i].normalized;
+    const correctWord=correctTokens[j].normalized;
+    if(userWord===correctWord){ i++; j++; continue; }
+    if(OPTIONAL_WORDS.has(correctWord)){ adjustments.push({type:"missing",word:correctTokens[j].original}); j++; continue; }
+    if(OPTIONAL_WORDS.has(userWord)){ adjustments.push({type:"extra",word:userTokens[i].original}); i++; continue; }
+    if(userWord.length>=4&&correctWord.length>=4){
+      const distance=editDistance(userWord,correctWord);
+      if(distance>=1&&distance<=(correctWord.length>=8?2:1)&&typoCount<maxTypos){
+        mistakes.push({index:i,user:userTokens[i].original,correct:correctTokens[j].original});
+        typoCount++; i++; j++; continue;
+      }
+    }
+    return result;
+  }
+  result.correct=true;
+  result.spelling=mistakes.length>0;
+  result.language=adjustments.length>0;
+  result.mistakes=mistakes;
+  result.adjustments=adjustments;
+  return result;
 }
 
 function evaluate(signal,short,long,meaning){
   return {
-    short:{correct:compareAnswer(short,signal.short)},
-    long:{correct:compareAnswer(long,signal.long)},
-    meaning:{correct:compareAnswer(meaning,signal.meaning)}
+    short:compareAnswer(short,signal.short),
+    long:compareAnswer(long,signal.long),
+    meaning:compareAnswer(meaning,signal.meaning)
   };
 }
 
