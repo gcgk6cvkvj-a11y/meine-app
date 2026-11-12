@@ -439,6 +439,14 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
       <button type="button" id="exportData">Daten exportieren</button>
       <button type="button" id="importButton">Daten importieren</button>
     </div>
+    <!-- Fortschrittsbalken für den Export -->
+    <div id="exportProgressContainer" style="margin-top:12px;" hidden>
+      <div class="row" style="margin-bottom:4px;font-size:12px;">
+        <span id="exportProgressText" class="muted">Export läuft...</span>
+        <span id="exportProgressPercent" style="text-align:right;" class="muted">0%</span>
+      </div>
+      <div class="progress"><span id="exportProgressBar" style="width:0%;"></span></div>
+    </div>
     <input type="file" id="importFile" accept=".json,application/json" hidden>
   </div>
 </section>
@@ -501,6 +509,7 @@ let tempImageBase64="";
 let imageLoadToken=0;
 let selectedSignalIds=new Set();
 let bulkDeleteRunning=false;
+let exportRunning=false; // Sperre gegen mehrfachen Export
 
 let selectedLearnCategories=new Set(BASE_CATEGORIES);
 let selectedExamCategories=new Set(BASE_CATEGORIES);
@@ -1940,22 +1949,38 @@ function handleImageInput(file){
   reader.readAsDataURL(file);
 }
 
-/* EXPORT – INKLUSIVE ALLER BILDER */
+/* EXPORT – MIT SPERRE UND LIVE-FORTSCHRITTSBALKEN */
 
 async function exportData(){
+  if(exportRunning)return; // Verhindert parallele Exports bei mehrfachem Klick
   if(!signals.length){
     return notify("Keine Signale zum Exportieren vorhanden.");
   }
 
-  notify("Bereite Export vor (lade Bilder)...");
+  exportRunning=true;
+  const exportBtn=$("exportData");
+  exportBtn.disabled=true;
+  exportBtn.textContent="Export läuft...";
+
+  const progressContainer=$("exportProgressContainer");
+  const progressBar=$("exportProgressBar");
+  const progressText=$("exportProgressText");
+  const progressPercent=$("exportProgressPercent");
+
+  progressContainer.hidden=false;
+  progressBar.style.width="0%";
+  progressPercent.textContent="0%";
+  progressText.textContent="Lade Bilder für Export...";
 
   try{
     const exportSignals=[];
+    const total=signals.length;
 
-    for(let i=0;i<signals.length;i++){
+    for(let i=0;i<total;i++){
       const s=signals[i];
       let image=s.image||"";
 
+      // Falls das Bild fehlt, direkt aus Supabase nachladen
       if(!image&&s.id&&currentUser){
         const {data,error}=await _supabase
           .from("signals")
@@ -1977,13 +2002,20 @@ async function exportData(){
         image:image
       });
 
-      if((i+1)%10===0||i===signals.length-1){
-        notify(`Export-Fortschritt: ${i+1} / ${signals.length} vorbereitet...`);
+      const percent=Math.round(((i+1)/total)*100);
+      progressBar.style.width=percent+"%";
+      progressPercent.textContent=percent+"%";
+      progressText.textContent=`Vorbereitet: ${i+1} von ${total} Signalen`;
+
+      // Kleiner Yield an den Browser, damit die UI flüssig bleibt
+      if(i%5===0){
+        await new Promise(r=>setTimeout(r,10));
       }
     }
 
+    progressText.textContent="Erstelle Backup-Datei...";
     const backup={
-      version:6,
+      version:7,
       signals:exportSignals
     };
 
@@ -2005,11 +2037,18 @@ async function exportData(){
 
     setTimeout(()=>URL.revokeObjectURL(url),10000);
 
-    notify("Export mit allen Bildern erfolgreich gestartet!");
+    notify("Export erfolgreich abgeschlossen!");
 
   }catch(err){
     console.error(err);
     notify("Export fehlgeschlagen: "+err.message);
+  }finally{
+    exportRunning=false;
+    exportBtn.disabled=false;
+    exportBtn.textContent="Daten exportieren";
+    setTimeout(()=>{
+      progressContainer.hidden=true;
+    },3000);
   }
 }
 
