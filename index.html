@@ -484,7 +484,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <section id="friends" class="page" hidden>
   <div class="panel">
     <h2>👥 Freunde & Kontakte</h2>
-    <p class="muted">Füge Kollegen per E-Mail hinzu, um Lerngruppen zu gründen oder Signale zu teilen.</p>
+    <p class="muted">Füge Kollegen per E-Mail hinzu (inkl. automatischer Vorschläge), um Lerngruppen zu gründen oder Signale zu teilen.</p>
 
     <label for="friendEmail">E-Mail-Adresse des Kollegen</label>
     <input type="email" id="friendEmail" list="userAutocompleteList" placeholder="kollege@email.de" autocomplete="off">
@@ -500,7 +500,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <section id="studyGroups" class="page" hidden>
   <div class="panel">
     <h2>👥 Lerngruppen</h2>
-    <p class="muted">Lerne gemeinsam mit Kollegen abseits deines privaten Bereichs.</p>
+    <p class="muted">Lerne gemeinsam mit Kollegen in Lerngruppen abseits deines privaten Bereichs.</p>
 
     <div class="actions">
       <button type="button" class="primary" id="showCreateGroupBtn">+ Neue Lerngruppe erstellen</button>
@@ -545,7 +545,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <section id="courses" class="page" hidden>
   <div class="panel">
     <h2>🎓 Kurse & Schulungen</h2>
-    <p class="muted">Nimm an Kursen teil oder erstelle als Trainer Schulungen für deine Schüler.</p>
+    <p class="muted">Nimm als Schüler an Kursen teil oder erstelle als freigeschalteter Trainer Schulungen für deine Teilnehmer.</p>
 
     <div id="trainerActionBox" style="margin-bottom:14px;" hidden>
       <button type="button" class="primary" id="createCourseBtn">+ Neuen Kurs erstellen</button>
@@ -589,13 +589,41 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   </div>
 </section>
 
-<!-- TUTORIAL -->
+<!-- TUTORIAL (VOLLSTÄNDIG AKTUALISIERT) -->
 <section id="tutorial" class="page" hidden>
   <div class="panel">
-    <h2>📖 Tutorial – Alle Funktionen</h2>
+    <h2>📖 Vollständiges App-Tutorial</h2>
+    <p class="muted">Hier findest du Erklärungen zu allen Funktionen der Plattform:</p>
+
     <div class="tutorial-step">
-      <h3>1. 👥 Freunde, Lerngruppen & Kurse</h3>
-      <p>Füge Freunde hinzu, gründe Lerngruppen mit individuellen Berechtigungen (wer darf löschen/bearbeiten) oder nimm an Kursen teil. Trainer können nach Freigabe Schulungen und Hausaufgaben erstellen.</p>
+      <h3>1. 📚 Lern- & Prüfungsmodus</h3>
+      <p>Trainiere deine Signale nach Gruppen. Das System erkennt Tippfehler automatisch und wertet falsche Bedeutungen in der Prüfung als Betriebsgefahr (0 Punkte). Falsche Antworten landen automatisch im Fehler-Training.</p>
+    </div>
+
+    <div class="tutorial-step">
+      <h3>2. 👥 Freunde & Auto-Vervollständigung</h3>
+      <p>Füge Kollegen über die E-Mail-Suche hinzu. Sobald du anfängst, eine E-Mail einzutippen, werden dir registrierte Nutzer automatisch vorgeschlagen.</p>
+    </div>
+
+    <div class="tutorial-step">
+      <h3>3. 👥 Lerngruppen (Mit Berechtigungen)</h3>
+      <p>Jeder User kann eine Lerngruppe gründen und Freunde einladen. Der Ersteller kann feine Berechtigungen verwalten: Wer darf in der Gruppe Signale hinzufügen, wer darf sie bearbeiten und wer darf sie löschen?</p>
+    </div>
+
+    <div class="tutorial-step">
+      <h3>4. 🎓 Kurse & Trainer-System</h3>
+      <p>Normale User können über das Menü den <b>Trainer-Status beantragen</b>. Nach Bestätigung durch den Admin kannst du als Trainer eigene Kurse eröffnen. Trainer können:</p>
+      <ul style="margin:6px 0;padding-left:20px;color:var(--text);font-size:14px;">
+        <li>Schüler per E-Mail in den Kurs einladen.</li>
+        <li>Lernmaterialien und Dokumente hochladen.</li>
+        <li><b>Hausaufgaben mit Abgabefrist</b> aufgeben (Schüler haben einen Abgabe-Button).</li>
+        <li>Bildschirm-Popups und Direktnachrichten direkt an Kursteilnehmer senden.</li>
+      </ul>
+    </div>
+
+    <div class="tutorial-step">
+      <h3>5. 📬 Postfach & Administrator-Funktionen</h3>
+      <p>Erhalte Antworten auf Support-Anfragen, Direktnachrichten von Trainern und verwalte Admin-Broadcasts, die als nicht zu übersehendes Pop-up auf dem Bildschirm angezeigt werden.</p>
     </div>
   </div>
 </section>
@@ -642,7 +670,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <!-- VERWALTUNG -->
 <section id="manage" class="page" hidden>
 
-  <!-- ADMIN: TRAINER-ANFRAGEN & BROADCASTS -->
   <div class="panel" id="adminTrainerPanel" hidden>
     <h2 style="margin-bottom:4px;">🛡️ Trainer-Anträge verwalten</h2>
     <div id="adminTrainerRequestsList"><p class="muted">Lade Anträge...</p></div>
@@ -657,7 +684,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     </select>
     <div id="bcEmailsContainer" hidden>
       <label for="bcEmails">E-Mail-Adressen (Komma-getrennt)</label>
-      <input id="bcEmails" placeholder="kollege1@email.de">
+      <input id="bcEmails" list="userAutocompleteList" placeholder="kollege1@email.de">
     </div>
     <label for="bcTitle">Titel</label>
     <input id="bcTitle" placeholder="Titel">
@@ -668,9 +695,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 
   <div class="panel" id="adminStatsPanel" hidden>
     <div class="row" style="align-items:center;">
-      <div>
-        <h2 style="margin-bottom:4px;">📈 Nutzerstatistik</h2>
-      </div>
+      <div><h2 style="margin-bottom:4px;">📈 Nutzerstatistik</h2></div>
       <button type="button" id="refreshAdminStats" style="flex:0 0 auto;">↻</button>
     </div>
     <div class="stat-grid" style="margin-top:14px;">
