@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -720,8 +719,6 @@ async function loadAdminStats(){
     $("adminToday").textContent=data?.active_today??0;
     $("adminWeek").textContent=data?.active_7_days??0;
     $("adminMonth").textContent=data?.active_30_days??0;
-
-    /* NEU: Tatsächliche Gesamtzahl aller registrierten Konten */
     $("adminTotal").textContent=data?.registered_users??0;
 
     $("adminStatsUpdated").textContent=
@@ -1170,12 +1167,6 @@ async function deleteSelectedSignals(){
       notify(deletedCount+" gelöscht. "+failedCount+" konnten nicht gelöscht werden.");
     }
 
-    console.log("Mehrfachlöschen:",{
-      erfolgreich:deletedCount,
-      fehlgeschlagen:failedCount,
-      fehlgeschlageneIds:failedIds
-    });
-
   }catch(err){
     console.error(err);
     notify("Fehler beim Aktualisieren: "+(err.message||String(err)));
@@ -1281,7 +1272,7 @@ function clearForm(){
   $("saveSignal").textContent="Signal speichern";
 }
 
-/* ANTWORTEN BEWERTEN – ALLGEMEINE KLEINIGKEITEN TOLERIEREN */
+/* ANTWORTEN BEWERTEN */
 
 function clean(value){
   return String(value??"").toLocaleLowerCase("de")
@@ -1334,16 +1325,9 @@ function tokenizeAnswer(value){
   })).filter(token=>token.normalized);
 }
 
-/*
-  Diese Wörter dürfen als kleine grammatikalische Abweichung
-  fehlen oder zusätzlich vorkommen. Fachlich wichtige Wörter
-  wie "nicht", "ohne", "nur", "Halt" und "Weiterfahrt" sind
-  ausdrücklich NICHT in dieser Liste.
-*/
 const OPTIONAL_WORDS=new Set([
   "der","die","das","den","dem","des",
   "ein","eine","einer","einem","einen","eines",
-  "einem","einen","einer",
   "ist","sind","wird","werden",
   "am","im","zum","zur"
 ]);
@@ -1376,17 +1360,9 @@ function compareAnswer(user,correct){
 
   if(!userTokens.length||!correctTokens.length)return result;
 
-  /*
-    Vergleicht Wort für Wort. Dabei werden:
-    - harmlose Artikel/kleine Grammatik-Wörter toleriert,
-    - getrennte Zusammensetzungen zusammengeführt,
-    - kleine Tippfehler toleriert,
-    - fachlich wichtige Wörter weiterhin verlangt.
-  */
   let i=0;
   let j=0;
   let typoCount=0;
-  let languageCount=0;
 
   const maxTypos=Math.max(1,Math.floor(correctTokens.length/8));
   const mistakes=[];
@@ -1398,15 +1374,10 @@ function compareAnswer(user,correct){
       const expected=correctTokens[j].normalized;
 
       if(isOptionalWord(expected)){
-        adjustments.push({
-          type:"missing",
-          word:correctTokens[j].original
-        });
-        languageCount++;
+        adjustments.push({type:"missing",word:correctTokens[j].original});
         j++;
         continue;
       }
-
       return result;
     }
 
@@ -1414,15 +1385,10 @@ function compareAnswer(user,correct){
       const entered=userTokens[i].normalized;
 
       if(isOptionalWord(entered)){
-        adjustments.push({
-          type:"extra",
-          word:userTokens[i].original
-        });
-        languageCount++;
+        adjustments.push({type:"extra",word:userTokens[i].original});
         i++;
         continue;
       }
-
       return result;
     }
 
@@ -1435,17 +1401,13 @@ function compareAnswer(user,correct){
       continue;
     }
 
-    // Zusammengesetztes Wort: "vorbei fahren" = "vorbeifahren".
     if(i+1<userTokens.length&&
        userWord+userTokens[i+1].normalized===correctWord){
-
       adjustments.push({
         type:"joined",
         user:userTokens[i].original+" "+userTokens[i+1].original,
         correct:correctTokens[j].original
       });
-
-      languageCount++;
       i+=2;
       j++;
       continue;
@@ -1453,43 +1415,28 @@ function compareAnswer(user,correct){
 
     if(j+1<correctTokens.length&&
        correctWord+correctTokens[j+1].normalized===userWord){
-
       adjustments.push({
         type:"joined",
         user:userTokens[i].original,
         correct:correctTokens[j].original+correctTokens[j+1].original
       });
-
-      languageCount++;
       i++;
       j+=2;
       continue;
     }
 
-    // Unwichtige grammatikalische Wörter dürfen fehlen/zusätzlich sein.
     if(isOptionalWord(correctWord)){
-      adjustments.push({
-        type:"missing",
-        word:correctTokens[j].original
-      });
-
-      languageCount++;
+      adjustments.push({type:"missing",word:correctTokens[j].original});
       j++;
       continue;
     }
 
     if(isOptionalWord(userWord)){
-      adjustments.push({
-        type:"extra",
-        word:userTokens[i].original
-      });
-
-      languageCount++;
+      adjustments.push({type:"extra",word:userTokens[i].original});
       i++;
       continue;
     }
 
-    // Kleine Tippfehler in längeren Wörtern.
     if(userWord.length>=4&&correctWord.length>=4){
       const distance=editDistance(userWord,correctWord);
       const maxDistance=correctWord.length>=8?2:1;
@@ -1500,7 +1447,6 @@ function compareAnswer(user,correct){
           user:userTokens[i].original,
           correct:correctTokens[j].original
         });
-
         typoCount++;
         i++;
         j++;
@@ -1508,7 +1454,6 @@ function compareAnswer(user,correct){
       }
     }
 
-    // Kein tolerierbarer Unterschied: fachlich möglicherweise relevant.
     return result;
   }
 
@@ -1531,11 +1476,8 @@ function evaluate(signal,short,long,meaning){
 
 function calculatePoints(result){
   if(!result.meaning.correct)return 0;
-
   return Number(result.short.correct)+Number(result.long.correct)+1;
 }
-
-/* KORREKTUREN SICHTBAR DARSTELLEN */
 
 function spellingHTML(result){
   if(!result||!result.spelling||!result.mistakes.length)return "";
@@ -1561,11 +1503,9 @@ function languageHTML(result){
     if(item.type==="missing"){
       return `Kleines Wort ergänzt: <span class="spelling-correction">${esc(item.word)}</span>`;
     }
-
     if(item.type==="extra"){
       return `Zusätzliches kleines Wort: <span class="spelling-correction">${esc(item.word)}</span>`;
     }
-
     return `<span class="spelling-error">${esc(item.user)}</span>`+
       `<span class="spelling-arrow">→</span>`+
       `<span class="spelling-correction">${esc(item.correct)}</span>`;
@@ -2000,30 +1940,33 @@ function handleImageInput(file){
   reader.readAsDataURL(file);
 }
 
-/* EXPORT */
+/* EXPORT – INKLUSIVE ALLER BILDER */
 
 async function exportData(){
   if(!signals.length){
     return notify("Keine Signale zum Exportieren vorhanden.");
   }
 
-  notify("Bereite Export vor...");
+  notify("Bereite Export vor (lade Bilder)...");
 
   try{
     const exportSignals=[];
 
     for(let i=0;i<signals.length;i++){
       const s=signals[i];
-
       let image=s.image||"";
 
-      if(image===undefined||image===null){
-        const {data,error}=await _supabase.from("signals").select("image")
-          .eq("id",s.id).eq("user_id",currentUser.id).maybeSingle();
+      if(!image&&s.id&&currentUser){
+        const {data,error}=await _supabase
+          .from("signals")
+          .select("image")
+          .eq("id",s.id)
+          .eq("user_id",currentUser.id)
+          .maybeSingle();
 
-        if(error)throw error;
-
-        image=data?.image||"";
+        if(!error&&data){
+          image=data.image||"";
+        }
       }
 
       exportSignals.push({
@@ -2033,6 +1976,10 @@ async function exportData(){
         category:s.category,
         image:image
       });
+
+      if((i+1)%10===0||i===signals.length-1){
+        notify(`Export-Fortschritt: ${i+1} / ${signals.length} vorbereitet...`);
+      }
     }
 
     const backup={
@@ -2058,7 +2005,7 @@ async function exportData(){
 
     setTimeout(()=>URL.revokeObjectURL(url),10000);
 
-    notify("Export erfolgreich gestartet!");
+    notify("Export mit allen Bildern erfolgreich gestartet!");
 
   }catch(err){
     console.error(err);
@@ -2280,7 +2227,6 @@ function initEvents(){
     this.value="";
   });
 
-  /* ADMIN-STATISTIK AKTUALISIEREN */
   $("refreshAdminStats").addEventListener("click",loadAdminStats);
 }
 
