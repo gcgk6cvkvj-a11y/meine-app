@@ -659,6 +659,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   <button type="button" data-page="stats"><span class="icon">📊</span><span>Statistik</span></button>
   <button type="button" data-page="manage"><span class="icon">⚙️</span><span>Verwaltung</span></button>
 </nav>
+
 <script>
 (function(){
 "use strict";
@@ -1138,7 +1139,7 @@ function renderStats(){
   }
 }
 
-/* EXPORT & IMPORT */
+/* EXPORT & SICHERER IMPORT */
 async function exportData(){
   if(exportRunning||!signals.length)return notify("Keine Signale zum Exportieren.");
   exportRunning=true;
@@ -1160,15 +1161,29 @@ async function handleImportFile(file){
     try{
       const parsed=JSON.parse(e.target.result);
       const raw=Array.isArray(parsed)?parsed:(parsed.signals||[]);
+      if(!raw.length){
+        alert("Die Datei enthält keine Signale.");
+        return;
+      }
+      if(!confirm(raw.length+" Signale gefunden. Jetzt importieren?"))return;
+
+      let count=0;
       for(let s of raw){
-        await _supabase.from("signals").insert([{
-          short:String(s.short||""), long:String(s.long||""), meaning:String(s.meaning||""),
-          category:String(s.category||"Sonstige"), image:s.image||"", user_id:currentUser.id
+        const {error}=await _supabase.from("signals").insert([{
+          short:String(s.short||""), 
+          long:String(s.long||""), 
+          meaning:String(s.meaning||""),
+          category:String(s.category||"Sonstige"), 
+          image:String(s.image||""), 
+          user_id:currentUser.id
         }]);
+        if(!error)count++;
       }
       loadCloudSignals();
-      notify("Import erfolgreich!");
-    }catch(err){notify("Import-Fehler.");}
+      alert(count+" von "+raw.length+" Signalen erfolgreich importiert!");
+    }catch(err){
+      alert("Fehler beim Verarbeiten der JSON-Datei.");
+    }
   };
   reader.readAsText(file);
 }
