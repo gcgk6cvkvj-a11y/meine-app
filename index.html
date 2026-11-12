@@ -55,6 +55,10 @@ small,.muted {color:var(--muted)}
   box-shadow:6px 0 24px rgba(0,0,0,.6);
 }
 #sidebar.open {transform:translateX(0)}
+.sidebar-header {
+  display:flex;justify-content:space-between;align-items:center;
+  padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:6px;
+}
 .sidebar-link {
   width:100%;justify-content:flex-start;background:var(--panel);
   padding:13px 14px;font-size:15px;position:relative;
@@ -149,8 +153,26 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
 }
 .solution h3 {color:#d9fff0;margin-top:0}
 .solution p {margin:8px 0}
-.solution-value {white-space:pre-wrap;word-break:break-word;color:#fff;font-weight:600}
-.missing {color:#ffbd70;font-weight:700}
+.progress {
+  height:8px;background:#101722;border-radius:10px;
+  overflow:hidden;margin:10px 0;
+}
+.progress span {
+  display:block;height:100%;background:var(--green);
+  width:0%;transition:width .3s ease;
+}
+.stat-grid {display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat {
+  background:#111c29;border-radius:12px;padding:14px;
+  border:1px solid var(--border);
+}
+.stat strong {display:block;font-size:24px;margin-top:6px;color:var(--accent)}
+.signal-card {
+  background:#111c29;border:1px solid var(--border);
+  border-radius:12px;padding:14px;margin:10px 0;
+}
+.signal-card h3 {margin:0 0 6px;color:#fff;font-size:17px}
+.signal-card p {margin:8px 0;color:#d0dbe7;font-size:14px}
 .ticket-tag {
   display:inline-block;padding:3px 8px;border-radius:6px;
   font-size:11px;font-weight:700;background:var(--panel2);color:var(--accent);
@@ -173,8 +195,13 @@ label {display:block;color:var(--muted);font-size:13px;font-weight:500}
   align-items:center;gap:9px;cursor:pointer;flex:1;
 }
 .signal-select-row input[type="checkbox"],
-.signal-card input[type="checkbox"] {
-  width:22px;height:22px;margin:0;accent-color:var(--accent);flex-shrink:0;
+.signal-card input[type="checkbox"],
+.filter-box input[type="checkbox"] {
+  width:20px;height:20px;margin:0;accent-color:var(--accent);flex-shrink:0;
+}
+.filter-box {
+  display:flex;align-items:center;gap:10px;background:#111c29;
+  border:1px solid var(--border);padding:10px 12px;border-radius:10px;margin-bottom:12px;
 }
 .signal-card.selected {border-color:var(--accent);background:#14283b}
 .bulk-toolbar {
@@ -219,7 +246,6 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   min-height:20px;color:var(--green);font-weight:600;
   font-size:14px;margin-top:4px;
 }
-.score-line {display:flex;justify-content:space-between;gap:8px}
 #authPanel {max-width:420px;margin:30px auto}
 @media(max-width:520px) {
   body {padding:8px 8px 85px}
@@ -246,7 +272,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <!-- SEITENLEISTE -->
 <div id="sidebarBackdrop" hidden></div>
 <aside id="sidebar" aria-label="Seitenmenü">
-  <div class="sidebar-header" style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:6px;">
+  <div class="sidebar-header">
     <strong>Menü</strong>
     <button type="button" id="closeSidebar" style="padding:6px 10px;">✕</button>
   </div>
@@ -343,6 +369,11 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
         Signalgruppen auswählen ▼
       </button>
     </div>
+
+    <label class="filter-box" for="onlyWrongFilter">
+      <input type="checkbox" id="onlyWrongFilter">
+      <span>🎯 Nur falsch beantwortete Signale üben (<b id="wrongCount">0</b>)</span>
+    </label>
 
     <div class="row">
       <div>
@@ -447,7 +478,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <hr>
     <h3>Letztes Prüfungsergebnis</h3>
     <div id="lastExamResult" class="muted">Noch keine Prüfung absolviert.</div>
-    <button type="button" class="danger" id="resetStats" style="width:100%;margin-top:14px;">Statistik zurücksetzen</button>
+    <button type="button" class="danger" id="resetStats" style="width:100%;margin-top:14px;">Statistik & Fehlerliste zurücksetzen</button>
   </div>
 </section>
 
@@ -458,16 +489,20 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <p class="muted">Eine kurze Übersicht über alle Bereiche und Funktionen:</p>
 
     <div class="tutorial-step">
-      <h3>1. ⚙️ Verwaltung & Signal-Sharing</h3>
-      <p>Füge Signale hinzu und teile sie direkt per E-Mail mit anderen Kollegen. Empfangene Signale findest du im Menü unter <b>Geteilte Signale</b>.</p>
+      <h3>1. ⚙️ Verwaltung & Mehrfach-Sharing</h3>
+      <p>Füge Signale hinzu. Markiere mehrere Signale mit den Checkboxen und teile sie gebündelt per E-Mail über <b>📨 Ausgewählte teilen</b> mit Kollegen.</p>
     </div>
     <div class="tutorial-step">
-      <h3>2. 📚 Lern- & 📝 Prüfungsmodus</h3>
-      <p>Trainiere gezielt nach Signalgruppen. Die App gleicht Tippfehler automatisch ab und wertet falsche Bedeutungen als Betriebsgefahr.</p>
+      <h3>2. 📚 Lernmodus & 🎯 Fehler-Training</h3>
+      <p>Trainiere gezielt nach Signalgruppen. Falsche Antworten merkt sich die App automatisch.</p>
     </div>
     <div class="tutorial-step">
-      <h3>3. 💬 Support & Postfach</h3>
-      <p>Schreibe dem Admin bei Fragen oder Problemen. Antworten erscheinen direkt in deinem Postfach.</p>
+      <h3>3. 📝 Prüfungsmodus</h3>
+      <p>Stelle dir eine Prüfung zusammen. Bei falscher Bedeutung greift die Betriebsgefahr-Regel (0 Punkte). Ab 80 % ist die Prüfung bestanden.</p>
+    </div>
+    <div class="tutorial-step">
+      <h3>4. 💬 Support & 📬 Postfach</h3>
+      <p>Melde Probleme oder Vorschläge. Antworten vom Entwickler landen direkt in deinem Postfach.</p>
     </div>
   </div>
 </section>
@@ -508,7 +543,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
 <section id="shared" class="page" hidden>
   <div class="panel">
     <h2>📨 Von Kollegen geteilte Signale</h2>
-    <p class="muted">Hier siehst du Signale, die dir andere Nutzer geschickt haben.</p>
+    <p class="muted">Hier siehst du Signale inklusive Bildern, die dir andere Nutzer per E-Mail geschickt haben.</p>
     <div id="sharedSignalsList"><p class="muted">Keine geteilten Signale vorhanden.</p></div>
   </div>
 </section>
@@ -519,7 +554,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
   <!-- ADMIN: BILDSCHIRM-NACHRICHT (BROADCAST) -->
   <div class="panel" id="adminBroadcastPanel" hidden>
     <h2 style="margin-bottom:4px;">📢 Bildschirm-Nachricht senden</h2>
-    <p class="muted" style="margin:0;">Sendet ein sofortiges Pop-up auf den Bildschirm der Nutzer.</p>
+    <p class="muted" style="margin:0;">Sendet ein sofortiges Pop-up auf den Bildschirm der ausgewählten Nutzer.</p>
     
     <label for="bcTarget" style="margin-top:12px;">Empfänger</label>
     <select id="bcTarget">
@@ -565,7 +600,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
     <div class="row" style="align-items:center;">
       <div>
         <h2 style="margin-bottom:4px;">📨 Support-Anfragen der Nutzer</h2>
-        <p class="muted" style="margin:0;">Auf Probleme & Vorschläge antworten</p>
+        <p class="muted" style="margin:0;">Auf Probleme, Bewertungen & Vorschläge antworten</p>
       </div>
       <button type="button" id="refreshAdminSupport" style="flex:0 0 auto;">↻ Aktualisieren</button>
     </div>
@@ -617,6 +652,7 @@ hr {border:0;border-top:1px solid var(--border);margin:16px 0}
       </div>
       <div class="actions">
         <button type="button" id="clearSelection">Auswahl aufheben</button>
+        <button type="button" class="primary" id="shareSelected" disabled>📨 Ausgewählte teilen</button>
         <button type="button" class="danger" id="deleteSelected" disabled>🗑 Ausgewählte löschen</button>
       </div>
       <div id="selectionCount" class="selection-count">0 Signale ausgewählt</div>
@@ -680,7 +716,8 @@ const CATEGORY_LABELS={
 
 let currentUser=null;
 let signals=[];
-let stats={answered:0,points:0,exams:0,lastExam:null};
+let stats=JSON.parse(localStorage.getItem("armando_signal_stats")||'{"answered":0,"points":0,"exams":0,"lastExam":null}');
+let wrongSignalIds=new Set(JSON.parse(localStorage.getItem("armando_wrong_signals")||"[]"));
 let current=null;
 let learnNumber=0;
 let learnDone=false;
@@ -704,6 +741,12 @@ let examStarted=0;
 let examTimerInterval=null;
 let examAnswered=false;
 let examQuestionResults=[];
+
+function saveLocalProgress(){
+  localStorage.setItem("armando_signal_stats",JSON.stringify(stats));
+  localStorage.setItem("armando_wrong_signals",JSON.stringify([...wrongSignalIds]));
+  if($("wrongCount"))$("wrongCount").textContent=wrongSignalIds.size;
+}
 
 function notify(message){
   const el=$("notice");
@@ -847,7 +890,7 @@ function toggleAllCategories(type){
 }
 
 function updateLearnAvailable(){
-  const count=signals.filter(s=>selectedLearnCategories.has(s.category||"Sonstige")).length;
+  const count=getLearnSignals().length;
   $("learnAvailable").textContent=count;
 }
 
@@ -1046,6 +1089,7 @@ function initUserSession(){
     loadAdminSupport();
   }
 
+  saveLocalProgress();
   loadCloudSignals();
   loadUserInbox();
   loadSharedSignals();
@@ -1070,7 +1114,6 @@ async function checkForBroadcasts(){
 
     const readIds=new Set((reads||[]).map(r=>r.broadcast_id));
 
-    // Finde die erste ungelesene Nachricht, die für diesen Nutzer bestimmt ist
     const unread=broadcasts.find(b=>{
       if(readIds.has(b.id))return false;
       if(b.target_type==="all")return true;
@@ -1087,9 +1130,7 @@ async function checkForBroadcasts(){
       $("popupBackdrop").hidden=false;
       $("broadcastPopup").hidden=false;
     }
-  }catch(err){
-    console.error("Broadcast Fehler:",err);
-  }
+  }catch(err){}
 }
 
 async function markBroadcastAsRead(){
@@ -1103,6 +1144,7 @@ async function markBroadcastAsRead(){
   $("popupBackdrop").hidden=true;
   $("broadcastPopup").hidden=true;
   currentPopupId=null;
+  checkForBroadcasts();
 }
 
 async function sendBroadcastMessage(){
@@ -1138,15 +1180,12 @@ async function sendBroadcastMessage(){
   }
 }
 
-/* SIGNAL SHARING ZWISCHEN NUTZERN */
+/* SIGNAL SHARING ZWISCHEN NUTZERN (EINZELN & MEHRFACH) */
 async function shareSignalPrompt(signalId){
   const signal=signals.find(s=>String(s.id)===String(signalId));
-  if(!signal)return notify("Signal nicht gefunden.");
-
+  if(!signal)return signal;
   const recipient=prompt("Gib die E-Mail-Adresse des Kollegen ein, an den du dieses Signal senden möchtest:");
   if(!recipient||!recipient.trim())return;
-
-  notify("Sende Signal...");
 
   let imgData=signal.image||"";
   if(!imgData && signal.id){
@@ -1166,12 +1205,51 @@ async function shareSignalPrompt(signalId){
         image:imgData
       }
     }]);
-
     if(error)throw error;
-    notify("Signal erfolgreich an "+recipient.trim()+" gesendet!");
+    notify("Signal erfolgreich gesendet!");
   }catch(err){
     notify("Fehler beim Teilen: "+err.message);
   }
+}
+
+async function shareSelectedSignals(){
+  if(!currentUser||selectedSignalIds.size===0)return;
+  const recipient=prompt("Gib die E-Mail-Adresse des Kollegen ein, an den du die ausgewählten Signale senden möchtest:");
+  if(!recipient||!recipient.trim())return;
+
+  notify("Sende ausgewählte Signale...");
+  const ids=[...selectedSignalIds];
+  let successCount=0;
+
+  for(let i=0;i<ids.length;i++){
+    const signal=signals.find(s=>String(s.id)===String(ids[i]));
+    if(!signal)continue;
+
+    let imgData=signal.image||"";
+    if(!imgData && signal.id){
+      const {data}=await _supabase.from("signals").select("image").eq("id",signal.id).maybeSingle();
+      if(data)imgData=data.image||"";
+    }
+
+    try{
+      const {error}=await _supabase.from("shared_signals").insert([{
+        sender_email:currentUser.email,
+        recipient_email:recipient.trim().toLowerCase(),
+        signal_data:{
+          short:signal.short,
+          long:signal.long,
+          meaning:signal.meaning,
+          category:signal.category,
+          image:imgData
+        }
+      }]);
+      if(!error)successCount++;
+    }catch(err){}
+  }
+
+  notify(successCount+" von "+ids.length+" Signalen erfolgreich an "+recipient.trim()+" gesendet!");
+  selectedSignalIds.clear();
+  renderList();
 }
 
 async function loadSharedSignals(){
@@ -1192,6 +1270,7 @@ async function loadSharedSignals(){
 
     $("sharedBadge").hidden=(list.length===0);
     $("sharedBadge").textContent=list.length;
+    updateMenuBadge();
 
     if(!list.length){
       container.innerHTML="<p class='muted'>Keine neuen geteilten Signale vorhanden.</p>";
@@ -1253,6 +1332,12 @@ async function acceptSharedSignal(shareId){
   }
 }
 
+function updateMenuBadge(){
+  const inboxUnread=!$("inboxUnreadBadge").hidden;
+  const sharedUnread=!$("sharedBadge").hidden;
+  $("menuBadgeDot").hidden=!(inboxUnread||sharedUnread);
+}
+
 /* SUPPORT & POSTFACH */
 
 async function sendSupportMessage(){
@@ -1294,14 +1379,14 @@ async function loadUserInbox(markAsRead=false){
     const messages=data||[];
     const unread=messages.filter(m=>m.admin_reply&&!m.is_read).length;
 
-    $("menuBadgeDot").hidden=(unread===0);
     $("inboxUnreadBadge").hidden=(unread===0);
     $("inboxUnreadBadge").textContent=unread;
+    updateMenuBadge();
 
     if(markAsRead&&unread>0){
       await _supabase.from("support_messages").update({is_read:true}).eq("user_id",currentUser.id).not("admin_reply","is",null);
-      $("menuBadgeDot").hidden=true;
       $("inboxUnreadBadge").hidden=true;
+      updateMenuBadge();
     }
 
     if(!container)return;
@@ -1514,9 +1599,11 @@ async function saveSignal(){
 
 async function deleteSignal(id){
   if(!confirm("Signal wirklich löschen?"))return;
-  const {data,error}=await _supabase.from("signals").delete().eq("id",id).eq("user_id",currentUser.id).select("id");
+  const {error}=await _supabase.from("signals").delete().eq("id",id).eq("user_id",currentUser.id);
   if(error)return notify("Fehler: "+error.message);
   selectedSignalIds.delete(String(id));
+  wrongSignalIds.delete(String(id));
+  saveLocalProgress();
   notify("Signal gelöscht.");
   await loadCloudSignals();
 }
@@ -1531,8 +1618,9 @@ function getVisibleSignals(){
 
 function updateSelectionUI(){
   const count=selectedSignalIds.size;
-  $("selectionCount").textContent=count+" Gekennzeichnet";
+  $("selectionCount").textContent=count+" Signale ausgewählt";
   $("deleteSelected").disabled=count===0||bulkDeleteRunning;
+  $("shareSelected").disabled=count===0;
 }
 
 function toggleSignalSelection(id,checked){
@@ -1566,9 +1654,11 @@ async function deleteSelectedSignals(){
   bulkDeleteRunning=true;
   for(let i=0;i<ids.length;i++){
     await _supabase.from("signals").delete().eq("id",ids[i]).eq("user_id",currentUser.id);
+    wrongSignalIds.delete(String(ids[i]));
   }
   bulkDeleteRunning=false;
   selectedSignalIds.clear();
+  saveLocalProgress();
   await loadCloudSignals();
   notify("Ausgewählte Signale gelöscht.");
 }
@@ -1648,7 +1738,7 @@ function clearForm(){
   $("saveSignal").textContent="Signal speichern";
 }
 
-/* BEWERTUNG & LERNMODUS */
+/* BEWERTUNG */
 function clean(value){
   return String(value??"").toLocaleLowerCase("de").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[\u2010-\u2015-]/g,"").replace(/[.,;:!?()[\]{}"'`„“”]/g," ").replace(/\s+/g," ").trim();
 }
@@ -1703,22 +1793,36 @@ function feedbackHTML(signal,result){
   const allCorrect=points===3;
   return `
     <h3 class="${allCorrect?"correct":"incorrect"}">${allCorrect?"✓ Alles richtig!":"✗ Nicht vollständig richtig"}</h3>
-    <p>Kurz: ${result.short.correct?"Richtig":"Falsch"}</p>
-    <p>Lang: ${result.long.correct?"Richtig":"Falsch"}</p>
-    <p>Bedeutung: ${result.meaning.correct?"Richtig":"Falsch"}</p>
-    ${!result.meaning.correct?`<div class="warning"><h3>⚠ BETRIEBSGEFAHR</h3><p>Bedeutung falsch (0 Punkte).</p></div>`:""}
+    <p>Kurz: <b>${result.short.correct?"✓ Richtig":"✗ Falsch"}</b></p>
+    <p>Lang: <b>${result.long.correct?"✓ Richtig":"✗ Falsch"}</b></p>
+    <p>Bedeutung: <b>${result.meaning.correct?"✓ Richtig":"✗ Falsch"}</b></p>
+    ${!result.meaning.correct?`<div class="warning"><h3>⚠ BETRIEBSGEFAHR</h3><p>Die Signalbedeutung ist falsch (0 Punkte).</p></div>`:""}
+    ${!allCorrect?`<div class="solution"><h3>✓ Musterlösung</h3><p><b>${esc(signal.short)} – ${esc(signal.long)}</b></p><p>${esc(signal.meaning)}</p></div>`:""}
     <hr><h3>Ergebnis: ${points} von 3 Punkten</h3>`;
 }
 
+/* LERNMODUS */
+function getLearnSignals(){
+  const onlyWrong=$("onlyWrongFilter")?.checked;
+  return signals.filter(s=>{
+    const inCat=selectedLearnCategories.has(s.category||"Sonstige");
+    if(!inCat)return false;
+    if(onlyWrong)return wrongSignalIds.has(String(s.id));
+    return true;
+  });
+}
+
 function nextLearn(){
-  const list=signals.filter(s=>selectedLearnCategories.has(s.category||"Sonstige"));
+  const list=getLearnSignals();
   updateLearnAvailable();
   if(!list.length){
     current=null;
     imageLoadToken++;
     $("learnImage").hidden=true;
     $("learnNoImage").hidden=false;
-    $("learnNoImage").textContent="Keine Signale in dieser Gruppe.";
+    $("learnNoImage").textContent=$("onlyWrongFilter")?.checked
+      ?"Keine falsch beantworteten Signale in den gewählten Gruppen vorhanden!"
+      :"Keine Signale in dieser Gruppe vorhanden.";
     $("learnCounter").textContent="Keine Frage";
     $("learnFeedback").hidden=true;
     $("nextLearn").hidden=true;
@@ -1740,14 +1844,92 @@ function nextLearn(){
 function checkLearn(){
   if(!current||learnDone)return;
   const res=evaluate(current,$("learnShort").value,$("learnLong").value,$("learnMeaning").value);
+  const pts=calculatePoints(res);
   learnDone=true;
+
+  if(pts<3)wrongSignalIds.add(String(current.id));
+  else wrongSignalIds.delete(String(current.id));
+
   $("learnFeedback").innerHTML=feedbackHTML(current,res);
   $("learnFeedback").hidden=false;
   $("checkLearn").disabled=true; $("skipLearn").disabled=true; $("nextLearn").hidden=false;
-  stats.answered++; stats.points+=calculatePoints(res);
+  stats.answered++; stats.points+=pts;
+  saveLocalProgress();
   renderStats();
 }
 function skipLearn(){if(!learnDone)nextLearn();}
+
+/* PRÜFUNGSMODUS */
+function stopExamTimer(){
+  if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null;}
+}
+function updateExamTimer(){
+  if(!examStarted)return;
+  const s=Math.floor((Date.now()-examStarted)/1000);
+  $("examTimer").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+}
+function startExam(){
+  const available=signals.filter(s=>selectedExamCategories.has(s.category||"Sonstige"));
+  if(!available.length)return notify("Keine Signale in den ausgewählten Gruppen vorhanden.");
+  const req=Number($("examLength").value)||10;
+  examList=shuffle(available).slice(0,Math.min(req,available.length));
+  examIndex=0; examPoints=0; examAnswered=false; examQuestionResults=[]; examStarted=Date.now();
+  $("examConfig").hidden=true; $("examArea").hidden=false; $("examResult").hidden=true;
+  stopExamTimer(); updateExamTimer();
+  examTimerInterval=setInterval(updateExamTimer,1000);
+  showExamQuestion();
+}
+function showExamQuestion(){
+  if(examIndex>=examList.length)return finishExam();
+  const signal=examList[examIndex];
+  examAnswered=false;
+  $("examCounter").textContent="Frage "+(examIndex+1)+" von "+examList.length;
+  $("examProgress").style.width=((examIndex)/examList.length*100)+"%";
+  loadSignalImage(signal,$("examImage"),$("examNoImage"));
+  $("examShort").value=""; $("examLong").value=""; $("examMeaning").value="";
+  $("examFeedback").hidden=true; $("examNext").hidden=true;
+  $("submitExam").hidden=false; $("submitExam").disabled=false;
+}
+function submitExamAnswer(){
+  if(examAnswered)return;
+  const signal=examList[examIndex];
+  const res=evaluate(signal,$("examShort").value,$("examLong").value,$("examMeaning").value);
+  const pts=calculatePoints(res);
+  if(pts<3)wrongSignalIds.add(String(signal.id));
+  else wrongSignalIds.delete(String(signal.id));
+  examPoints+=pts; examAnswered=true;
+  examQuestionResults.push({signal,points:pts});
+  stats.answered++; stats.points+=pts;
+  saveLocalProgress();
+  $("examFeedback").innerHTML=feedbackHTML(signal,res);
+  $("examFeedback").hidden=false;
+  $("submitExam").disabled=true; $("submitExam").hidden=true;
+  $("examNext").hidden=false;
+  $("examNext").textContent=examIndex===examList.length-1?"Prüfung auswerten":"Nächste Frage ➔";
+  renderStats();
+}
+function nextExamQuestion(){if(examAnswered){examIndex++;showExamQuestion();}}
+function finishExam(){
+  stopExamTimer();
+  const maxPoints=examList.length*3;
+  const percent=maxPoints?Math.round(examPoints/maxPoints*100):0;
+  const s=Math.floor((Date.now()-examStarted)/1000);
+  const duration=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+  stats.exams++;
+  stats.lastExam={points:examPoints,maxPoints,percent,duration};
+  saveLocalProgress();
+  $("examArea").hidden=true; $("examResult").hidden=false; $("examProgress").style.width="100%";
+  $("examResult").innerHTML=`
+    <h2>Prüfung abgeschlossen!</h2>
+    <h1 class="${percent>=80?"correct":"incorrect"}" style="font-size:32px;">${percent} %</h1>
+    <h3>${examPoints} von ${maxPoints} Punkten</h3>
+    <p>Benötigte Zeit: ${duration}</p>
+    <button type="button" class="primary" id="restartExam" style="width:100%;margin-top:12px;">Neue Prüfung starten</button>`;
+  $("restartExam").addEventListener("click",()=>{
+    $("examConfig").hidden=false; $("examArea").hidden=true; $("examResult").hidden=true; updateExamAvailable();
+  });
+  renderStats();
+}
 
 /* EXPORT / IMPORT */
 async function exportData(){
@@ -1770,6 +1952,8 @@ async function exportData(){
       const pct=Math.round(((i+1)/total)*100);
       $("exportProgressBar").style.width=pct+"%";
       $("exportProgressPercent").textContent=pct+"%";
+      $("exportProgressText").textContent=`Vorbereitet: ${i+1} von ${total}`;
+      if(i%5===0)await new Promise(r=>setTimeout(r,10));
     }
     const blob=new Blob([JSON.stringify({version:8,signals:exportSignals},null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob);
@@ -1816,11 +2000,19 @@ function renderStats(){
   $("statPoints").textContent=stats.points||0;
   $("statRate").textContent=stats.answered?Math.round((stats.points/(stats.answered*3))*100)+" %":"0 %";
   $("statExams").textContent=stats.exams||0;
+  if(stats.lastExam){
+    $("lastExamResult").textContent=`${stats.lastExam.points} von ${stats.lastExam.maxPoints} Punkten (${stats.lastExam.percent} %) · ${stats.lastExam.duration} Min.`;
+  }else{
+    $("lastExamResult").textContent="Noch keine Prüfung absolviert.";
+  }
 }
 function resetStats(){
-  if(!confirm("Statistik zurücksetzen?"))return;
+  if(!confirm("Statistik & Fehlerliste wirklich zurücksetzen?"))return;
   stats={answered:0,points:0,exams:0,lastExam:null};
+  wrongSignalIds.clear();
+  saveLocalProgress();
   renderStats();
+  nextLearn();
 }
 
 function showPage(page){
@@ -1898,10 +2090,15 @@ function initEvents(){
   $("examSelectAll").addEventListener("click",()=>toggleAllCategories("exam"));
   $("learnToggleCategories").addEventListener("click",()=>toggleCategoryPicker("learn"));
   $("examToggleCategories").addEventListener("click",()=>toggleCategoryPicker("exam"));
+  $("onlyWrongFilter").addEventListener("change",nextLearn);
 
   $("checkLearn").addEventListener("click",checkLearn);
   $("nextLearn").addEventListener("click",nextLearn);
   $("skipLearn").addEventListener("click",skipLearn);
+
+  $("startExam").addEventListener("click",startExam);
+  $("submitExam").addEventListener("click",submitExamAnswer);
+  $("examNext").addEventListener("click",nextExamQuestion);
 
   $("resetStats").addEventListener("click",resetStats);
   $("saveSignal").addEventListener("click",saveSignal);
@@ -1916,6 +2113,7 @@ function initEvents(){
   $("selectAllSignals").addEventListener("change",e=>selectAllVisibleSignals(e.target.checked));
   $("clearSelection").addEventListener("click",clearSelection);
   $("deleteSelected").addEventListener("click",deleteSelectedSignals);
+  $("shareSelected").addEventListener("click",shareSelectedSignals);
 
   $("pickGallery").addEventListener("click",()=>$("imageFile").click());
   $("pickCamera").addEventListener("click",()=>$("cameraFile").click());
